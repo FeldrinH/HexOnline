@@ -6,7 +6,7 @@
 
 [sub_resource type="TileSet" id=1]
 0/name = "Sea Gyser - 1.png 0"
-0/texture = ExtResource( 1 )
+0/texture = SubResource( 2 )
 0/tex_offset = Vector2( 0, 0 )
 0/modulate = Color( 1, 1, 1, 1 )
 0/region = Rect2( 16, 26, 500, 384 )
