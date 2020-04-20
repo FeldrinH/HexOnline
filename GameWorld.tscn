@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Sea Gyser - 1.png" type="Texture" id=1]
+[ext_resource path="res://hex_tile.png" type="Texture" id=2]
 
 [sub_resource type="TileSet" id=1]
 0/name = "Sea Gyser - 1.png 0"
@@ -17,12 +18,27 @@
 0/shape_one_way_margin = 0.0
 0/shapes = [  ]
 0/z_index = 0
+1/name = "hex_tile.png 1"
+1/texture = ExtResource( 2 )
+1/tex_offset = Vector2( 0, 0 )
+1/modulate = Color( 1, 1, 1, 1 )
+1/region = Rect2( 1, 0, 180, 209 )
+1/tile_mode = 0
+1/occluder_offset = Vector2( 0, 0 )
+1/navigation_offset = Vector2( 0, 0 )
+1/shape_offset = Vector2( 0, 0 )
+1/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+1/shape_one_way = false
+1/shape_one_way_margin = 0.0
+1/shapes = [  ]
+1/z_index = 0
 
 [node name="GameWorld" type="Node2D"]
 
 [node name="TileMap" type="TileMap" parent="."]
 position = Vector2( 534.458, 345.728 )
-mode = 2
 tile_set = SubResource( 1 )
+cell_size = Vector2( 180, 156 )
 cell_half_offset = 0
 format = 1
+tile_data = PoolIntArray( -65537, 1, 0, -131072, 1, 0, -131071, 1, 0, -2, 1, 0, -1, 1, 0, -65536, 1, 0, -65535, 1, 0, 0, 1, 0, 1, 1, 0 )
