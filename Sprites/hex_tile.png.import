@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Sea Gyser - 1.png-2516ffc181d717d61865380789c71825.stex"
+path="res://.import/hex_tile.png-2d115bb063c4a224f37295595e7ad8b4.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sea Gyser - 1.png"
-dest_files=[ "res://.import/Sea Gyser - 1.png-2516ffc181d717d61865380789c71825.stex" ]
+source_file="res://Sprites/hex_tile.png"
+dest_files=[ "res://.import/hex_tile.png-2d115bb063c4a224f37295595e7ad8b4.stex" ]
 
 [params]
 
