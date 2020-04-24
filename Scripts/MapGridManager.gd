@@ -10,3 +10,5 @@ func _ready():
 		tile_instance.set_position(tilemap.map_to_world(tile))
 		tile_instance.set_name(str(tile))
 		add_child(tile_instance)
+	
+	tilemap.queue_free()
