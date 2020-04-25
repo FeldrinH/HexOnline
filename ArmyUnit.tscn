@@ -5,7 +5,7 @@
 [ext_resource path="res://Roboto-Bold.ttf" type="DynamicFontData" id=3]
 
 [sub_resource type="DynamicFont" id=1]
-size = 32
+size = 50
 font_data = ExtResource( 3 )
 
 [node name="ArmyUnit" type="Node2D"]
@@ -15,10 +15,10 @@ script = ExtResource( 1 )
 texture = ExtResource( 2 )
 
 [node name="Label" type="Label" parent="."]
-margin_left = -32.6066
-margin_top = 57.6526
-margin_right = 17.3934
-margin_bottom = 95.6526
+margin_left = -36.2292
+margin_top = 56.0864
+margin_right = 21.7708
+margin_bottom = 116.086
 grow_horizontal = 2
 grow_vertical = 2
 custom_fonts/font = SubResource( 1 )
@@ -28,4 +28,4 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Tween" type="Tween" parent="."]
+[node name="MovementTween" type="Tween" parent="."]
