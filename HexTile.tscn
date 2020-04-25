@@ -11,6 +11,7 @@ collision_mask = 0
 script = ExtResource( 2 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+visible = false
 polygon = PoolVector2Array( -90, 50, 0, -1, 90, 51, 90, 156, 0, 208, -90, 156 )
 
 [node name="Sprite" type="Sprite" parent="."]

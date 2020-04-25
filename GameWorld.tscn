@@ -25,7 +25,6 @@ __meta__ = {
 }
 
 [node name="TileMap" type="TileMap" parent="."]
-visible = false
 modulate = Color( 0.745098, 0.231373, 0.231373, 1 )
 position = Vector2( -90, 0 )
 tile_set = SubResource( 1 )
