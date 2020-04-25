@@ -17,7 +17,8 @@ func move_to(target_tile):
 		tile.army = null
 	
 	if tile != null:
-		movement_tween.interpolate_property(self, "position", position, target_tile.position, position.distance_to(target_tile.position) / 1000, Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
+		#print(position.distance_to(target_tile.position) / 1000)
+		movement_tween.interpolate_property(self, "position", position, target_tile.position, max(position.distance_to(target_tile.position) / 1000, 0.25), Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 		movement_tween.start()
 		yield(movement_tween, "tween_all_completed")
 	else:
