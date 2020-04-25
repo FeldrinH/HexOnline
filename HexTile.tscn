@@ -9,15 +9,19 @@ monitorable = false
 collision_layer = 524288
 collision_mask = 0
 script = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true
+}
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 visible = false
+position = Vector2( 0, -103 )
 polygon = PoolVector2Array( -90, 50, 0, -1, 90, 51, 90, 156, 0, 208, -90, 156 )
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
 centered = false
-offset = Vector2( -90, 0 )
-[connection signal="input_event" from="." to="." method="mouse_pressed"]
+offset = Vector2( -100, -113 )
+[connection signal="input_event" from="." to="." method="input_event"]
 [connection signal="mouse_entered" from="." to="." method="mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="mouse_exited"]

@@ -1,32 +1,26 @@
 extends Area2D
 
-onready var tile_manager = $".."
+onready var manager = $".."
 
 var coordinate : Vector2
-var active : bool = false
+
+var army = null
 
 func mouse_entered():
-	set_active(true)
+	manager.set_active(self)
 
 func mouse_exited():
-	set_active(false)
+	if manager.active == self:
+		manager.set_active(null)
 
-func set_active(new_active):
-	if new_active:
-		if tile_manager.active_tile != null:
-			tile_manager.active_tile.set_active(false)
-		
-		tile_manager.active_tile = self
-		
-		self.modulate = Color(255,0,0)
+func update_appearance():
+	if manager.selected == self:
+		modulate = Color(2,2,0)
+	elif manager.active == self:
+		modulate = Color(2,0,0)
 	else:
-		if tile_manager.active_tile == self:
-			tile_manager.active_tile = null
-		
-		self.modulate = Color(255,255,255)
-	
-	active = new_active
+		modulate = Color(1,1,1)
 
-func mouse_pressed(Node, event : InputEvent, shape):
-	if event.is_action_pressed("ui_mouse_left"):
-		print(coordinate)
+func input_event(viewport, event, shape_idx):
+	if manager.active == self:
+		manager.active_click(event)
