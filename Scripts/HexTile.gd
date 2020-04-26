@@ -18,8 +18,11 @@ func update_appearance():
 		modulate = Color(2,2,0)
 	elif manager.active == self:
 		modulate = Color(2,0,0)
+	elif manager.highlighted.has(self):
+		modulate = Color(0, 2, 0)
 	else:
 		modulate = Color(1,1,1)
+	
 
 func input_event(viewport, event, shape_idx):
 	if manager.active == self:
