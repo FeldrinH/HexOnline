@@ -10,6 +10,8 @@ const tile_dict = {}
 var active = null
 var selected = null
 
+var turn_active = false
+
 var highlighted = {}
 
 const moveDirections = [
@@ -64,25 +66,41 @@ func highlight_tiles(tiles):
 func get_tile(coord):
 	return tile_dict.get(coord, null)
 
-func find_neighbors(current_tile):
-	var neighbors = {}
-	for i in moveDirections:
-		var newTile = get_tile(current_tile.coordinate + i)
+func util_add_row(tiles, row_start : Vector2, row_length : int, dir : int):
+	for i in range(0, row_length):
+		var newTile = get_tile(row_start + Vector2(2*dir*i, 0))
 		if newTile != null:
-			neighbors[newTile] = 0
+			tiles[newTile] = true
+
+func find_neighbors(center_tile, radius : int):
+	var neighbors = {}
+	
+	var center_coordinate : Vector2 = center_tile.coordinate
+	var row_offset : Vector2 = Vector2(-radius, -radius)
+	var row_length : int = radius + 1
+	while row_offset.y < 0:
+		util_add_row(neighbors, center_coordinate + row_offset, row_length, 1)
+		util_add_row(neighbors, center_coordinate - row_offset, row_length, -1)
+		row_offset += Vector2(-1, 1)
+		row_length += 1
+	util_add_row(neighbors, center_coordinate + row_offset, radius, 1)
+	util_add_row(neighbors, center_coordinate - row_offset, radius, -1)
+	
 	return neighbors
 
 func active_click(event : InputEvent):
 	if event.is_action_pressed("ui_mouse_left"):
-		if selected == null and active.army != null:
-			set_selected(active)
-			highlight_tiles(find_neighbors(active))
-		elif selected != null and selected.army != null:
-			selected.army.move_to(active)
-			set_selected(null)
-			highlight_tiles({})
+		if !turn_active:
+			if selected == null and active.army != null:
+				set_selected(active)
+				highlight_tiles(find_neighbors(active, 2))
+			elif selected != null and selected.army != null and highlighted.has(active):
+				if active.army == null or active.army.power < active.army.max_power:
+					selected.army.move_to(active)
+					set_selected(null)
+					highlight_tiles({})
 	elif event.is_action_pressed("ui_mouse_debug"):
 		var unit_instance = army_unit.instance()
 		army_manager.add_child(unit_instance)
-		unit_instance.init(active, 50)
+		unit_instance.init(active, 20)
 
