@@ -2,6 +2,7 @@ extends Node2D
 
 const army_unit = preload("res://ArmyUnit.tscn")
 const tile_scene = preload("res://HexTile.tscn")
+const map_generator = preload("res://Scripts/MapGenerator.gd")
 
 onready var army_manager = $"../ArmyUnits"
 onready var tilemap : TileMap = $"../TileMap"
@@ -14,19 +15,15 @@ var turn_active = false
 
 var highlighted = {}
 
-const moveDirections = [
-	Vector2(2, 0), Vector2(1, 1),
-	Vector2(-1, 1), Vector2(-2, 0),
-	Vector2(-1, -1), Vector2(1, -1)
-]
-
 func _ready():
-	print(posmod(-3, 2))
+	
+	map_generator.generate_map(tilemap)
 	
 	for coordinate in tilemap.get_used_cells():
 		var tile_instance = tile_scene.instance()
 		tile_instance.set_position(tilemap.map_to_world(coordinate))
-
+		#tile_instance.modulate = Color(tilemap.get_cellv(coordinate)/254.0, tilemap.get_cellv(coordinate)/254.0, tilemap.get_cellv(coordinate)/254.0)
+		
 		coordinate.x = coordinate.x * 2 + posmod(coordinate.y, 2)
 		tile_dict[coordinate] = tile_instance
 		tile_instance.coordinate = coordinate
