@@ -16,6 +16,8 @@ func init(manager, coordinate, blocked):
 	self.blocked = blocked
 	
 	$Label.text = str(coordinate)
+	
+	setup_appearance()
 
 func can_enter(entering_army) -> bool:
 	if blocked:
@@ -29,18 +31,18 @@ func can_enter(entering_army) -> bool:
 func setup_appearance():
 	match terrain:
 		Util.TERRAIN_GROUND:
-			base_color = Color(1.2,1,1)
+			base_color = Color(86/255.0, 125/255.0, 70/255.0)
 		Util.TERRAIN_WATER:
-			base_color = Color(0,0,2)
+			base_color = Color(0, 0, 1)
 	modulate = base_color
 
 func update_appearance():
 	if manager.selected == self:
-		modulate = Color(2,2,0)
+		modulate = Color(0.8,0.8,0)
 	elif manager.active == self:
-		modulate = Color(2,0,0)
+		modulate = Color(0.6,0,0)
 	elif manager.highlighted.has(self):
-		modulate = Color(0,2,0)
+		modulate = Color(0,0.8,0)
 	else:
 		modulate = base_color
 

@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Sprites/hex_tile.png" type="Texture" id=1]
+[ext_resource path="res://Sprites/tile.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/HexTile.gd" type="Script" id=2]
 [ext_resource path="res://Roboto-Bold.ttf" type="DynamicFontData" id=3]
 
@@ -22,12 +22,10 @@ __meta__ = {
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 visible = false
 position = Vector2( 0, -103 )
-polygon = PoolVector2Array( -90, 50, 0, -1, 90, 51, 90, 156, 0, 208, -90, 156 )
+polygon = PoolVector2Array( -22.5, 90, 0, 77, 22.5, 90, 22.5, 116, 0, 129, -22.5, 116 )
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
-centered = false
-offset = Vector2( -100, -113 )
 
 [node name="Label" type="Label" parent="."]
 visible = false
