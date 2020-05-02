@@ -17,12 +17,13 @@ var turn_active = false
 
 func _ready():
 	for coordinate in tilemap.get_used_cells():
+		var tile_index = tilemap.get_cellv(coordinate)
 		var tile_instance = HexTile.instance()
 		tile_instance.set_position(tilemap.map_to_world(coordinate))
 		
 		coordinate.x = coordinate.x * 2 + posmod(coordinate.y, 2)
 		__tile_dict[coordinate] = tile_instance
-		tile_instance.init(self, coordinate, tilemap.get_cellv(coordinate) == 2)
+		tile_instance.init(self, coordinate, tile_index == 1)
 		
 		add_child(tile_instance)
 	
