@@ -29,7 +29,7 @@ func _ready():
 	
 	tilemap.queue_free()
 	
-	MapGenerator.generate_map(__tile_dict)
+	MapGenerator.generate_map(self)
 
 func set_active(new_active):
 	var previous_active = active
@@ -60,7 +60,7 @@ func set_highlighted(tiles : Dictionary):
 func get_tile(coord):
 	return __tile_dict.get(coord, null)
 
-func find_neighbors(center_tile, radius : int):
+func find_in_radius(center_tile, radius : int):
 	var neighbors = {}
 	
 	var center_coordinate : Vector2 = center_tile.coordinate
@@ -76,11 +76,27 @@ func find_neighbors(center_tile, radius : int):
 	
 	return neighbors
 
+func find_travelable(center_tile, army, distance : int):
+	var neighbors = {}
+	__add_neighbors(neighbors, center_tile.coordinate, army,  distance)
+	neighbors.erase(center_tile)
+	return neighbors
+
+func __add_neighbors(tiles, center : Vector2, army, distance: int):
+	if distance == 0:
+		return
+	
+	for dir in Util.directions:
+		var new_tile = get_tile(center + dir)
+		if new_tile != null and new_tile.can_enter(army):
+			tiles[new_tile] = true
+			__add_neighbors(tiles, new_tile.coordinate, army, distance - 1)
+
 func __add_row(tiles, row_start : Vector2, row_length : int, dir : int):
 	for i in range(0, row_length):
-		var newTile = get_tile(row_start + Vector2(2*dir*i, 0))
-		if newTile != null:
-			tiles[newTile] = true
+		var new_tile = get_tile(row_start + Vector2(2*dir*i, 0))
+		if new_tile != null:
+			tiles[new_tile] = true
 
 func filter_can_enter(tiles : Dictionary, army):
 	for tile in tiles.keys():
@@ -92,14 +108,19 @@ func filter_can_enter(tiles : Dictionary, army):
 func __active_click(event : InputEvent):
 	if event.is_action_pressed("ui_mouse_left"):
 		if !turn_active:
-			if selected == null and active.army != null:
-				set_selected(active)
-				var neighbors = find_neighbors(active, 2)
-				filter_can_enter(neighbors, active.army)
-				set_highlighted(neighbors)
-			elif selected != null and selected.army != null and highlighted.has(active):
-				if active.army == null or active.army.power < active.army.max_power:
-					selected.army.move_to(active)
+			if selected == null:
+				if active.army != null:
+					set_selected(active)
+					var neighbors = find_travelable(active, active.army, 2)
+					#filter_can_enter(neighbors, active.army)
+					set_highlighted(neighbors)
+			else: # selected != null
+				if highlighted.has(active):
+					if selected.army != null and (active.army == null or active.army.power < active.army.max_power):
+						selected.army.move_to(active)
+						set_selected(null)
+						set_highlighted({})
+				else: # !highlighted.has(active):
 					set_selected(null)
 					set_highlighted({})
 	elif event.is_action_pressed("ui_mouse_debug"):

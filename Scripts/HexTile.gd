@@ -6,16 +6,33 @@ var manager
 var coordinate : Vector2
 var blocked : bool
 
+var terrain = Util.TERRAIN_GROUND
+
 var army = null
 
 func init(manager, coordinate, blocked):
 	self.manager = manager
 	self.coordinate = coordinate
 	self.blocked = blocked
+	
+	$Label.text = str(coordinate)
 
-# To be overriden by subclasses. Should return bool indicating if entering_army can enter this tile 
 func can_enter(entering_army) -> bool:
-	return !blocked
+	if blocked:
+		return false
+	
+	if terrain == Util.TERRAIN_WATER:
+		return false
+	else:
+		return true
+
+func setup_appearance():
+	match terrain:
+		Util.TERRAIN_GROUND:
+			base_color = Color(1.2,1,1)
+		Util.TERRAIN_WATER:
+			base_color = Color(0,0,2)
+	modulate = base_color
 
 func update_appearance():
 	if manager.selected == self:
@@ -38,9 +55,6 @@ func __input_event(viewport, event, shape_idx):
 	if manager.active == self:
 		manager.__active_click(event)
 
-func convert_type(type : Script):
-	var manager = self.manager
-	var coordinate = self.coordinate
-	var blocked = self.blocked
-	self.set_script(type)
-	self.init(manager, coordinate, blocked)
+func set_terrain(new_terrain : int):
+	terrain = new_terrain
+	setup_appearance()
