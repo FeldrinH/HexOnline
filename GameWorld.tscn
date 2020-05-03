@@ -56,5 +56,7 @@ __meta__ = {
 [node name="ArmyUnits" type="Node2D" parent="."]
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2( 287.428, 38.1883 )
+position = Vector2( 292.167, 97.1971 )
 current = true
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
