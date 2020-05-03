@@ -6,7 +6,7 @@ var manager
 var coordinate : Vector2
 var blocked : bool
 
-var terrain = Util.TERRAIN_GROUND
+var terrain : int
 
 var army = null
 
@@ -16,8 +16,6 @@ func init(manager, coordinate, blocked):
 	self.blocked = blocked
 	
 	$Label.text = str(coordinate)
-	
-	setup_appearance()
 
 func can_enter(entering_army) -> bool:
 	if blocked:
