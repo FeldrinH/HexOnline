@@ -9,19 +9,14 @@ onready var map_manager = $"../../HexGrid"
 
 onready var label = $Label
 onready var movement_tween = $MovementTween
+onready var audio_player = $AudioStreamPlayer
 
-var audio_player 
 var marching_clip = load("res://Sounds/march.ogg")
 
 var tile = null
 var power = 0
 
-func init(starting_tile, starting_power):
-	audio_player = AudioStreamPlayer.new()
-	audio_player.volume_db = -20
-	
-	self.add_child(audio_player)
-	
+func init(starting_tile, starting_power):	
 	set_power(starting_power)
 	position = starting_tile.position
 	enter_tile(starting_tile)
@@ -34,7 +29,6 @@ func move_to(target_tile):
 	map_manager.turn_active = true
 	
 	audio_player.stream = marching_clip
-
 	audio_player.play()
 	
 	# If combined army would exeed max power, send detachment and stay in current tile
@@ -49,8 +43,9 @@ func move_to(target_tile):
 	movement_tween.interpolate_property(self, "position", position, target_tile.position, max(position.distance_to(target_tile.position) / 100, 0.25), Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 	movement_tween.start()
 	yield(movement_tween, "tween_all_completed")
-	audio_player.stop()
 	enter_tile(target_tile)
+	
+	audio_player.stop()
 	
 	map_manager.turn_active = false
 
