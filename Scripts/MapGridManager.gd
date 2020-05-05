@@ -9,6 +9,9 @@ onready var tilemap : TileMap = $"../TileMap"
 
 const __tile_dict = {}
 
+onready var players = [$"../Player 1", $"../Player 2"]
+var current_player
+
 var active = null
 var selected = null
 var highlighted = {}
@@ -30,6 +33,9 @@ func _ready():
 	tilemap.queue_free()
 	
 	MapGenerator.generate_map(self)
+
+func create_players():
+	pass	
 
 func set_active(new_active):
 	var previous_active = active
@@ -126,5 +132,9 @@ func __active_click(event : InputEvent):
 	elif event.is_action_pressed("ui_mouse_debug"):
 		var unit_instance = ArmyUnit.instance()
 		army_manager.add_child(unit_instance)
-		unit_instance.init(active, 20)
+		unit_instance.init(active, 20, current_player)
 
+func _unhandled_key_input(event):
+	if event.is_action_pressed("change_side"):
+		current_player = players[(players.find(current_player) + 1) % players.size()]
+		print("changed side. Current side : " + str(current_player.id))

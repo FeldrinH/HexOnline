@@ -10,18 +10,20 @@ onready var map_manager = $"../../HexGrid"
 onready var label = $Label
 onready var movement_tween = $MovementTween
 onready var audio_player = $AudioStreamPlayer
+onready var battle_particles : Particles2D = $Particles2D
 
 var marching_clip = load("res://Sounds/march.ogg")
 
+var player
 var tile = null
 var power = 0
 
-func init(starting_tile, starting_power):	
-	set_power(starting_power)
-	position = starting_tile.position
+func init(starting_tile, starting_power, side):	
+	init_detached(starting_tile, starting_power, side)
 	enter_tile(starting_tile)
 
-func init_detached(starting_tile, starting_power):
+func init_detached(starting_tile, starting_power, side):
+	player = side
 	set_power(starting_power)
 	position = starting_tile.position
 
@@ -55,11 +57,24 @@ func enter_tile(target_tile):
 			tile.army = null
 	else:
 		if target_tile.army != null:
-			target_tile.army.merge_with(self)
+			if target_tile.army.player != player:
+				if battle(target_tile.army):
+					target_tile.army = self
+			else:
+				target_tile.army.merge_with(self)
 		else:
 			target_tile.army = self
 	
 	tile = target_tile
+
+func battle(defending_army) -> bool:
+	battle_particles.emitting = true
+	if power > defending_army.power:
+		defending_army.queue_free()
+		return true
+	else:
+		queue_free()
+		return false
 
 func merge_with(other_army):
 	set_power(power + other_army.power)
@@ -70,7 +85,7 @@ func split(split_power):
 	
 	var unit_instance = army_unit.instance()
 	army_manager.add_child(unit_instance)
-	unit_instance.init_detached(tile, split_power)
+	unit_instance.init_detached(tile, split_power, player)
 	
 	return unit_instance
 
