@@ -63,7 +63,10 @@ current = true
 
 [node name="Player 1" type="Node" parent="."]
 script = ExtResource( 2 )
+id = 0
+unit_color = Color( 0.956863, 0.121569, 0.121569, 1 )
 
 [node name="Player 2" type="Node" parent="."]
 script = ExtResource( 2 )
-id = 0
+id = 1
+unit_color = Color( 0.0901961, 0.247059, 0.964706, 1 )

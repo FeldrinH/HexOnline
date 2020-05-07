@@ -1,6 +1,7 @@
 extends Node
 
 export var id : int = -1
+export var unit_color : Color
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

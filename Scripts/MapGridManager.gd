@@ -10,7 +10,7 @@ onready var tilemap : TileMap = $"../TileMap"
 const __tile_dict = {}
 
 onready var players = [$"../Player 1", $"../Player 2"]
-var current_player
+onready var current_player = players[0]
 
 var active = null
 var selected = null
@@ -115,7 +115,7 @@ func __active_click(event : InputEvent):
 	if event.is_action_pressed("ui_mouse_left"):
 		if !turn_active:
 			if selected == null:
-				if active.army != null:
+				if active.army != null and active.army.player == current_player:
 					set_selected(active)
 					var neighbors = find_travelable(active, active.army, 2)
 					#filter_can_enter(neighbors, active.army)
@@ -137,4 +137,6 @@ func __active_click(event : InputEvent):
 func _unhandled_key_input(event):
 	if event.is_action_pressed("change_side"):
 		current_player = players[(players.find(current_player) + 1) % players.size()]
+		set_selected(null)
+		set_highlighted({})
 		print("changed side. Current side : " + str(current_player.id))
