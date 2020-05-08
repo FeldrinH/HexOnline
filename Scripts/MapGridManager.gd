@@ -4,8 +4,11 @@ const ArmyUnit = preload("res://ArmyUnit.tscn")
 const HexTile = preload("res://HexTile.tscn")
 const MapGenerator = preload("res://Scripts/MapGenerator.gd")
 
-onready var army_manager : Node2D = $"../ArmyUnits"
-onready var tilemap : TileMap = $"../TileMap"
+onready var tiles : Node2D = $TilesContainer
+onready var units : Node2D = $UnitsContainer
+onready var effects : Node2D = $EffectsManager
+
+onready var tilemap : TileMap = $TileMap
 
 const __tile_dict = {}
 
@@ -28,7 +31,7 @@ func _ready():
 		__tile_dict[coordinate] = tile_instance
 		tile_instance.init(self, coordinate, tile_index == 1)
 		
-		add_child(tile_instance)
+		tiles.add_child(tile_instance)
 	
 	tilemap.queue_free()
 	
@@ -131,8 +134,8 @@ func __active_click(event : InputEvent):
 					set_highlighted({})
 	elif event.is_action_pressed("ui_mouse_debug"):
 		var unit_instance = ArmyUnit.instance()
-		army_manager.add_child(unit_instance)
-		unit_instance.init(active, 20, current_player)
+		units.add_child(unit_instance)
+		unit_instance.init(self, active, 20, current_player)
 
 func _unhandled_key_input(event):
 	if event.is_action_pressed("change_side"):
