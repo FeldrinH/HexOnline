@@ -16,10 +16,10 @@ var terrain : int
 var army = null
 var city = null
 
-func init(manager, coordinate, blocked):
-	self.manager = manager
-	self.coordinate = coordinate
-	self.blocked = blocked
+func init(tile_manager, tile_coordinate, tile_blocked):
+	manager = tile_manager
+	coordinate = tile_coordinate
+	blocked = tile_blocked
 	
 	$Label.text = str(coordinate)
 

@@ -15,14 +15,14 @@ var player = null
 var tile = null
 var power : int = 0
 
-func init(main_manager, starting_tile, starting_power, side):	
-	init_detached(main_manager, starting_tile, starting_power, side)
+func init(unit_manager, starting_tile, starting_power, unit_player):	
+	init_detached(unit_manager, starting_tile, starting_power, unit_player)
 	enter_tile(starting_tile)
 
-func init_detached(main_manager, starting_tile, starting_power, side):
-	manager = main_manager
-	player = side
-	$Sprites.modulate = side.unit_color
+func init_detached(unit_manager, starting_tile, starting_power, unit_player):
+	manager = unit_manager
+	player = unit_player
+	$Sprites.modulate = unit_player.unit_color
 	set_power(starting_power)
 	position = starting_tile.position
 

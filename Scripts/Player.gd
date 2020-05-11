@@ -5,5 +5,5 @@ export var unit_color : Color
 
 var manager : Node2D = null
 
-func init_manager(game_manager):
-	manager = game_manager
+func init_manager(player_manager):
+	manager = player_manager
