@@ -106,7 +106,9 @@ tile_data = PoolIntArray( -262148, 1, 0, -262147, 1, 0, -262146, 1, 0, -262145, 
 [node name="EffectsManager" type="Node2D" parent="HexGrid"]
 script = ExtResource( 3 )
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="HexGrid/EffectsManager"]
+[node name="BattleSoundPlayer" type="AudioStreamPlayer" parent="HexGrid/EffectsManager"]
+
+[node name="MovementSoundPlayer" type="AudioStreamPlayer" parent="HexGrid/EffectsManager"]
 
 [node name="BattleParticles" type="Particles2D" parent="HexGrid/EffectsManager"]
 emitting = false

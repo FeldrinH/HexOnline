@@ -2,7 +2,7 @@ extends Node2D
 
 var army_unit = load("res://ArmyUnit.tscn")
 
-const marching_clip = preload("res://Sounds/march.ogg")
+
 
 onready var label = $Label
 onready var movement_tween = $MovementTween
@@ -28,7 +28,7 @@ func init_detached(unit_manager, starting_tile, starting_power, unit_player):
 
 func move_to(target_tile):
 	manager.turn_active = true
-	manager.effects.play_audio(marching_clip)
+	manager.effects.play_movement_effects()
 	
 	# If combined army would exeed max power, send detachment and stay in current tile
 	if target_tile.army != null and power + target_tile.army.power > max_power:
