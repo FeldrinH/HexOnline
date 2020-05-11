@@ -22,7 +22,7 @@ func init(main_manager, starting_tile, starting_power, side):
 func init_detached(main_manager, starting_tile, starting_power, side):
 	manager = main_manager
 	player = side
-	$Sprite.modulate = side.unit_color
+	$Sprites.modulate = side.unit_color
 	set_power(starting_power)
 	position = starting_tile.position
 
@@ -91,3 +91,13 @@ func split(split_power):
 func set_power(new_power):
 	power = new_power
 	label.text = str(power)
+	
+	for sprite in $Sprites.get_children():
+		sprite.visible = false
+	
+	if power < 40:
+		$Sprites/SpriteInfantry.visible = true
+	elif power < 70:
+		$Sprites/SpriteCavalry.visible = true
+	else:
+		$Sprites/SpriteArtillery.visible = true
