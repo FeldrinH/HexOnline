@@ -1,5 +1,8 @@
 extends Node2D
 
+signal turn_start(starting_player)
+signal turn_end(ending_player)
+
 const ArmyUnit = preload("res://ArmyUnit.tscn")
 const HexTile = preload("res://HexTile.tscn")
 const MapGenerator = preload("res://Scripts/MapGenerator.gd")
@@ -10,10 +13,10 @@ onready var effects : Node2D = $EffectsManager
 
 onready var tilemap : TileMap = $TileMap
 
-const __tile_dict = {}
+const __tile_dict : Dictionary = {}
 
-onready var players = [$"../Player 1", $"../Player 2"]
-onready var current_player = players[0]
+onready var players : Array = $Players.get_children()
+onready var current_player : Node = players[0]
 
 var active = null
 var selected = null
@@ -22,6 +25,9 @@ var highlighted = {}
 var turn_active = false
 
 func _ready():
+	for player in players:
+		player.init_manager(self)
+	
 	for coordinate in tilemap.get_used_cells():
 		var tile_index = tilemap.get_cellv(coordinate)
 		var tile_instance = HexTile.instance()
@@ -38,7 +44,7 @@ func _ready():
 	MapGenerator.generate_map(self)
 
 func create_players():
-	pass	
+	pass
 
 func set_active(new_active):
 	var previous_active = active
@@ -68,6 +74,22 @@ func set_highlighted(tiles : Dictionary):
 
 func get_tile(coord):
 	return __tile_dict.get(coord, null)
+
+# Slow, should only be used during map generation
+func get_all_tiles():
+	return __tile_dict.values()
+
+func add_unit(starting_tile : Node2D, starting_power : int, side : Node) -> Node2D:
+	var unit_instance = ArmyUnit.instance()
+	units.add_child(unit_instance)
+	unit_instance.init(self, starting_tile, starting_power, side)
+	return unit_instance
+	
+func add_unit_detached(starting_tile : Node2D, starting_power : int, side : Node) -> Node2D:
+	var unit_instance = ArmyUnit.instance()
+	units.add_child(unit_instance)
+	unit_instance.init_detached(self, starting_tile, starting_power, side)
+	return unit_instance
 
 func find_in_radius(center_tile, radius : int):
 	var neighbors = {}
@@ -133,9 +155,7 @@ func __active_click(event : InputEvent):
 					set_selected(null)
 					set_highlighted({})
 	elif event.is_action_pressed("ui_mouse_debug"):
-		var unit_instance = ArmyUnit.instance()
-		units.add_child(unit_instance)
-		unit_instance.init(self, active, 20, current_player)
+		add_unit(active, 20, current_player)
 
 func _unhandled_key_input(event):
 	if event.is_action_pressed("change_side"):

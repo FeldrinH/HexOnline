@@ -1,5 +1,10 @@
 extends Area2D
 
+const City = preload("res://City.tscn")
+const Capital = preload("res://Capital.tscn")
+
+onready var sprite = $Sprite
+
 var base_color = Color(1,1,1)
 
 var manager
@@ -9,6 +14,7 @@ var blocked : bool
 var terrain : int
 
 var army = null
+var city = null
 
 func init(manager, coordinate, blocked):
 	self.manager = manager
@@ -16,6 +22,22 @@ func init(manager, coordinate, blocked):
 	self.blocked = blocked
 	
 	$Label.text = str(coordinate)
+
+func add_city() -> Node2D:
+	var city_instance = City.instance()
+	self.add_child(city_instance)
+	city_instance.init(manager)
+	return city_instance
+
+func add_capital(side) -> Node2D:
+	var city_instance = Capital.instance()
+	self.add_child(city_instance)
+	self.set_city(city_instance)
+	city_instance.init_capital(manager, side)
+	return city_instance
+
+func set_city(new_city):
+	city = new_city
 
 func can_enter(entering_army) -> bool:
 	if blocked:
@@ -32,17 +54,17 @@ func setup_appearance():
 			base_color = Color(86/255.0, 125/255.0, 70/255.0)
 		Util.TERRAIN_WATER:
 			base_color = Color(0, 0, 1)
-	modulate = base_color
+	sprite.modulate = base_color
 
 func update_appearance():
 	if manager.selected == self:
-		modulate = Color(0.8,0.8,0)
+		sprite.modulate = Color(0.8,0.8,0)
 	elif manager.active == self:
-		modulate = Color(0.6,0,0)
+		sprite.modulate = Color(0.6,0,0)
 	elif manager.highlighted.has(self):
-		modulate = Color(0,0.8,0)
+		sprite.modulate = Color(0,0.8,0)
 	else:
-		modulate = base_color
+		sprite.modulate = base_color
 
 func __mouse_entered():
 	manager.set_active(self)

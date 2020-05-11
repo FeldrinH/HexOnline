@@ -86,11 +86,7 @@ func merge_with(other_army):
 func split(split_power):
 	set_power(power - split_power)
 	
-	var unit_instance = army_unit.instance()
-	manager.units.add_child(unit_instance)
-	unit_instance.init_detached(manager, tile, split_power, player)
-	
-	return unit_instance
+	return manager.add_unit_detached(tile, split_power, player)
 
 func set_power(new_power):
 	power = new_power

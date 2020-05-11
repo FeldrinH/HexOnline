@@ -1,5 +1,7 @@
+
+
 static func generate_map(manager):
-	var tiles = manager.__tile_dict.values()
+	var tiles = manager.get_all_tiles()
 	
 	randomize()
 	
@@ -23,3 +25,10 @@ static func generate_map(manager):
 	for tile in tiles:
 		if noise.get_noise_2dv(tile.position) > 0.4:
 			tile.set_terrain(Util.TERRAIN_WATER)
+	
+	for player in manager.players:
+		while true:
+			var try_tile = Util.pick_random(tiles)
+			if try_tile.terrain == Util.TERRAIN_GROUND and !try_tile.blocked:
+				try_tile.add_capital(player)
+				break
