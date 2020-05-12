@@ -28,15 +28,17 @@ func init_detached(unit_manager, starting_tile, starting_power, unit_player):
 
 func move_to(target_tile):
 	manager.turn_active = true
-	manager.effects.play_movement_effects()
 	
 	# If combined army would exeed max power, send detachment and stay in current tile
-	if target_tile.army != null and power + target_tile.army.power > max_power:
-		var split_unit = split(max_power - target_tile.army.power)
-		split_unit.move_to(target_tile)
+	if target_tile.army != null and target_tile.army.player == player and power + target_tile.army.power > max_power:
+		var split_power = max_power - target_tile.army.power
+		if split_power > 0:
+			var split_unit = split(split_power)
+			split_unit.move_to(target_tile)
 		manager.turn_active = false
 		return
 	
+	manager.effects.play_movement_effects()
 	enter_tile(null)
 	
 	movement_tween.interpolate_property(self, "position", position, target_tile.position, max(position.distance_to(target_tile.position) / 1000, 0.25), Tween.TRANS_QUAD, Tween.EASE_IN_OUT)

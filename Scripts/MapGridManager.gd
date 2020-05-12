@@ -147,7 +147,7 @@ func __active_click(event : InputEvent):
 					set_highlighted(neighbors)
 			else: # selected != null
 				if highlighted.has(active):
-					if selected.army != null and (active.army == null or active.army.power < active.army.max_power):
+					if selected.army != null:
 						selected.army.move_to(active)
 						set_selected(null)
 						set_highlighted({})
