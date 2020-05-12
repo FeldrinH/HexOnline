@@ -8,7 +8,7 @@ onready var movement_sound_player : AudioStreamPlayer = $MovementSoundPlayer
 onready var battle_particles : Particles2D = $BattleParticles
 
 func _ready():
-	movement_sound_player.stream = marching_clip
+	#movement_sound_player.stream = marching_clip
 	battle_sound_player.stream = battle_clip
 
 #func play_audio(play_stream : AudioStream):
