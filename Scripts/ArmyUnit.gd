@@ -64,8 +64,10 @@ func arrive_at_tile(target_tile):
 	tile = target_tile
 
 func enter_tile(target_tile):
-		target_tile.set_player(player)
-		
+	target_tile.set_player(player)
+	for adjacent_tile in manager.find_travelable(target_tile, self, 1):
+		if adjacent_tile.army == null:
+			adjacent_tile.set_player(player)
 
 func battle(defending_army) -> bool:
 	manager.effects.play_battle_effects(position)

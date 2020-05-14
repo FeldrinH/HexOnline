@@ -56,9 +56,7 @@ func setup_appearance():
 			base_color = Color(86/255.0, 125/255.0, 70/255.0)
 		Util.TERRAIN_WATER:
 			base_color = Color(0, 0, 1)
-	if player != null:
-		base_color += player.unit_color * 0.2
-	sprite.modulate = base_color
+	update_appearance()
 
 # Updates related to appearance & UI
 func update_appearance():
@@ -70,6 +68,9 @@ func update_appearance():
 		sprite.modulate = Color(0,0.8,0)
 	else:
 		sprite.modulate = base_color
+	
+	if player != null:
+		sprite.modulate += player.unit_color * 0.2
 
 func __mouse_entered():
 	manager.set_active(self)
