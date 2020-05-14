@@ -2,8 +2,6 @@ extends Node2D
 
 var army_unit = load("res://ArmyUnit.tscn")
 
-
-
 onready var label = $Label
 onready var movement_tween = $MovementTween
 
@@ -17,7 +15,7 @@ var power : int = 0
 
 func init(unit_manager, starting_tile, starting_power, unit_player):	
 	init_detached(unit_manager, starting_tile, starting_power, unit_player)
-	enter_tile(starting_tile)
+	arrive_at_tile(starting_tile)
 
 func init_detached(unit_manager, starting_tile, starting_power, unit_player):
 	manager = unit_manager
@@ -39,16 +37,16 @@ func move_to(target_tile):
 		return
 	
 	manager.effects.play_movement_effects()
-	enter_tile(null)
+	arrive_at_tile(null)
 	
 	movement_tween.interpolate_property(self, "position", position, target_tile.position, max(position.distance_to(target_tile.position) / 1000, 0.25), Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 	movement_tween.start()
 	yield(movement_tween, "tween_all_completed")
-	enter_tile(target_tile)
+	arrive_at_tile(target_tile)
 	
 	manager.turn_active = false
 
-func enter_tile(target_tile):
+func arrive_at_tile(target_tile):
 	if target_tile == null:
 		if tile != null:
 			tile.army = null
@@ -61,8 +59,13 @@ func enter_tile(target_tile):
 				target_tile.army.merge_with(self)
 		else:
 			target_tile.army = self
-	
+		if target_tile.army == self:
+			enter_tile(target_tile)
 	tile = target_tile
+
+func enter_tile(target_tile):
+		target_tile.set_player(player)
+		
 
 func battle(defending_army) -> bool:
 	manager.effects.play_battle_effects(position)
@@ -77,6 +80,8 @@ func battle(defending_army) -> bool:
 		self.queue_free()
 	
 	return we_won
+
+
 
 static func __handle_loss(winning_army, losing_army):
 	winning_army.set_power(max(winning_army.power - round(losing_army.power * rand_range(0.75, 1)), 1))

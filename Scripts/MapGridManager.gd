@@ -2,6 +2,7 @@ extends Node2D
 
 signal turn_start(starting_player)
 signal turn_end(ending_player)
+signal unit_enter(unit)
 
 const ArmyUnit = preload("res://ArmyUnit.tscn")
 const HexTile = preload("res://HexTile.tscn")

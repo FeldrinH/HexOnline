@@ -13,6 +13,7 @@ var blocked : bool
 
 var terrain : int
 
+var player = null
 var army = null
 var city = null
 
@@ -20,7 +21,7 @@ func init(tile_manager, tile_coordinate, tile_blocked):
 	manager = tile_manager
 	coordinate = tile_coordinate
 	blocked = tile_blocked
-	
+	manager.connect("unit_enter", self, "__unit_enter")
 	$Label.text = str(coordinate)
 
 func add_city() -> Node2D:
@@ -48,14 +49,18 @@ func can_enter(entering_army) -> bool:
 	else:
 		return true
 
+# When a tile's appearance changes related to ingame logic
 func setup_appearance():
 	match terrain:
 		Util.TERRAIN_GROUND:
 			base_color = Color(86/255.0, 125/255.0, 70/255.0)
 		Util.TERRAIN_WATER:
 			base_color = Color(0, 0, 1)
+	if player != null:
+		base_color += player.unit_color * 0.2
 	sprite.modulate = base_color
 
+# Updates related to appearance & UI
 func update_appearance():
 	if manager.selected == self:
 		sprite.modulate = Color(0.8,0.8,0)
@@ -79,4 +84,8 @@ func __input_event(viewport, event, shape_idx):
 
 func set_terrain(new_terrain : int):
 	terrain = new_terrain
+	setup_appearance()
+
+func set_player(new_player):
+	self.player =  new_player
 	setup_appearance()
