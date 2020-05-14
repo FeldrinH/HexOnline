@@ -122,7 +122,8 @@ func __add_neighbors(tiles, center : Vector2, army, distance: int):
 		var new_tile = get_tile(center + dir)
 		if new_tile != null and new_tile.can_enter(army):
 			tiles[new_tile] = true
-			__add_neighbors(tiles, new_tile.coordinate, army, distance - 1)
+			if new_tile.army == null or new_tile.army.player == army.player:
+				__add_neighbors(tiles, new_tile.coordinate, army, distance - 1)
 
 func __add_row(tiles, row_start : Vector2, row_length : int, dir : int):
 	for i in range(0, row_length):
