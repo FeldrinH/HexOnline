@@ -3,7 +3,7 @@ extends Area2D
 const City = preload("res://City.tscn")
 const Capital = preload("res://Capital.tscn")
 
-onready var sprite = $Sprite
+onready var sprites = $Sprites
 
 var base_color = Color(1,1,1)
 
@@ -61,16 +61,16 @@ func setup_appearance():
 # Updates related to appearance & UI
 func update_appearance():
 	if manager.selected == self:
-		sprite.modulate = Color(0.8,0.8,0)
+		sprites.modulate = Color(0.8,0.8,0)
 	elif manager.active == self:
-		sprite.modulate = Color(0.6,0,0)
+		sprites.modulate = Color(0.6,0,0)
 	elif manager.highlighted.has(self):
-		sprite.modulate = Color(0,0.8,0)
+		sprites.modulate = Color(0,0.8,0)
 	else:
-		sprite.modulate = base_color
+		sprites.modulate = base_color
 	
 	if player != null:
-		sprite.modulate += player.unit_color * 0.2
+		sprites.modulate += player.unit_color * 0.2
 
 func __mouse_entered():
 	manager.set_active(self)
