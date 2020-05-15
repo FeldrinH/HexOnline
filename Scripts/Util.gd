@@ -6,12 +6,12 @@ enum {
 }
 
 const directions = [
-	Vector2( 2,  0), 
-	Vector2( 1,  1),
-	Vector2(-1,  1),
 	Vector2(-2,  0),
 	Vector2(-1, -1),
-	Vector2( 1, -1)
+	Vector2( 1, -1),
+	Vector2( 2,  0),
+	Vector2( 1,  1),
+	Vector2(-1,  1)
 ]
 
 static func pick_random(array : Array):

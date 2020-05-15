@@ -12,7 +12,7 @@ static func generate_map(manager):
 	
 	while seatiles.size() < 60:
 		var expand_at = Util.pick_random(seatiles)
-		var neighbor = Util.pick_random(manager.find_in_radius(expand_at, 1).keys())
+		var neighbor = Util.pick_random(manager.find_neighbours(expand_at))
 		if neighbor.terrain != Util.TERRAIN_WATER:
 			neighbor.set_terrain(Util.TERRAIN_WATER)
 			seatiles.append(neighbor)

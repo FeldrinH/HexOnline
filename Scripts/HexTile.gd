@@ -3,14 +3,15 @@ extends Area2D
 const City = preload("res://City.tscn")
 const Capital = preload("res://Capital.tscn")
 
-onready var sprites = $Sprites
+onready var sprites : Node2D = $Sprites
+onready var border : Node2D = $Border
+onready var border_sections : Array = [$"Border/1", $"Border/2", $"Border/3", $"Border/4", $"Border/5", $"Border/6"]
 
-var base_color = Color(1,1,1)
+var base_color : Color = Color(1,1,1)
 
 var manager
 var coordinate : Vector2
 var blocked : bool
-
 var terrain : int
 
 var player = null
@@ -56,10 +57,10 @@ func setup_appearance():
 			base_color = Color(86/255.0, 125/255.0, 70/255.0)
 		Util.TERRAIN_WATER:
 			base_color = Color(0, 0, 1)
-	update_appearance()
+	update_highlight_appearance()
 
 # Updates related to appearance & UI
-func update_appearance():
+func update_highlight_appearance():
 	if manager.selected == self:
 		sprites.modulate = Color(0.8,0.8,0)
 	elif manager.active == self:
@@ -69,8 +70,22 @@ func update_appearance():
 	else:
 		sprites.modulate = base_color
 	
+#	if player != null:
+#		sprites.modulate += player.unit_color * 0.2
+
+func update_border_appearance():
 	if player != null:
-		sprites.modulate += player.unit_color * 0.2
+		border.visible = true
+		border.modulate = player.unit_color
+		
+		for i in range(0,6):
+			var adjacent_tile = manager.get_tile(coordinate + Util.directions[i])
+			if adjacent_tile != null and adjacent_tile.player == player:
+				border_sections[i].visible = false
+			else:
+				border_sections[i].visible = true
+	else:
+		border.visible = false
 
 func __mouse_entered():
 	manager.set_active(self)
@@ -88,5 +103,7 @@ func set_terrain(new_terrain : int):
 	setup_appearance()
 
 func set_player(new_player):
-	self.player =  new_player
-	setup_appearance()
+	player = new_player
+	update_border_appearance()
+	for adjacent_tile in manager.find_neighbours(self):
+		adjacent_tile.update_border_appearance()

@@ -51,27 +51,27 @@ func set_active(new_active):
 	var previous_active = active
 	active = new_active
 	if new_active != null:
-		new_active.update_appearance()
+		new_active.update_highlight_appearance()
 	if previous_active != null:
-		previous_active.update_appearance()
+		previous_active.update_highlight_appearance()
 
 func set_selected(new_selected):
 	var previous_selected = selected
 	selected = new_selected
 	if new_selected != null:
-		new_selected.update_appearance()
+		new_selected.update_highlight_appearance()
 	if previous_selected != null:
-		previous_selected.update_appearance()
+		previous_selected.update_highlight_appearance()
 
 func set_highlighted(tiles : Dictionary):
 	var previous_highlighted = highlighted
 	highlighted = tiles
 	
 	for tile in previous_highlighted:
-		tile.update_appearance()
+		tile.update_highlight_appearance()
 		
 	for tile in tiles:
-		tile.update_appearance()
+		tile.update_highlight_appearance()
 
 func get_tile(coord):
 	return __tile_dict.get(coord, null)
@@ -92,8 +92,19 @@ func add_unit_detached(starting_tile : Node2D, starting_power : int, side : Node
 	unit_instance.init_detached(self, starting_tile, starting_power, side)
 	return unit_instance
 
-func find_in_radius(center_tile, radius : int):
-	var neighbors = {}
+func find_neighbours(center_tile) -> Array:
+	var neigbours : Array = []
+	
+	var center_coordinate : Vector2 = center_tile.coordinate
+	for dir in Util.directions:
+		var new_tile = get_tile(center_coordinate + dir)
+		if new_tile != null:
+			neigbours.append(new_tile)
+	
+	return neigbours
+
+func find_in_radius(center_tile, radius : int) -> Dictionary:
+	var neighbors : Dictionary = {}
 	
 	var center_coordinate : Vector2 = center_tile.coordinate
 	var row_offset : Vector2 = Vector2(-radius, -radius)
@@ -108,13 +119,13 @@ func find_in_radius(center_tile, radius : int):
 	
 	return neighbors
 
-func find_travelable(center_tile, army, distance : int):
-	var neighbors = {}
+func find_travelable(center_tile, army, distance : int) -> Dictionary:
+	var neighbors : Dictionary = {}
 	__add_neighbors(neighbors, center_tile.coordinate, army,  distance)
 	neighbors.erase(center_tile)
 	return neighbors
 
-func __add_neighbors(tiles, center : Vector2, army, distance: int):
+func __add_neighbors(tiles : Dictionary, center : Vector2, army, distance: int):
 	if distance == 0:
 		return
 	
@@ -125,7 +136,7 @@ func __add_neighbors(tiles, center : Vector2, army, distance: int):
 			if new_tile.army == null or new_tile.army.player == army.player:
 				__add_neighbors(tiles, new_tile.coordinate, army, distance - 1)
 
-func __add_row(tiles, row_start : Vector2, row_length : int, dir : int):
+func __add_row(tiles : Dictionary, row_start : Vector2, row_length : int, dir : int):
 	for i in range(0, row_length):
 		var new_tile = get_tile(row_start + Vector2(2*dir*i, 0))
 		if new_tile != null:
