@@ -72,7 +72,13 @@ func enter_tile(target_tile):
 func battle(defending_army) -> bool:
 	manager.effects.play_battle_effects(position)
 	
+	if defending_army.tile.city != null:
+		defending_army.power *= 2
+		
 	var we_won = randf() < 0.5 if power == defending_army.power else power > defending_army.power
+	
+	if defending_army.tile.city != null:
+		defending_army.power /= 2
 	
 	if we_won:
 		__handle_loss(self, defending_army)
@@ -80,7 +86,7 @@ func battle(defending_army) -> bool:
 	else:
 		__handle_loss(defending_army, self)
 		self.queue_free()
-	
+
 	return we_won
 
 
