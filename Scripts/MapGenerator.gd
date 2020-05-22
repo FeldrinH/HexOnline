@@ -3,6 +3,8 @@
 static func generate_map(manager):
 	var tiles = manager.get_all_tiles()
 	
+	var city_names = ["Atlanta", "Richmond", "Washington", "Petersburg", "Shiloh"]
+	
 	randomize()
 	
 	for tile in tiles:
@@ -32,3 +34,9 @@ static func generate_map(manager):
 			if try_tile.terrain == Util.TERRAIN_GROUND and !try_tile.blocked:
 				try_tile.add_capital(player)
 				break
+				
+	for name in city_names:
+		var try_tile = Util.pick_random(tiles)
+		if try_tile.terrain == Util.TERRAIN_GROUND and !try_tile.blocked:
+			try_tile.add_city(name)
+			

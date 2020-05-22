@@ -25,10 +25,10 @@ func init(tile_manager, tile_coordinate, tile_blocked):
 	manager.connect("unit_enter", self, "__unit_enter")
 	$Label.text = str(coordinate)
 
-func add_city() -> Node2D:
+func add_city(name) -> Node2D:
 	var city_instance = City.instance()
 	self.add_child(city_instance)
-	city_instance.init(manager)
+	city_instance.init_name(manager, name)
 	return city_instance
 
 func add_capital(side) -> Node2D:
