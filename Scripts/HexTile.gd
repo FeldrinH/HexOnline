@@ -26,17 +26,17 @@ func init(tile_manager, tile_coordinate, tile_blocked):
 	$Label.text = str(coordinate)
 
 func add_city(name) -> Node2D:
-	var city_instance = City.instance()
-	self.add_child(city_instance)
-	city_instance.init_name(manager, name)
-	return city_instance
+	city = City.instance()
+	self.add_child(city)
+	city.init_name(manager, name)
+	return city
 
 func add_capital(side) -> Node2D:
-	var city_instance = Capital.instance()
-	self.add_child(city_instance)
-	self.set_city(city_instance)
-	city_instance.init_capital(manager, side)
-	return city_instance
+	city = Capital.instance()
+	self.add_child(city)
+	self.set_city(city)
+	city.init_capital(manager, side)
+	return city
 
 func set_city(new_city):
 	city = new_city
@@ -44,11 +44,16 @@ func set_city(new_city):
 func can_enter(entering_army) -> bool:
 	if blocked:
 		return false
-	
-	if terrain == Util.TERRAIN_WATER:
-		return false
+		
+	if entering_army.on_ship:
+		if city != null and city.is_port:
+			return true
+		return terrain == Util.TERRAIN_WATER
 	else:
-		return true
+		if entering_army.tile != null and entering_army.tile.city != null:
+			if entering_army.tile.city.is_port:
+				return true
+		return terrain == Util.TERRAIN_GROUND
 
 # When a tile's appearance changes related to ingame logic
 func setup_appearance():

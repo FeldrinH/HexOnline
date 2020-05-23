@@ -13,6 +13,8 @@ var player = null
 var tile = null
 var power : int = 0
 
+var on_ship : bool = false
+
 func init(unit_manager, starting_tile, starting_power, unit_player):	
 	init_detached(unit_manager, starting_tile, starting_power, unit_player)
 	arrive_at_tile(starting_tile)
@@ -26,6 +28,14 @@ func init_detached(unit_manager, starting_tile, starting_power, unit_player):
 
 func move_to(target_tile):
 	manager.turn_active = true
+	
+	if target_tile.terrain == Util.TERRAIN_WATER:
+		on_ship = true
+		update_appearance()
+		
+	if target_tile.city != null and target_tile.city.is_port:
+		on_ship = false
+		update_appearance()
 	
 	# If combined army would exeed max power, send detachment and stay in current tile
 	if target_tile.army != null and target_tile.army.player == player and power + target_tile.army.power > max_power:
@@ -45,7 +55,7 @@ func move_to(target_tile):
 	arrive_at_tile(target_tile)
 	
 	manager.turn_active = false
-
+	
 func arrive_at_tile(target_tile):
 	if target_tile == null:
 		if tile != null:
@@ -98,14 +108,20 @@ func split(split_power):
 
 func set_power(new_power):
 	power = new_power
+	update_appearance()
+	
+func update_appearance():
 	label.text = str(power)
 	
 	for sprite in $Sprites.get_children():
 		sprite.visible = false
 	
-	if power < 40:
-		$Sprites/SpriteInfantry.visible = true
-	elif power < 70:
-		$Sprites/SpriteCavalry.visible = true
+	if !on_ship:
+		if power < 40:
+			$Sprites/SpriteInfantry.visible = true
+		elif power < 70:
+			$Sprites/SpriteCavalry.visible = true
+		else:
+			$Sprites/SpriteArtillery.visible = true
 	else:
-		$Sprites/SpriteArtillery.visible = true
+		$Sprites/SpriteIronclad.visible = true
