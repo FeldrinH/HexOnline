@@ -30,10 +30,14 @@ static func generate_map(map):
 	for player in map.players:
 		while true:
 			var try_tile = Util.pick_random(tiles)
-			if try_tile.terrain == Util.TERRAIN_GROUND and !try_tile.blocked:
-				try_tile.add_capital(player)
-				break
-	
+			var nearby_tiles = map.find_in_radius(try_tile, 6)
+			#check_for_capital(nearby_tiles)
+			if !nearby_tiles.has(try_tile):
+				if try_tile.terrain == Util.TERRAIN_GROUND and !try_tile.blocked:
+					try_tile.add_capital(player)
+					break
+			
+
 	for name in city_names:
 		for i in range (10):
 			var try_tile = find_spawnable(tiles, name)
@@ -61,3 +65,12 @@ static func find_coast(map, seatiles) -> Array:
 			if tile.terrain == Util.TERRAIN_GROUND and !tile.blocked:
 				coast_tiles.append(tile)
 	return coast_tiles
+
+#static func check_for_capital(nearby_tiles) -> bool:
+#	for key in nearby_tiles.keys():
+#		print (typeof(key.city))
+#		key.city = Capital
+#		print("muna")
+##		if key.city != null and typeof(key.city) == Capital:
+##			return false
+#	return true

@@ -127,6 +127,9 @@ explosiveness = 0.4
 process_material = SubResource( 5 )
 texture = ExtResource( 5 )
 
+[node name="ShipSoundPlayer" type="AudioStreamPlayer2D" parent="HexGrid/EffectsManager"]
+volume_db = -12.455
+
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( 342, 113 )
 current = true

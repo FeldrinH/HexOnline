@@ -46,7 +46,11 @@ func move_to(target_tile):
 		manager.turn_active = false
 		return
 	
-	manager.effects.play_movement_effects()
+	if target_tile.terrain == Util.TERRAIN_GROUND:
+		manager.effects.play_movement_effects()
+	elif target_tile.terrain == Util.TERRAIN_WATER:
+		manager.effects.play_ship_sound()
+
 	arrive_at_tile(null)
 	
 	movement_tween.interpolate_property(self, "position", position, target_tile.position, max(position.distance_to(target_tile.position) / 1000, 0.25), Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
