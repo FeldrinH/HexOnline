@@ -24,6 +24,10 @@ config/name="HexGame"
 run/main_scene="res://GameWorld.tscn"
 config/icon="res://icon.png"
 
+[display]
+
+window/size/resizable=false
+
 [input]
 
 ui_mouse_left={
