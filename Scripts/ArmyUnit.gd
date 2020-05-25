@@ -64,6 +64,7 @@ func arrive_at_tile(target_tile):
 	if target_tile == null:
 		if tile != null:
 			tile.army = null
+		tile = target_tile
 	else:
 		if target_tile.army != null:
 			if target_tile.army.player != player:
@@ -73,11 +74,12 @@ func arrive_at_tile(target_tile):
 				target_tile.army.merge_with(self)
 		else:
 			target_tile.army = self
+		
+		tile = target_tile
 		if target_tile.army == self:
-			enter_tile(target_tile)
-	tile = target_tile
+			on_enter_tile(target_tile)
 
-func enter_tile(target_tile):
+func on_enter_tile(target_tile):
 	target_tile.set_player(player)
 	for adjacent_tile in manager.find_travelable(target_tile, self, 1):
 		if adjacent_tile.army == null:
@@ -109,6 +111,18 @@ func split(split_power):
 	set_power(power - split_power)
 	
 	return manager.add_unit_detached(tile, split_power, player)
+
+func can_enter(leave_tile, enter_tile) -> bool:
+	if enter_tile.blocked:
+		return false
+	
+	if leave_tile == tile:
+		if enter_tile.city != null and enter_tile.city.is_port or leave_tile.city != null and leave_tile.city.is_port:
+			return true
+		else:
+			return enter_tile.terrain == leave_tile.terrain
+	else:
+		return leave_tile.terrain == tile.terrain and enter_tile.terrain == leave_tile.terrain
 
 func set_power(new_power):
 	power = new_power

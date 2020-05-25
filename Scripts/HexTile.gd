@@ -41,20 +41,6 @@ func add_capital(side) -> Node2D:
 func set_city(new_city):
 	city = new_city
 
-func can_enter(entering_army) -> bool:
-	if blocked:
-		return false
-		
-	if entering_army.on_ship:
-		if city != null and city.is_port:
-			return true
-		return terrain == Util.TERRAIN_WATER
-	else:
-		if entering_army.tile != null and entering_army.tile.city != null:
-			if entering_army.tile.city.is_port:
-				return true
-		return terrain == Util.TERRAIN_GROUND
-
 # When a tile's appearance changes related to ingame logic
 func setup_appearance():
 	match terrain:
@@ -71,7 +57,7 @@ func update_highlight_appearance():
 	elif manager.active == self:
 		sprites.modulate = Color(0.6,0,0)
 	elif manager.highlighted.has(self):
-		sprites.modulate = Color(0,0.8,0)
+		sprites.modulate = base_color.blend(Color(0, 1, 0, 0.7))
 	else:
 		sprites.modulate = base_color
 	

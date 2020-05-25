@@ -2,6 +2,9 @@ extends "City.gd"
 
 var player : Node = null
 
+func _ready():
+	is_capital = true
+
 func init_capital(capital_manager, capital_player):
 	init(capital_manager)
 	player = capital_player

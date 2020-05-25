@@ -121,20 +121,20 @@ func find_in_radius(center_tile, radius : int) -> Dictionary:
 
 func find_travelable(center_tile, army, distance : int) -> Dictionary:
 	var neighbors : Dictionary = {}
-	__add_neighbors(neighbors, center_tile.coordinate, army,  distance)
+	__add_neighbors(neighbors, center_tile, army,  distance)
 	neighbors.erase(center_tile)
 	return neighbors
 
-func __add_neighbors(tiles : Dictionary, center : Vector2, army, distance: int):
+func __add_neighbors(tiles : Dictionary, center_tile, army, distance: int):
 	if distance == 0:
 		return
 	
 	for dir in Util.directions:
-		var new_tile = get_tile(center + dir)
-		if new_tile != null and new_tile.can_enter(army):
+		var new_tile = get_tile(center_tile.coordinate + dir)
+		if new_tile != null and army.can_enter(center_tile, new_tile):
 			tiles[new_tile] = true
 			if new_tile.army == null or new_tile.army.player == army.player:
-				__add_neighbors(tiles, new_tile.coordinate, army, distance - 1)
+				__add_neighbors(tiles, new_tile, army, distance - 1)
 
 func __add_row(tiles : Dictionary, row_start : Vector2, row_length : int, dir : int):
 	for i in range(0, row_length):
@@ -142,12 +142,12 @@ func __add_row(tiles : Dictionary, row_start : Vector2, row_length : int, dir : 
 		if new_tile != null:
 			tiles[new_tile] = true
 
-func filter_can_enter(tiles : Dictionary, army):
-	for tile in tiles.keys():
-		if !tile.can_enter(army):
-			tiles.erase(tile)
-	
-	return tiles
+#func filter_can_enter(tiles : Dictionary, army):
+#	for tile in tiles.keys():
+#		if !tile.can_enter(army):
+#			tiles.erase(tile)
+#
+#	return tiles
 
 func __active_click(event : InputEvent):
 	if event.is_action_pressed("ui_mouse_left"):
@@ -156,7 +156,6 @@ func __active_click(event : InputEvent):
 				if active.army != null and active.army.player == current_player:
 					set_selected(active)
 					var neighbors = find_travelable(active, active.army, 2)
-					#filter_can_enter(neighbors, active.army)
 					set_highlighted(neighbors)
 			else: # selected != null
 				if highlighted.has(active):
