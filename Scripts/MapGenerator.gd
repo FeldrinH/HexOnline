@@ -1,4 +1,4 @@
-const city_names = ["Atlanta", "Richmond", "Washington", "Petersburg", "Shiloh"]
+const city_names = []
 const port_names = ["New York", "Portland", "San Franscisco"]
 
 static func generate_map(map):
@@ -37,7 +37,20 @@ static func generate_map(map):
 					try_tile.add_capital(player)
 					break
 			
-
+	var file = File.new()
+	file.open("res://Scripts/city_names.csv", file.READ)
+	
+	var temp_cities = []
+	
+	while !file.eof_reached():
+		temp_cities.append(file.get_line())
+	file.close()
+	
+	for i in range(10):
+		var index = randi() % temp_cities.size()
+		city_names.append(temp_cities[index])
+		temp_cities.remove(index)
+		
 	for name in city_names:
 		for i in range (10):
 			var try_tile = find_spawnable(tiles, name)
