@@ -26,17 +26,35 @@ static func generate_map(map):
 	for tile in tiles:
 		if noise.get_noise_2dv(tile.position) > 0.4:
 			tile.set_terrain(Util.TERRAIN_WATER)
+
+	var best_min_distance = 0
+	var best_total_distance = 0
+	var best_capitals = null
+	for i in 100000:
+		var try_min_distance = 100000
+		var try_total_distance = 0
+		var try_capitals = []
+		for player in map.players:
+			var try_tile = find_spawnable(tiles, 20)
+			if try_tile:
+				for capital_tile in try_capitals:
+					var new_distance = map.distance_between(try_tile, capital_tile)
+					try_min_distance = min(new_distance, try_min_distance)
+					try_total_distance += new_distance
+					if try_min_distance < best_min_distance:
+						break
+				try_capitals.append(try_tile)
+			else:
+				break
+		if (try_min_distance > best_min_distance or (try_min_distance == best_min_distance and try_total_distance > best_total_distance)) and len(try_capitals) == len(map.players):
+			best_min_distance = try_min_distance
+			best_total_distance = try_total_distance
+			best_capitals = try_capitals
+			print(str(best_min_distance) + "  " + str(best_total_distance))
 	
-	for player in map.players:
-		while true:
-			var try_tile = Util.pick_random(tiles)
-			var nearby_tiles = map.find_in_radius(try_tile, 6)
-			#check_for_capital(nearby_tiles)
-			if !nearby_tiles.has(try_tile):
-				if try_tile.terrain == Util.TERRAIN_GROUND and !try_tile.blocked:
-					try_tile.add_capital(player)
-					break
-			
+	for i in len(map.players):
+		best_capitals[i].add_capital(map.players[i])
+	
 	var file = File.new()
 	file.open("res://Scripts/city_names.csv", file.READ)
 	
@@ -46,28 +64,30 @@ static func generate_map(map):
 		temp_cities.append(file.get_line())
 	file.close()
 	
-	for i in range(10):
+	# Picks 10 random city names from list
+	for i in 10:
 		var index = randi() % temp_cities.size()
 		city_names.append(temp_cities[index])
 		temp_cities.remove(index)
-		
+	
+	# Adds cities
 	for name in city_names:
-		for i in range (10):
-			var try_tile = find_spawnable(tiles, name)
-			if try_tile != null:
-				try_tile.add_city(name)
-				break
+		var try_tile = find_spawnable(tiles, 10)
+		if try_tile != null:
+			try_tile.add_city(name)
+	
 	# Adds ports
 	for port_name in port_names:
-		var try_tile = find_spawnable(find_coast(map, seatiles), port_name)
+		var try_tile = find_spawnable(find_coast(map, seatiles), 10)
 		if try_tile != null:
 			try_tile.add_city(port_name)
 			try_tile.city.make_port()
-						
-static func find_spawnable(tiles, name) -> Node:
-	var try_tile = Util.pick_random(tiles)
-	if try_tile.terrain == Util.TERRAIN_GROUND and !try_tile.blocked and try_tile.city == null:
-		return try_tile
+
+static func find_spawnable(tiles : Array, max_attempts : int) -> Node:
+	for i in max_attempts:
+		var try_tile = Util.pick_random(tiles)
+		if try_tile.terrain == Util.TERRAIN_GROUND and !try_tile.blocked and try_tile.city == null:
+			return try_tile
 	return null
 
 static func find_coast(map, seatiles) -> Array:
@@ -78,6 +98,7 @@ static func find_coast(map, seatiles) -> Array:
 			if tile.terrain == Util.TERRAIN_GROUND and !tile.blocked:
 				coast_tiles.append(tile)
 	return coast_tiles
+
 
 #static func check_for_capital(nearby_tiles) -> bool:
 #	for key in nearby_tiles.keys():

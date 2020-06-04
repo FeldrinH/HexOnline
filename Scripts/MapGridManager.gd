@@ -92,6 +92,11 @@ func add_unit_detached(starting_tile : Node2D, starting_power : int, side : Node
 	unit_instance.init_detached(self, starting_tile, starting_power, side)
 	return unit_instance
 
+func distance_between(first_tile, second_tile):
+	var dx = abs(first_tile.coordinate.x - second_tile.coordinate.x)
+	var dy = abs(first_tile.coordinate.y - second_tile.coordinate.y)
+	return dy + max(0, (dx - dy) / 2)
+
 func find_neighbours(center_tile) -> Array:
 	var neigbours : Array = []
 	
@@ -168,6 +173,8 @@ func __active_click(event : InputEvent):
 					set_highlighted({})
 	elif event.is_action_pressed("ui_mouse_debug"):
 		add_unit(active, 20, current_player)
+	elif event.is_action_pressed("ui_mouse_right"):
+		print(distance_between(selected, active))
 
 func _unhandled_key_input(event):
 	if event.is_action_pressed("change_side"):
