@@ -7,7 +7,10 @@ signal unit_enter(unit)
 const ArmyUnit = preload("res://ArmyUnit.tscn")
 const HexTile = preload("res://HexTile.tscn")
 const MapGenerator = preload("res://Scripts/MapGenerator.gd")
+const TerrainGroundSprite = preload("res://TerrainGroundSprite.tscn")
+const TerrainGroundTextures = [preload("res://Sprites/Terrain/hex_sprites_blend_1.png"), preload("res://Sprites/Terrain/hex_sprites_blend_2.png"), preload("res://Sprites/Terrain/hex_sprites_blend_3.png")]
 
+onready var terrainsprites : Node2D = $TerrainSpritesContainer
 onready var tiles : Node2D = $TilesContainer
 onready var units : Node2D = $UnitsContainer
 onready var effects : Node2D = $EffectsManager
@@ -26,6 +29,21 @@ var highlighted = {}
 var turn_active = false
 
 func _ready():
+	randomize()
+	
+	var sprites : Array = []
+	for x in 12:
+		for y in 7:
+			var sprite : Sprite = TerrainGroundSprite.instance()
+			sprite.set_position(Vector2(x * 100, y * 100))
+			sprite.texture = Util.pick_random(TerrainGroundTextures)
+			sprite.rotation_degrees = (randi() % 4) * 90 + rand_range(-20, 20)
+			sprites.append(sprite)
+	
+	sprites.shuffle()
+	for sprite in sprites:
+		terrainsprites.add_child(sprite)
+	
 	for player in players:
 		player.init_manager(self)
 	

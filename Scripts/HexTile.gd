@@ -45,7 +45,7 @@ func set_city(new_city):
 func setup_appearance():
 	match terrain:
 		Util.TERRAIN_GROUND:
-			base_color = Color(86/255.0, 125/255.0, 70/255.0)
+			base_color = Color(86/255.0, 125/255.0, 70/255.0, 0)
 		Util.TERRAIN_WATER:
 			base_color = Color(0, 0, 1)
 	update_highlight_appearance()
