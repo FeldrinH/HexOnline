@@ -17,7 +17,7 @@ var on_ship : bool = false
 
 func init(unit_manager, starting_tile, starting_power, unit_player):	
 	init_detached(unit_manager, starting_tile, starting_power, unit_player)
-	arrive_at_tile(starting_tile)
+	do_enter_tile(starting_tile)
 
 func init_detached(unit_manager, starting_tile, starting_power, unit_player):
 	manager = unit_manager
@@ -51,33 +51,38 @@ func move_to(target_tile):
 	elif target_tile.terrain == Util.TERRAIN_WATER:
 		manager.effects.play_ship_sound()
 
-	arrive_at_tile(null)
+	do_enter_tile(null)
 	
 	movement_tween.interpolate_property(self, "position", position, target_tile.position, max(position.distance_to(target_tile.position) / 1000, 0.25), Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 	movement_tween.start()
 	yield(movement_tween, "tween_all_completed")
-	arrive_at_tile(target_tile)
+	
+	do_enter_tile(target_tile)
 	
 	manager.turn_active = false
 	
-func arrive_at_tile(target_tile):
+func do_enter_tile(target_tile):
+	var has_entered = false
+	
 	if target_tile == null:
 		if tile != null:
 			tile.army = null
-		tile = target_tile
 	else:
 		if target_tile.army != null:
 			if target_tile.army.player != player:
 				if battle(target_tile.army):
 					target_tile.army = self
+					has_entered = true
 			else:
 				target_tile.army.merge_with(self)
+				has_entered = true
 		else:
 			target_tile.army = self
+			has_entered = true
 		
-		tile = target_tile
-		if target_tile.army == self:
-			on_enter_tile(target_tile)
+	tile = target_tile
+	if has_entered:
+		on_enter_tile(target_tile)
 
 func on_enter_tile(target_tile):
 	target_tile.set_player(player)
