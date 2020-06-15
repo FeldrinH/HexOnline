@@ -78,7 +78,7 @@ func arrive_at_tile(target_tile):
 		tile = target_tile
 		if target_tile.army == self:
 			on_enter_tile(target_tile)
-
+	
 func on_enter_tile(target_tile):
 	target_tile.set_player(player)
 	for adjacent_tile in manager.find_travelable(target_tile, self, 1):
@@ -87,8 +87,11 @@ func on_enter_tile(target_tile):
 
 func battle(defending_army) -> bool:
 	manager.effects.play_battle_effects(position)
+	var defending_power = defending_army.power
 	
-	var defending_power = defending_army.power * 2
+	if defending_army.tile.city != null:
+		defending_power *= 2
+		
 	var we_won = randf() < 0.5 if power == defending_power else power > defending_power
 	
 	if we_won:
@@ -102,6 +105,12 @@ func battle(defending_army) -> bool:
 
 static func __apply_loss(winning_army, losing_army):
 	winning_army.set_power(max(winning_army.power - round(losing_army.power * rand_range(0.75, 1)), 1))
+
+func add_forces():
+	if power + 10 < max_power:
+		power += 10
+	else:
+		power = max_power
 
 func merge_with(other_army):
 	set_power(power + other_army.power)
@@ -123,7 +132,7 @@ func can_enter(leave_tile, enter_tile) -> bool:
 			return enter_tile.terrain == leave_tile.terrain
 	else:
 		return leave_tile.terrain == tile.terrain and enter_tile.terrain == leave_tile.terrain
-
+		
 func set_power(new_power):
 	power = new_power
 	update_appearance()
