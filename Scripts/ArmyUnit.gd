@@ -17,7 +17,7 @@ var on_ship : bool = false
 
 func init(unit_manager, starting_tile, starting_power, unit_player):	
 	init_detached(unit_manager, starting_tile, starting_power, unit_player)
-	arrive_at_tile(starting_tile)
+	do_enter_tile(starting_tile)
 
 func init_detached(unit_manager, starting_tile, starting_power, unit_player):
 	manager = unit_manager
@@ -51,34 +51,39 @@ func move_to(target_tile):
 	elif target_tile.terrain == Util.TERRAIN_WATER:
 		manager.effects.play_ship_sound()
 
-	arrive_at_tile(null)
+	do_enter_tile(null)
 	
 	movement_tween.interpolate_property(self, "position", position, target_tile.position, max(position.distance_to(target_tile.position) / 1000, 0.25), Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 	movement_tween.start()
 	yield(movement_tween, "tween_all_completed")
-	arrive_at_tile(target_tile)
+	
+	do_enter_tile(target_tile)
 	
 	manager.turn_active = false
 	
-func arrive_at_tile(target_tile):
+func do_enter_tile(target_tile):
+	var has_entered = false
+	
 	if target_tile == null:
 		if tile != null:
 			tile.army = null
-		tile = target_tile
 	else:
 		if target_tile.army != null:
 			if target_tile.army.player != player:
 				if battle(target_tile.army):
 					target_tile.army = self
+					has_entered = true
 			else:
 				target_tile.army.merge_with(self)
+				has_entered = true
 		else:
 			target_tile.army = self
+			has_entered = true
 		
-		tile = target_tile
-		if target_tile.army == self:
-			on_enter_tile(target_tile)
-	
+	tile = target_tile
+	if has_entered:
+		on_enter_tile(target_tile)
+
 func on_enter_tile(target_tile):
 	target_tile.set_player(player)
 	for adjacent_tile in manager.find_travelable(target_tile, self, 1):
@@ -87,11 +92,8 @@ func on_enter_tile(target_tile):
 
 func battle(defending_army) -> bool:
 	manager.effects.play_battle_effects(position)
-	var defending_power = defending_army.power
 	
-	if defending_army.tile.city != null:
-		defending_power *= 2
-		
+	var defending_power = defending_army.power * 2
 	var we_won = randf() < 0.5 if power == defending_power else power > defending_power
 	
 	if we_won:
@@ -105,12 +107,6 @@ func battle(defending_army) -> bool:
 
 static func __apply_loss(winning_army, losing_army):
 	winning_army.set_power(max(winning_army.power - round(losing_army.power * rand_range(0.75, 1)), 1))
-
-func add_forces():
-	if power + 10 < max_power:
-		power += 10
-	else:
-		power = max_power
 
 func merge_with(other_army):
 	set_power(power + other_army.power)
@@ -132,7 +128,7 @@ func can_enter(leave_tile, enter_tile) -> bool:
 			return enter_tile.terrain == leave_tile.terrain
 	else:
 		return leave_tile.terrain == tile.terrain and enter_tile.terrain == leave_tile.terrain
-		
+
 func set_power(new_power):
 	power = new_power
 	update_appearance()
