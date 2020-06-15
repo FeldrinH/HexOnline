@@ -27,6 +27,10 @@ static func generate_map(map):
 		if noise.get_noise_2dv(tile.position) > 0.4:
 			tile.set_terrain(Util.TERRAIN_WATER)
 
+	for tile in tiles:
+		if is_single_tile_island(tile, map):
+			tile.set_terrain(Util.TERRAIN_WATER)
+
 	var best_min_distance = 0
 	var best_total_distance = 0
 	var best_capitals = null
@@ -82,6 +86,12 @@ static func generate_map(map):
 		if try_tile != null:
 			try_tile.add_city(port_name)
 			try_tile.city.make_port()
+
+static func is_single_tile_island(tile, map) -> bool:
+	for neighbour in map.find_neighbours(tile):
+		if neighbour.terrain == Util.TERRAIN_GROUND:
+			return false
+	return true
 
 static func find_spawnable(tiles : Array, max_attempts : int) -> Node:
 	for i in max_attempts:
