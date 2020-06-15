@@ -24,7 +24,6 @@ texture = ExtResource( 2 )
 [node name="Label" type="Label" parent="."]
 margin_left = -16.0
 margin_right = 16.0
-margin_bottom = 13.0
 grow_horizontal = 2
 custom_fonts/font = SubResource( 1 )
 text = "City"

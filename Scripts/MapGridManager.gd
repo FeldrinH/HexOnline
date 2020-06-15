@@ -35,7 +35,7 @@ func _ready():
 	for x in 12:
 		for y in 7:
 			var sprite : Sprite = TerrainGroundSprite.instance()
-			sprite.set_position(Vector2(x * 100, y * 100))
+			sprite.position = Vector2(x * 100, y * 100)
 			sprite.texture = Util.pick_random(TerrainGroundTextures)
 			sprite.rotation_degrees = (randi() % 4) * 90 + rand_range(-20, 20)
 			sprites.append(sprite)

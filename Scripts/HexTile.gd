@@ -2,6 +2,8 @@ extends Area2D
 
 const City = preload("res://City.tscn")
 const Capital = preload("res://Capital.tscn")
+const ground_tiles = [preload("res://Sprites/land_tile_1.png"), preload("res://Sprites/land_tile_2.png"), preload("res://Sprites/land_tile_3.png")]
+const base_tile = preload("res://Sprites/tile.png")
 
 onready var sprites : Node2D = $Sprites
 onready var border : Node2D = $Border
@@ -45,8 +47,10 @@ func set_city(new_city):
 func setup_appearance():
 	match terrain:
 		Util.TERRAIN_GROUND:
-			base_color = Color(86/255.0, 125/255.0, 70/255.0, 0)
+			$Sprites.texture = Util.pick_random(ground_tiles)
+			base_color = Color(1, 1, 1, 1) #Color(86/255.0, 125/255.0, 70/255.0, 0)
 		Util.TERRAIN_WATER:
+			$Sprites.texture = base_tile
 			base_color = Color(0, 0, 1)
 	update_highlight_appearance()
 

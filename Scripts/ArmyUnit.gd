@@ -23,8 +23,8 @@ func init_detached(unit_manager, starting_tile, starting_power, unit_player):
 	manager = unit_manager
 	player = unit_player
 	$Sprites.modulate = unit_player.unit_color
-	set_power(starting_power)
 	position = starting_tile.position
+	set_power(starting_power)
 
 func move_to(target_tile):
 	manager.turn_active = true
@@ -139,6 +139,7 @@ func can_enter(leave_tile, enter_tile) -> bool:
 		return leave_tile.terrain == tile.terrain and enter_tile.terrain == leave_tile.terrain
 
 func set_power(new_power):
+	manager.effects.play_number_popup(new_power - power, player.unit_color, position)
 	power = new_power
 	update_appearance()
 	
