@@ -1,28 +1,66 @@
 extends Node
 
 const PORT = 2000
-const MAX_PLAYERS = 2
+const MAX_PLAYERS = 4
 
-var players = {}
-var peer
+const Client = preload("res://Client.tscn")
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
+onready var world: Node2D = $".."
 
-func _process(delta):
-	if Input.is_action_just_pressed("ui_right"):
-		create_server()
-		print("created")
-	if Input.is_action_just_pressed("ui_left"):
-		join_server()
-		
+var client_display_name: String = "Client display name"
+
+var clients: Dictionary = {}
+var our_client: Node = null
+var is_server: bool = false
+
 func create_server():
-	peer =  NetworkedMultiplayerENet.new()
+	var peer = NetworkedMultiplayerENet.new()
 	peer.create_server(PORT, MAX_PLAYERS)
+	get_tree().network_peer = peer
+	is_server = true
+	get_tree().connect("network_peer_connected", self, "__server_peer_connected")
+	
 	print("Server created")
 	
-func join_server():
-	peer.create_client("localhost", PORT)
-	print("client connected")
+	# Initialize server's client
+	__client_connected_to_server()
 
+func join_server(ip):
+	var peer = NetworkedMultiplayerENet.new()
+	peer.create_client(ip, PORT)
+	get_tree().network_peer = peer
+	is_server = false
+	get_tree().connect("connected_to_server", self, "__client_connected_to_server")
+	
+	print("Connecting...")
+
+# Run on server when new client connects
+func __server_peer_connected(id: int):
+	# Send existing clients to new client
+	for client in clients.values():
+		rpc_id(id, "add_client", client.id, client.display_name)
+	
+	print("Client connected: " + str(id))
+
+# Run on client when connected to server
+func __client_connected_to_server():
+	var id = get_tree().get_network_unique_id()
+	our_client = add_client(id, client_display_name)
+	rpc("request_add_client", id, client_display_name)
+	
+	print("Connected to server: " + str(id))
+
+master func request_add_client(id: int, display_name: String):
+	if get_tree().get_rpc_sender_id() == id:
+		rpc("add_client", id, display_name)
+
+puppetsync func add_client(id: int, display_name: String) -> Node:
+	if clients.has(id):
+		return clients[id] # Client exists
+	
+	var client = Client.instance()
+	client.init(id, display_name)
+	add_child(client)
+	clients[id] = client
+	
+	return client

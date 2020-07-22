@@ -7,45 +7,42 @@ signal unit_enter(unit)
 const ArmyUnit = preload("res://ArmyUnit.tscn")
 const HexTile = preload("res://HexTile.tscn")
 const MapGenerator = preload("res://Scripts/MapGenerator.gd")
-const TerrainGroundSprite = preload("res://TerrainGroundSprite.tscn")
-const TerrainGroundTextures = [preload("res://Sprites/Terrain/hex_sprites_blend_1.png"), preload("res://Sprites/Terrain/hex_sprites_blend_2.png"), preload("res://Sprites/Terrain/hex_sprites_blend_3.png")]
+#const TerrainGroundSprite = preload("res://TerrainGroundSprite.tscn")
+#const TerrainGroundTextures = [preload("res://Sprites/Terrain/hex_sprites_blend_1.png"), preload("res://Sprites/Terrain/hex_sprites_blend_2.png"), preload("res://Sprites/Terrain/hex_sprites_blend_3.png")]
+
+onready var players : Array = $Players.get_children()
 
 onready var terrainsprites : Node2D = $TerrainSpritesContainer
 onready var tiles : Node2D = $TilesContainer
 onready var units : Node2D = $UnitsContainer
 onready var effects : Node2D = $EffectsManager
 
+onready var network : Node = $Network
+onready var game: Node = $Game
+onready var ui: Node = $UI
+
 onready var tilemap : TileMap = $TileMap
 
 const __tile_dict : Dictionary = {}
 
-onready var players : Array = $Players.get_children()
-onready var current_player : Node = players[0]
-
-var active = null
-var selected = null
-var highlighted = {}
-
-var turn_active = false
-
 func _ready():
+	for player in players:
+		player.init(self)
+	
 	randomize()
 	
-	var sprites : Array = []
-	for x in 12:
-		for y in 7:
-			var sprite : Sprite = TerrainGroundSprite.instance()
-			sprite.position = Vector2(x * 100, y * 100)
-			sprite.texture = Util.pick_random(TerrainGroundTextures)
-			sprite.rotation_degrees = (randi() % 4) * 90 + rand_range(-20, 20)
-			sprites.append(sprite)
+	#var sprites : Array = []
+	#for x in 12:
+	#	for y in 7:
+	#		var sprite : Sprite = TerrainGroundSprite.instance()
+	#		sprite.position = Vector2(x * 100, y * 100)
+	#		sprite.texture = Util.pick_random(TerrainGroundTextures)
+	#		sprite.rotation_degrees = (randi() % 4) * 90 + rand_range(-20, 20)
+	#		sprites.append(sprite)
 	
-	sprites.shuffle()
-	for sprite in sprites:
-		terrainsprites.add_child(sprite)
-	
-	for player in players:
-		player.init_manager(self)
+	#sprites.shuffle()
+	#for sprite in sprites:
+	#	terrainsprites.add_child(sprite)
 	
 	for coordinate in tilemap.get_used_cells():
 		var tile_index = tilemap.get_cellv(coordinate)
@@ -61,35 +58,6 @@ func _ready():
 	tilemap.queue_free()
 	
 	MapGenerator.generate_map(self)
-
-func create_players():
-	pass
-
-func set_active(new_active):
-	var previous_active = active
-	active = new_active
-	if new_active != null:
-		new_active.update_highlight_appearance()
-	if previous_active != null:
-		previous_active.update_highlight_appearance()
-
-func set_selected(new_selected):
-	var previous_selected = selected
-	selected = new_selected
-	if new_selected != null:
-		new_selected.update_highlight_appearance()
-	if previous_selected != null:
-		previous_selected.update_highlight_appearance()
-
-func set_highlighted(tiles : Dictionary):
-	var previous_highlighted = highlighted
-	highlighted = tiles
-	
-	for tile in previous_highlighted:
-		tile.update_highlight_appearance()
-		
-	for tile in tiles:
-		tile.update_highlight_appearance()
 
 func get_tile(coord):
 	return __tile_dict.get(coord, null)
@@ -172,31 +140,4 @@ func __add_row(tiles : Dictionary, row_start : Vector2, row_length : int, dir : 
 #
 #	return tiles
 
-func __active_click(event : InputEvent):
-	if event.is_action_pressed("ui_mouse_left"):
-		if !turn_active:
-			if selected == null:
-				if active.army != null and active.army.player == current_player:
-					set_selected(active)
-					var neighbors = find_travelable(active, active.army, 2)
-					set_highlighted(neighbors)
-			else: # selected != null
-				if highlighted.has(active):
-					if selected.army != null:
-						selected.army.move_to(active)
-						set_selected(null)
-						set_highlighted({})
-				else: # !highlighted.has(active):
-					set_selected(null)
-					set_highlighted({})
-	elif event.is_action_pressed("ui_mouse_debug"):
-		add_unit(active, 20, current_player)
-	elif event.is_action_pressed("ui_mouse_right"):
-		print(distance_between(selected, active))
 
-func _unhandled_key_input(event):
-	if event.is_action_pressed("change_side"):
-		current_player = players[(players.find(current_player) + 1) % players.size()]
-		set_selected(null)
-		set_highlighted({})
-		print("changed side. Current side : " + str(current_player.id))

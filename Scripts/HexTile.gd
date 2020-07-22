@@ -11,7 +11,7 @@ onready var border_sections : Array = [$"Border/1", $"Border/2", $"Border/3", $"
 
 var base_color : Color = Color(1,1,1)
 
-var manager
+var world
 var coordinate : Vector2
 var blocked : bool
 var terrain : int
@@ -20,24 +20,24 @@ var player = null
 var army = null
 var city = null
 
-func init(tile_manager, tile_coordinate, tile_blocked):
-	manager = tile_manager
+func init(tile_world, tile_coordinate, tile_blocked):
+	world = tile_world
 	coordinate = tile_coordinate
 	blocked = tile_blocked
-	manager.connect("unit_enter", self, "__unit_enter")
+	#world.connect("unit_enter", self, "__unit_enter")
 	$Label.text = str(coordinate)
 
 func add_city(name) -> Node2D:
 	city = City.instance()
 	self.add_child(city)
-	city.init_name(manager, name)
+	city.init_name(world, name)
 	return city
 
 func add_capital(side) -> Node2D:
 	city = Capital.instance()
 	self.add_child(city)
 	self.set_city(city)
-	city.init_capital(manager, side)
+	city.init_capital(world, side)
 	return city
 
 func set_city(new_city):
@@ -56,11 +56,11 @@ func setup_appearance():
 
 # Updates related to appearance & UI
 func update_highlight_appearance():
-	if manager.selected == self:
+	if world.ui.selected == self:
 		sprites.modulate = Color(0.8,0.8,0)
-	elif manager.active == self:
+	elif world.ui.active == self:
 		sprites.modulate = Color(0.6,0,0)
-	elif manager.highlighted.has(self):
+	elif world.ui.highlighted.has(self):
 		sprites.modulate = base_color.blend(Color(0, 1, 0, 0.7))
 	else:
 		sprites.modulate = base_color
@@ -74,7 +74,7 @@ func update_border_appearance():
 		border.modulate = player.unit_color
 		
 		for i in range(0,6):
-			var adjacent_tile = manager.get_tile(coordinate + Util.directions[i])
+			var adjacent_tile = world.get_tile(coordinate + Util.directions[i])
 			if adjacent_tile != null and adjacent_tile.player == player:
 				border_sections[i].visible = false
 			else:
@@ -83,15 +83,15 @@ func update_border_appearance():
 		border.visible = false
 
 func __mouse_entered():
-	manager.set_active(self)
+	world.ui.set_active(self)
 
 func __mouse_exited():
-	if manager.active == self:
-		manager.set_active(null)
+	if world.ui.active == self:
+		world.ui.set_active(null)
 
 func __input_event(viewport, event, shape_idx):
-	if manager.active == self:
-		manager.__active_click(event)
+	if world.ui.active == self:
+		world.ui.__active_click(event)
 
 func set_terrain(new_terrain : int):
 	terrain = new_terrain
@@ -100,5 +100,5 @@ func set_terrain(new_terrain : int):
 func set_player(new_player):
 	player = new_player
 	update_border_appearance()
-	for adjacent_tile in manager.find_neighbours(self):
+	for adjacent_tile in world.find_neighbours(self):
 		adjacent_tile.update_border_appearance()
