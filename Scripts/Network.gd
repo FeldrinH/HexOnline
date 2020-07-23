@@ -7,13 +7,11 @@ const Client = preload("res://Client.tscn")
 
 onready var world: Node2D = $".."
 
-var client_display_name: String = "Client display name"
-
 var clients: Dictionary = {}
 var our_client: Node = null
 var is_server: bool = false
 
-func create_server():
+func create_server(client_display_name: String):
 	var peer = NetworkedMultiplayerENet.new()
 	peer.create_server(PORT, MAX_PLAYERS)
 	get_tree().network_peer = peer
@@ -23,14 +21,14 @@ func create_server():
 	print("Server created")
 	
 	# Initialize server's client
-	__client_connected_to_server()
+	__client_connected_to_server(client_display_name)
 
-func join_server(ip):
+func join_server(ip: String, client_display_name: String):
 	var peer = NetworkedMultiplayerENet.new()
 	peer.create_client(ip, PORT)
 	get_tree().network_peer = peer
 	is_server = false
-	get_tree().connect("connected_to_server", self, "__client_connected_to_server")
+	get_tree().connect("connected_to_server", self, "__client_connected_to_server", [client_display_name])
 	
 	print("Connecting...")
 
@@ -40,10 +38,10 @@ func __server_peer_connected(id: int):
 	for client in clients.values():
 		rpc_id(id, "add_client", client.id, client.display_name)
 	
-	print("Client connected: " + str(id))
+	print("Peer connected: " + str(id))
 
 # Run on client when connected to server
-func __client_connected_to_server():
+func __client_connected_to_server(client_display_name: String):
 	var id = get_tree().get_network_unique_id()
 	our_client = add_client(id, client_display_name)
 	rpc("request_add_client", id, client_display_name)
@@ -53,6 +51,7 @@ func __client_connected_to_server():
 master func request_add_client(id: int, display_name: String):
 	if get_tree().get_rpc_sender_id() == id:
 		rpc("add_client", id, display_name)
+		print("Joined: " + display_name)
 
 puppetsync func add_client(id: int, display_name: String) -> Node:
 	if clients.has(id):

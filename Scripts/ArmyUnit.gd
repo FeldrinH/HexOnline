@@ -27,7 +27,7 @@ func init_detached(unit_manager, starting_tile, starting_power, unit_player):
 	set_power(starting_power)
 
 func move_to(target_tile):
-	manager.turn_active = true
+	manager.game.start_move()
 	
 	if target_tile.terrain == Util.TERRAIN_WATER:
 		on_ship = true
@@ -59,7 +59,7 @@ func move_to(target_tile):
 	
 	do_enter_tile(target_tile)
 	
-	manager.turn_active = false
+	manager.game.end_move()
 	
 func do_enter_tile(target_tile):
 	var has_entered = false

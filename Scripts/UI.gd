@@ -34,7 +34,11 @@ func set_highlighted(tiles : Dictionary):
 
 func __active_click(event : InputEvent):
 	if event.is_action_pressed("ui_mouse_left"):
-		if world.game.is_our_turn() and !world.game.turn_active:
+		print(world.game.current_player)
+		print(world.game.get_our_player())
+		print(world.game.is_our_turn())
+		print(!world.game.__move_active)
+		if world.game.is_our_turn() and !world.game.__move_active:
 			if selected == null:
 				if active.army != null and world.game.current_player == active.army.player:
 					set_selected(active)

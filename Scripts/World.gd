@@ -17,6 +17,7 @@ onready var tiles : Node2D = $TilesContainer
 onready var units : Node2D = $UnitsContainer
 onready var effects : Node2D = $EffectsManager
 
+onready var debug : Node = $Debug
 onready var network : Node = $Network
 onready var game: Node = $Game
 onready var ui: Node = $UI
@@ -28,6 +29,8 @@ const __tile_dict : Dictionary = {}
 func _ready():
 	for player in players:
 		player.init(self)
+	
+	game.current_player = players[game.__current_player_index]
 	
 	randomize()
 	
