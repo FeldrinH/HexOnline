@@ -2,7 +2,7 @@ extends Area2D
 
 const City = preload("res://City.tscn")
 const Capital = preload("res://Capital.tscn")
-const ground_tiles = [preload("res://Sprites/land_tile_1.png"), preload("res://Sprites/land_tile_2.png"), preload("res://Sprites/land_tile_3.png")]
+const ground_tiles = [preload("res://Sprites/land_tile_1.png"), preload("res://Sprites/land_tile_2.png"), preload("res://Sprites/land_tile_3.png"), preload("res://Sprites/land_tile_4.png"), preload("res://Sprites/land_tile_5.png"), preload("res://Sprites/land_tile_6.png"), preload("res://Sprites/land_tile_7.png"), preload("res://Sprites/land_tile_8.png"), preload("res://Sprites/land_tile_9.png")]
 const base_tile = preload("res://Sprites/tile.png")
 
 onready var sprites : Node2D = $Sprites

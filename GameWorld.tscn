@@ -154,6 +154,7 @@ __meta__ = {
 }
 
 [node name="Button" type="Button" parent="Control"]
+light_mask = 7
 margin_left = 17.5992
 margin_top = 194.768
 margin_right = 280.599
