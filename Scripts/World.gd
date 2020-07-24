@@ -10,8 +10,6 @@ const MapGenerator = preload("res://Scripts/MapGenerator.gd")
 #const TerrainGroundSprite = preload("res://TerrainGroundSprite.tscn")
 #const TerrainGroundTextures = [preload("res://Sprites/Terrain/hex_sprites_blend_1.png"), preload("res://Sprites/Terrain/hex_sprites_blend_2.png"), preload("res://Sprites/Terrain/hex_sprites_blend_3.png")]
 
-onready var players : Array = $Players.get_children()
-
 onready var terrainsprites : Node2D = $TerrainSpritesContainer
 onready var tiles : Node2D = $TilesContainer
 onready var units : Node2D = $UnitsContainer
@@ -27,11 +25,6 @@ onready var tilemap : TileMap = $TileMap
 const __tile_dict : Dictionary = {}
 
 func _ready():
-	for player in players:
-		player.init(self)
-	
-	game.current_player = players[game.__current_player_index]
-	
 	randomize()
 	
 	#var sprites : Array = []
@@ -69,27 +62,30 @@ func get_tile(coord):
 func get_all_tiles():
 	return __tile_dict.values()
 
-func add_unit(starting_tile : Node2D, starting_power : int, side : Node) -> Node2D:
+func generate_army_id(player_id: int):
+	return str(player_id) + "|" + str(network.get_next_id())
+
+remotesync func add_unit(starting_tile_coord: Vector2, starting_power: int, player_id: int) -> Node2D:
 	var unit_instance = ArmyUnit.instance()
 	units.add_child(unit_instance)
-	unit_instance.init(self, starting_tile, starting_power, side)
+	unit_instance.init(generate_army_id(player_id), self, get_tile(starting_tile_coord), starting_power, game.get_player(player_id))
 	return unit_instance
 	
-func add_unit_detached(starting_tile : Node2D, starting_power : int, side : Node) -> Node2D:
+remotesync func add_unit_detached(starting_tile_coord: Vector2, starting_power: int, player_id: int) -> Node2D:
 	var unit_instance = ArmyUnit.instance()
 	units.add_child(unit_instance)
-	unit_instance.init_detached(self, starting_tile, starting_power, side)
+	unit_instance.init_detached(generate_army_id(player_id), self, get_tile(starting_tile_coord), starting_power, game.get_player(player_id))
 	return unit_instance
 
 func distance_between(first_tile, second_tile):
-	var dx = abs(first_tile.coordinate.x - second_tile.coordinate.x)
-	var dy = abs(first_tile.coordinate.y - second_tile.coordinate.y)
+	var dx = abs(first_tile.coord.x - second_tile.coord.x)
+	var dy = abs(first_tile.coord.y - second_tile.coord.y)
 	return dy + max(0, (dx - dy) / 2)
 
 func find_neighbours(center_tile) -> Array:
 	var neigbours : Array = []
 	
-	var center_coordinate : Vector2 = center_tile.coordinate
+	var center_coordinate : Vector2 = center_tile.coord
 	for dir in Util.directions:
 		var new_tile = get_tile(center_coordinate + dir)
 		if new_tile != null:
@@ -124,7 +120,7 @@ func __add_neighbors(tiles : Dictionary, center_tile, army, distance: int):
 		return
 	
 	for dir in Util.directions:
-		var new_tile = get_tile(center_tile.coordinate + dir)
+		var new_tile = get_tile(center_tile.coord + dir)
 		if new_tile != null and army.can_enter(center_tile, new_tile):
 			tiles[new_tile] = true
 			if new_tile.army == null or new_tile.army.player == army.player:

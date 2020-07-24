@@ -2,10 +2,18 @@ extends Node
 
 # Debug helper
 
+onready var debug = $"/root/Root/DebugMenu"
+onready var world = $".."
+
 func _ready():
-	pass # Replace with function body.
+	$"/root".connect("ready", self, "__autosetup")
 
+# Run after scene tree has initialized
+func autosetup():
+	if OS.has_feature("editor"):
+		autosetup_in_editor()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+# Run on autosetup when started from editor
+func autosetup_in_editor():
+	pass
+	#debug.get_node("Misc/HostButton")._pressed()

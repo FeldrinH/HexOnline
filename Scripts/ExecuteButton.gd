@@ -9,11 +9,11 @@ func _ready():
 	connect("pressed", self, "__button_pressed")
 
 func __button_pressed():
-	var parse_error = compiled_expression.parse(console.text, ["world"])
+	var parse_error = compiled_expression.parse(console.text, ["world", "OS"])
 	if parse_error:
 		print("> PARSE ERROR: " + compiled_expression.get_error_text())
 	else:
-		var result = compiled_expression.execute([world], root)
+		var result = compiled_expression.execute([world, OS], root)
 		if compiled_expression.has_execute_failed():
 			print("> ERROR: " + compiled_expression.get_error_text())
 		else:

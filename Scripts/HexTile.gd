@@ -12,7 +12,7 @@ onready var border_sections : Array = [$"Border/1", $"Border/2", $"Border/3", $"
 var base_color : Color = Color(1,1,1)
 
 var world
-var coordinate : Vector2
+var coord : Vector2
 var blocked : bool
 var terrain : int
 
@@ -22,10 +22,10 @@ var city = null
 
 func init(tile_world, tile_coordinate, tile_blocked):
 	world = tile_world
-	coordinate = tile_coordinate
+	coord = tile_coordinate
 	blocked = tile_blocked
 	#world.connect("unit_enter", self, "__unit_enter")
-	$Label.text = str(coordinate)
+	$Label.text = str(coord)
 
 func add_city(name) -> Node2D:
 	city = City.instance()
@@ -74,7 +74,7 @@ func update_border_appearance():
 		border.modulate = player.unit_color
 		
 		for i in range(0,6):
-			var adjacent_tile = world.get_tile(coordinate + Util.directions[i])
+			var adjacent_tile = world.get_tile(coord + Util.directions[i])
 			if adjacent_tile != null and adjacent_tile.player == player:
 				border_sections[i].visible = false
 			else:

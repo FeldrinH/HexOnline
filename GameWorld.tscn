@@ -76,16 +76,15 @@ onready var world: Node = get_node(\"/root/Root/World\")
 
 func _ready():
 	add_item(\"None\")
-	for player in world.players:
+	for player in world.game.players:
 		add_item(player.name)
 	
 	connect(\"item_selected\", self, \"__selected\")
 
 func __selected(index: int):
-	print(index)
 	if world.network.our_client:
 		if index > 0:
-			world.network.our_client.rpc(\"select_player\", world.players[index - 1])
+			world.network.our_client.rpc(\"select_player\", index - 1)
 			print(\"Selected player: \" + world.game.get_our_player().name)
 		else:
 			world.network.our_client.rpc(\"select_player\", null)
@@ -114,26 +113,26 @@ script = ExtResource( 7 )
 [node name="Game" type="Node" parent="World"]
 script = ExtResource( 12 )
 
-[node name="UI" type="Node" parent="World"]
-script = ExtResource( 11 )
+[node name="Players" type="Node" parent="World/Game"]
 
-[node name="Players" type="Node" parent="World"]
-
-[node name="Red" type="Node" parent="World/Players"]
+[node name="Red" type="Node" parent="World/Game/Players"]
 script = ExtResource( 2 )
 unit_color = Color( 0.956863, 0.121569, 0.121569, 1 )
 
-[node name="Blue" type="Node" parent="World/Players"]
+[node name="Blue" type="Node" parent="World/Game/Players"]
 script = ExtResource( 2 )
 unit_color = Color( 0.0901961, 0.247059, 0.964706, 1 )
 
-[node name="Green" type="Node" parent="World/Players"]
+[node name="Green" type="Node" parent="World/Game/Players"]
 script = ExtResource( 2 )
 unit_color = Color( 0.298039, 0.878431, 0.0862745, 1 )
 
-[node name="Yellow" type="Node" parent="World/Players"]
+[node name="Yellow" type="Node" parent="World/Game/Players"]
 script = ExtResource( 2 )
 unit_color = Color( 0.870588, 0.878431, 0.0862745, 1 )
+
+[node name="UI" type="Node" parent="World"]
+script = ExtResource( 11 )
 
 [node name="TileMap" type="TileMap" parent="World"]
 position = Vector2( -22, -26 )
@@ -277,7 +276,6 @@ margin_left = -62.0
 margin_top = -28.0
 margin_right = 62.0
 text = "Player 0"
-selected = 0
 script = SubResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
