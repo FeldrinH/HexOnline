@@ -15,22 +15,21 @@ var power : int = 0
 
 var on_ship : bool = false
 
-func init(unit_name, unit_world, starting_tile, starting_power, unit_player):
-	init_detached(unit_name, unit_world, starting_tile, starting_power, unit_player)
+func init(unit_world, starting_tile, starting_power, unit_player):
+	init_detached(unit_world, starting_tile, starting_power, unit_player)
 	do_enter_tile(starting_tile)
 
-func init_detached(unit_name, unit_world, starting_tile, starting_power, unit_player):
-	name = unit_name
+func init_detached(unit_world, starting_tile, starting_power, unit_player):
 	world = unit_world
 	player = unit_player
 	$Sprites.modulate = unit_player.unit_color
 	position = starting_tile.position
 	set_power(starting_power)
 
-remotesync func move_to(target_tile):
+remotesync func move_to(target_tile_coord):
 	world.game.await_start_move()
 	if world.game.is_rpc_sender_turn() and world.game.current_player == player:
-		execute_move_to(target_tile)
+		execute_move_to(world.get_tile(target_tile_coord))
 		world.game.advance_move(1)
 	world.game.end_move()
 

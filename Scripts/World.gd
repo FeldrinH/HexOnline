@@ -7,6 +7,7 @@ signal unit_enter(unit)
 const ArmyUnit = preload("res://ArmyUnit.tscn")
 const HexTile = preload("res://HexTile.tscn")
 const MapGenerator = preload("res://Scripts/MapGenerator.gd")
+const MapSender = preload("res://Scripts/MapSender.gd")
 #const TerrainGroundSprite = preload("res://TerrainGroundSprite.tscn")
 #const TerrainGroundTextures = [preload("res://Sprites/Terrain/hex_sprites_blend_1.png"), preload("res://Sprites/Terrain/hex_sprites_blend_2.png"), preload("res://Sprites/Terrain/hex_sprites_blend_3.png")]
 
@@ -40,20 +41,24 @@ func _ready():
 	#for sprite in sprites:
 	#	terrainsprites.add_child(sprite)
 	
-	for coordinate in tilemap.get_used_cells():
-		var tile_index = tilemap.get_cellv(coordinate)
+	for coord in tilemap.get_used_cells():
+		var tile_index = tilemap.get_cellv(coord)
 		var tile_instance = HexTile.instance()
-		tile_instance.set_position(tilemap.map_to_world(coordinate))
+		var hex_coord = Vector2(coord.x * 2 + posmod(coord.y, 2), coord.y)
 		
-		coordinate.x = coordinate.x * 2 + posmod(coordinate.y, 2)
-		__tile_dict[coordinate] = tile_instance
-		tile_instance.init(self, coordinate, tile_index == 1)
+		__tile_dict[hex_coord] = tile_instance
+		tile_instance.init(self, hex_coord, tilemap.map_to_world(coord), tile_index == 1)
+		tile_instance.set_name(str(hex_coord))
 		
 		tiles.add_child(tile_instance)
 	
 	tilemap.queue_free()
-	
+
+func generate_map():
 	MapGenerator.generate_map(self)
+
+func send_map(target_id: int):
+	MapSender.send_map(self, target_id)
 
 func get_tile(coord):
 	return __tile_dict.get(coord, null)
@@ -65,16 +70,18 @@ func get_all_tiles():
 func generate_army_id(player_id: int):
 	return str(player_id) + "|" + str(network.get_next_id())
 
-remotesync func add_unit(starting_tile_coord: Vector2, starting_power: int, player_id: int) -> Node2D:
+remotesync func add_unit(starting_tile_coord: Vector2, starting_power: int, player_id: int, name_override: String = "") -> Node2D:
 	var unit_instance = ArmyUnit.instance()
 	units.add_child(unit_instance)
-	unit_instance.init(generate_army_id(player_id), self, get_tile(starting_tile_coord), starting_power, game.get_player(player_id))
+	unit_instance.init(self, get_tile(starting_tile_coord), starting_power, game.get_player(player_id))
+	unit_instance.set_name(generate_army_id(player_id) if name_override == "" else name_override)
 	return unit_instance
 	
-remotesync func add_unit_detached(starting_tile_coord: Vector2, starting_power: int, player_id: int) -> Node2D:
+remotesync func add_unit_detached(starting_tile_coord: Vector2, starting_power: int, player_id: int, name_override: String = "") -> Node2D:
 	var unit_instance = ArmyUnit.instance()
 	units.add_child(unit_instance)
-	unit_instance.init_detached(generate_army_id(player_id), self, get_tile(starting_tile_coord), starting_power, game.get_player(player_id))
+	unit_instance.init_detached(self, get_tile(starting_tile_coord), starting_power, game.get_player(player_id))
+	unit_instance.set_name(generate_army_id(player_id) if name_override == "" else name_override)
 	return unit_instance
 
 func distance_between(first_tile, second_tile):

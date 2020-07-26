@@ -42,7 +42,7 @@ func __active_click(event : InputEvent):
 			else: # selected != null
 				if highlighted.has(active):
 					if selected.army != null:
-						selected.army.rpc("move_to", active)
+						selected.army.rpc("move_to", active.coord)
 						set_selected(null)
 						set_highlighted({})
 				else: # !highlighted.has(active):

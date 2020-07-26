@@ -56,8 +56,8 @@ func advance_move(moves_made: int):
 	print("Moves remaining: " + str(moves_remaining))
 
 func advance_turn():
-	__current_player_index = (__current_player_index + 1) % len(world.players)
-	current_player = world.players[__current_player_index]
+	__current_player_index = (__current_player_index + 1) % len(players)
+	current_player = players[__current_player_index]
 	moves_remaining = MOVES_PER_TURN
 	print("Turn advanced to player " + current_player.name)
 

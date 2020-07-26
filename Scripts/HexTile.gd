@@ -11,37 +11,34 @@ onready var border_sections : Array = [$"Border/1", $"Border/2", $"Border/3", $"
 
 var base_color : Color = Color(1,1,1)
 
-var world
-var coord : Vector2
-var blocked : bool
-var terrain : int
+var world: Node
+var coord: Vector2
+var blocked: bool
+var terrain: int
 
-var player = null
-var army = null
-var city = null
+var player: Node = null
+var army: Node2D = null
+var city: Node2D = null
 
-func init(tile_world, tile_coordinate, tile_blocked):
+func init(tile_world, tile_coord, tile_position, tile_blocked):
 	world = tile_world
-	coord = tile_coordinate
+	coord = tile_coord
+	position = tile_position
 	blocked = tile_blocked
 	#world.connect("unit_enter", self, "__unit_enter")
 	$Label.text = str(coord)
 
-func add_city(name) -> Node2D:
+puppet func add_city(name: String) -> Node2D:
 	city = City.instance()
 	self.add_child(city)
 	city.init_name(world, name)
 	return city
 
-func add_capital(side) -> Node2D:
+puppet func add_capital(player_id: int) -> Node2D:
 	city = Capital.instance()
 	self.add_child(city)
-	self.set_city(city)
-	city.init_capital(world, side)
+	city.init_capital(world, world.game.get_player(player_id))
 	return city
-
-func set_city(new_city):
-	city = new_city
 
 # When a tile's appearance changes related to ingame logic
 func setup_appearance():
@@ -93,7 +90,7 @@ func __input_event(viewport, event, shape_idx):
 	if world.ui.active == self:
 		world.ui.__active_click(event)
 
-func set_terrain(new_terrain : int):
+puppet func set_terrain(new_terrain : int):
 	terrain = new_terrain
 	setup_appearance()
 

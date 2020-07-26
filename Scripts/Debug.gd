@@ -6,7 +6,7 @@ onready var debug = $"/root/Root/DebugMenu"
 onready var world = $".."
 
 func _ready():
-	$"/root".connect("ready", self, "__autosetup")
+	$"/root".connect("ready", self, "autosetup")
 
 # Run after scene tree has initialized
 func autosetup():

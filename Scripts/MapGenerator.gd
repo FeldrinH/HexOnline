@@ -57,7 +57,7 @@ static func generate_map(map):
 			print(str(best_min_distance) + "  " + str(best_total_distance))
 	
 	for i in len(map.game.players):
-		best_capitals[i].add_capital(map.game.players[i])
+		best_capitals[i].add_capital(i)
 	
 	var file = File.new()
 	file.open("res://Scripts/city_names.csv", file.READ)

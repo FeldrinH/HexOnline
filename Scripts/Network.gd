@@ -53,6 +53,7 @@ func cleanup_connections():
 func create_server(client_display_name: String):
 	cleanup_connections()
 	
+	world.generate_map()
 	rng.randomize()
 	
 	var peer = NetworkedMultiplayerENet.new()
@@ -81,7 +82,8 @@ func join_server(ip: String, client_display_name: String):
 func __server_peer_connected(id: int):
 	# Send existing clients to new client
 	for client in clients.values():
-		rpc_id(id, "add_client", client.id, client.display_name, client.player.id)
+		rpc_id(id, "add_client", client.id, client.display_name, client.player.id if client.player else -1)
+	world.send_map(id)
 	rpc_id(id, "set_synced_values", rng.seed, __next_id)
 	
 	print("Peer connected: " + str(id))
