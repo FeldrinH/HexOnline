@@ -2,12 +2,14 @@ extends Area2D
 
 const City = preload("res://City.tscn")
 const Capital = preload("res://Capital.tscn")
-const ground_tiles = [preload("res://Sprites/land_tile_1.png"), preload("res://Sprites/land_tile_2.png"), preload("res://Sprites/land_tile_3.png"), preload("res://Sprites/land_tile_4.png"), preload("res://Sprites/land_tile_5.png"), preload("res://Sprites/land_tile_6.png"), preload("res://Sprites/land_tile_7.png"), preload("res://Sprites/land_tile_8.png"), preload("res://Sprites/land_tile_9.png")]
+const ground_tiles = [preload("res://Sprites/land_tile_4.png"), preload("res://Sprites/land_tile_9.png"), preload("res://Sprites/land_tile_10.png"), preload("res://Sprites/land_tile_11.png"), preload("res://Sprites/land_tile_12.png")]
+const sea_tiles = [preload("res://Sprites/sea_tile_1.png"), preload("res://Sprites/sea_tile_2.png"), preload("res://Sprites/sea_tile_3.png")]
 const base_tile = preload("res://Sprites/tile.png")
 
 onready var sprites : Node2D = $Sprites
 onready var border : Node2D = $Border
 onready var border_sections : Array = [$"Border/1", $"Border/2", $"Border/3", $"Border/4", $"Border/5", $"Border/6"]
+onready var shore_sections : Array = [$"Shore/1", $"Shore/2", $"Shore/3", $"Shore/4", $"Shore/5", $"Shore/6"]
 
 var base_color : Color = Color(1,1,1)
 
@@ -50,8 +52,8 @@ func setup_appearance():
 			$Sprites.texture = Util.pick_random(ground_tiles)
 			base_color = Color(1, 1, 1, 1) #Color(86/255.0, 125/255.0, 70/255.0, 0)
 		Util.TERRAIN_WATER:
-			$Sprites.texture = base_tile
-			base_color = Color(0, 0, 1)
+			$Sprites.texture = Util.pick_random(sea_tiles)
+			base_color = Color(1, 1, 1, 1)
 	update_highlight_appearance()
 
 # Updates related to appearance & UI
@@ -81,6 +83,14 @@ func update_border_appearance():
 				border_sections[i].visible = true
 	else:
 		border.visible = false
+
+func create_shoreline():
+	for i in range(0,6):
+			var adjacent_tile = manager.get_tile(coordinate + Util.directions[i])
+			if adjacent_tile != null and adjacent_tile.terrain ==  Util.TERRAIN_WATER and self.terrain == Util.TERRAIN_GROUND:
+				shore_sections[i-1].visible = true
+			else:
+				shore_sections[i-1].visible = false
 
 func __mouse_entered():
 	manager.set_active(self)

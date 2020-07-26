@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Sprites/tile.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/HexTile.gd" type="Script" id=2]
@@ -9,6 +9,12 @@
 [ext_resource path="res://Sprites/Effects/Highlight3.png" type="Texture" id=7]
 [ext_resource path="res://Sprites/Effects/Highlight5.png" type="Texture" id=8]
 [ext_resource path="res://Sprites/Effects/Highlight1.png" type="Texture" id=9]
+[ext_resource path="res://Sprites/Shore/sand_overlay_1.png" type="Texture" id=10]
+[ext_resource path="res://Sprites/Shore/sand_overlay_3.png" type="Texture" id=11]
+[ext_resource path="res://Sprites/Shore/sand_overlay_6.png" type="Texture" id=12]
+[ext_resource path="res://Sprites/Shore/sand_overlay_4.png" type="Texture" id=13]
+[ext_resource path="res://Sprites/Shore/sand_overlay_2.png" type="Texture" id=14]
+[ext_resource path="res://Sprites/Shore/sand_overlay_5.png" type="Texture" id=15]
 
 [sub_resource type="DynamicFont" id=1]
 size = 14
@@ -58,6 +64,37 @@ texture = ExtResource( 8 )
 [node name="6" type="Sprite" parent="Border"]
 visible = false
 texture = ExtResource( 5 )
+
+[node name="Shore" type="Node2D" parent="."]
+
+[node name="1" type="Sprite" parent="Shore"]
+position = Vector2( 0.851578, 1.61613 )
+texture = ExtResource( 10 )
+
+[node name="2" type="Sprite" parent="Shore"]
+visible = false
+position = Vector2( 1.64528, 2.80668 )
+texture = ExtResource( 14 )
+
+[node name="3" type="Sprite" parent="Shore"]
+visible = false
+position = Vector2( -0.735825, 1.21928 )
+texture = ExtResource( 11 )
+
+[node name="4" type="Sprite" parent="Shore"]
+visible = false
+position = Vector2( 1.24843, -0.963402 )
+texture = ExtResource( 13 )
+
+[node name="5" type="Sprite" parent="Shore"]
+visible = false
+position = Vector2( 1.05, -0.566551 )
+texture = ExtResource( 15 )
+
+[node name="6" type="Sprite" parent="Shore"]
+visible = false
+position = Vector2( 1.8437, 1.61613 )
+texture = ExtResource( 12 )
 
 [node name="Label" type="Label" parent="."]
 visible = false
