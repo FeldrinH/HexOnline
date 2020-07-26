@@ -34,14 +34,14 @@ func set_highlighted(tiles : Dictionary):
 
 func __active_click(event : InputEvent):
 	if event.is_action_pressed("ui_mouse_left"):
-		if world.game.is_our_turn() and !world.game.is_move_active():
-			if selected == null:
-				if active.army != null and world.game.current_player == active.army.player:
+		if !world.game.is_move_active():
+			if !selected:
+				if active.army and world.game.is_our_move_allowed(active.army.player):
 					set_selected(active)
 					set_highlighted(world.find_travelable(active, active.army, world.game.MOVE_RANGE))
 			else: # selected != null
 				if highlighted.has(active):
-					if selected.army != null:
+					if selected.army:
 						selected.army.rpc("move_to", active.coord)
 						set_selected(null)
 						set_highlighted({})
@@ -50,6 +50,6 @@ func __active_click(event : InputEvent):
 					set_highlighted({})
 	elif event.is_action_pressed("ui_mouse_debug"):
 		if world.game.get_our_player():
-			world.rpc("add_unit", active.coord, 20, world.game.get_our_player().id, true)
+			world.rpc("add_unit", active.coord, 20, world.game.get_our_player().id, false)
 	#elif event.is_action_pressed("ui_mouse_right"):
 		#print(world.distance_between(selected, active))

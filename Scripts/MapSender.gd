@@ -18,4 +18,4 @@ static func send_map(world, target_id: int):
 		tile.rpc_id(target_id, "setup_appearance")
 	
 	for unit in world.units.get_children():
-		world.rpc_id(target_id, "add_unit", unit.tile.coord, unit.power, unit.player.id, false, unit.name)
+		world.rpc_id(target_id, "add_unit", unit.tile.coord, unit.power, unit.player.id, true, unit.name)

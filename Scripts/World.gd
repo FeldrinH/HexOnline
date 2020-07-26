@@ -70,17 +70,17 @@ func get_all_tiles():
 func generate_army_id(player_id: int):
 	return str(player_id) + "|" + str(network.get_next_id())
 
-remotesync func add_unit(starting_tile_coord: Vector2, starting_power: int, player_id: int, do_enter_event: bool, name_override: String = "") -> Node2D:
+remotesync func add_unit(starting_tile_coord: Vector2, starting_power: int, player_id: int, silent: bool, name_override: String = "") -> Node2D:
 	var unit_instance = ArmyUnit.instance()
 	units.add_child(unit_instance)
-	unit_instance.init(self, get_tile(starting_tile_coord), starting_power, game.get_player(player_id), do_enter_event)
+	unit_instance.init(self, get_tile(starting_tile_coord), starting_power, game.get_player(player_id), silent)
 	unit_instance.set_name(generate_army_id(player_id) if name_override == "" else name_override)
 	return unit_instance
 	
-remotesync func add_unit_detached(starting_tile_coord: Vector2, starting_power: int, player_id: int, name_override: String = "") -> Node2D:
+remotesync func add_unit_detached(starting_tile_coord: Vector2, starting_power: int, player_id: int, silent: bool, name_override: String = "") -> Node2D:
 	var unit_instance = ArmyUnit.instance()
 	units.add_child(unit_instance)
-	unit_instance.init_detached(self, get_tile(starting_tile_coord), starting_power, game.get_player(player_id))
+	unit_instance.init_detached(self, get_tile(starting_tile_coord), starting_power, game.get_player(player_id), silent)
 	unit_instance.set_name(generate_army_id(player_id) if name_override == "" else name_override)
 	return unit_instance
 
