@@ -15,9 +15,9 @@ var power : int = 0
 
 var on_ship : bool = false
 
-func init(unit_world, starting_tile, starting_power, unit_player):
+func init(unit_world, starting_tile, starting_power, unit_player, do_enter_event: bool):
 	init_detached(unit_world, starting_tile, starting_power, unit_player)
-	do_enter_tile(starting_tile)
+	do_enter_tile(starting_tile, do_enter_event)
 
 func init_detached(unit_world, starting_tile, starting_power, unit_player):
 	world = unit_world
@@ -56,15 +56,15 @@ func execute_move_to(target_tile):
 	elif target_tile.terrain == Util.TERRAIN_WATER:
 		world.effects.play_ship_sound()
 
-	do_enter_tile(null)
+	do_enter_tile(null, true)
 	
 	movement_tween.interpolate_property(self, "position", position, target_tile.position, max(position.distance_to(target_tile.position) / 1000, 0.25), Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 	movement_tween.start()
 	yield(movement_tween, "tween_all_completed")
 	
-	do_enter_tile(target_tile)
+	do_enter_tile(target_tile, true)
 
-func do_enter_tile(target_tile):
+func do_enter_tile(target_tile, do_enter_event: bool):
 	var has_entered = false
 	
 	if target_tile == null:
@@ -84,7 +84,7 @@ func do_enter_tile(target_tile):
 			has_entered = true
 		
 	tile = target_tile
-	if has_entered:
+	if has_entered and do_enter_event:
 		on_enter_tile(target_tile)
 
 func on_enter_tile(target_tile):
