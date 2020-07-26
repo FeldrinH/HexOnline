@@ -58,7 +58,7 @@ puppet func setup_appearance():
 func update_highlight_appearance():
 	if world.ui.selected == self:
 		sprites.modulate = Color(0.8,0.8,0)
-	elif world.ui.active == self:
+	elif world.ui.hovered == self:
 		sprites.modulate = Color(0.6,0,0)
 	elif world.ui.highlighted.has(self):
 		sprites.modulate = base_color.blend(Color(0, 1, 0, 0.7))
@@ -91,15 +91,15 @@ func create_shoreline():
 				shore_sections[i-1].visible = false
 
 func __mouse_entered():
-	world.ui.set_active(self)
+	world.ui.set_hovered(self)
 
 func __mouse_exited():
-	if world.ui.active == self:
-		world.ui.set_active(null)
+	if world.ui.hovered == self:
+		world.ui.set_hovered(null)
 
 func __input_event(viewport, event, shape_idx):
-	if world.ui.active == self:
-		world.ui.__active_click(event)
+	if world.ui.hovered == self:
+		world.ui.__hovered_click(event)
 
 puppet func set_terrain(new_terrain : int):
 	terrain = new_terrain
