@@ -72,7 +72,7 @@ texture = ExtResource( 12 )
 
 [node name="Border" type="Node2D" parent="."]
 modulate = Color( 0, 0.133333, 1, 1 )
-z_index = 1
+z_index = 2
 
 [node name="1" type="Sprite" parent="Border"]
 visible = false

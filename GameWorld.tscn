@@ -159,26 +159,19 @@ texture = ExtResource( 5 )
 position = Vector2( 562, 343 )
 current = true
 
-[node name="DebugMenu" type="Node2D" parent="."]
-z_index = 200
+[node name="DebugMenu" type="CanvasLayer" parent="."]
 script = ExtResource( 8 )
-__meta__ = {
-"_edit_lock_": true
-}
 
-[node name="Misc" type="Control" parent="DebugMenu"]
+[node name="MenuRoot" type="Control" parent="DebugMenu"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 51.0
-margin_top = 46.0
-margin_right = 1074.0
-margin_bottom = 639.0
+margin_left = -0.224003
 mouse_filter = 2
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_use_anchors_": true
 }
 
-[node name="JoinIP" type="LineEdit" parent="DebugMenu/Misc"]
+[node name="JoinIP" type="LineEdit" parent="DebugMenu/MenuRoot"]
 anchor_left = 0.0236399
 anchor_top = 0.777266
 anchor_right = 0.0236399
@@ -193,7 +186,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ClientName" type="LineEdit" parent="DebugMenu/Misc"]
+[node name="ClientName" type="LineEdit" parent="DebugMenu/MenuRoot"]
 margin_left = 23.5823
 margin_top = 431.608
 margin_right = 166.582
@@ -204,7 +197,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HostButton" type="Button" parent="DebugMenu/Misc"]
+[node name="HostButton" type="Button" parent="DebugMenu/MenuRoot"]
 margin_left = 22.7498
 margin_top = 502.067
 margin_right = 119.75
@@ -217,7 +210,7 @@ __meta__ = {
 expression = "network.create_server(input2.text)"
 input2 = NodePath("../ClientName")
 
-[node name="JoinButton" type="Button" parent="DebugMenu/Misc"]
+[node name="JoinButton" type="Button" parent="DebugMenu/MenuRoot"]
 margin_left = 23.2499
 margin_top = 543.272
 margin_right = 121.25
@@ -231,29 +224,29 @@ expression = "network.join_server(input1.text, input2.text)"
 input1 = NodePath("../JoinIP")
 input2 = NodePath("../ClientName")
 
-[node name="ConsoleInput" type="LineEdit" parent="DebugMenu/Misc"]
-margin_left = 23.6819
-margin_top = 18.8863
-margin_right = 793.682
-margin_bottom = 60.8863
+[node name="ConsoleInput" type="LineEdit" parent="DebugMenu/MenuRoot"]
+margin_left = 24.0
+margin_top = 19.0
+margin_right = 794.0
+margin_bottom = 55.0
 caret_blink = true
 script = ExtResource( 15 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ExecuteButton" type="Button" parent="DebugMenu/Misc"]
+[node name="ExecuteButton" type="Button" parent="DebugMenu/MenuRoot"]
 margin_left = 805.0
 margin_top = 20.0
-margin_right = 892.0
-margin_bottom = 60.0
+margin_right = 889.0
+margin_bottom = 56.0
 text = "Execute"
 script = ExtResource( 10 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PlayerSelect" type="OptionButton" parent="DebugMenu/Misc"]
+[node name="PlayerSelect" type="OptionButton" parent="DebugMenu/MenuRoot"]
 anchor_left = 0.026222
 anchor_top = 0.146119
 anchor_right = 0.152535
