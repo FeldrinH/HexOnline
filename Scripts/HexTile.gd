@@ -97,9 +97,9 @@ func __mouse_exited():
 	if world.ui.hovered == self:
 		world.ui.set_hovered(null)
 
-func __input_event(viewport, event, shape_idx):
+func _input_event(viewport, event, shape_idx):
 	if world.ui.hovered == self:
-		world.ui.__hovered_click(event)
+		world.ui.hovered_click(event)
 
 puppet func set_terrain(new_terrain : int):
 	terrain = new_terrain

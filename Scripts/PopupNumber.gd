@@ -7,5 +7,5 @@ func play_popup(number : int, color : Color, anchor_position : Vector2):
 	position = anchor_position
 	modulate = color
 	label.text = ("+" if sign(number) > 0 else "") + str(number)
-	#animator.stop(true)
+	animator.stop(true)
 	animator.play("Popup")

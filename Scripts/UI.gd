@@ -32,7 +32,7 @@ func set_highlighted(tiles : Dictionary):
 	for tile in tiles:
 		tile.update_highlight_appearance()
 
-func __hovered_click(event : InputEvent):
+func hovered_click(event : InputEvent):
 	if event.is_action_pressed("ui_mouse_left"):
 		if !world.game.is_move_active():
 			if !selected:
