@@ -13,12 +13,12 @@ var is_capital : bool = false
 func init(city_manager):
 	manager = city_manager
 
-func init_name(city_manager, name):
+func init_name(city_manager, city_city_name):
 	manager = city_manager
-	city_name = name
+	city_name = city_city_name
 	label.text = city_name
 
-func make_port():
+puppet func make_port():
 	is_port = true
 	port_sprite.visible = true
 	city_sprite.visible = false

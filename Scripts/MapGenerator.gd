@@ -38,7 +38,7 @@ static func generate_map(map):
 		var try_min_distance = 100000
 		var try_total_distance = 0
 		var try_capitals = []
-		for player in map.players:
+		for player in map.game.players:
 			var try_tile = find_spawnable(tiles, 20)
 			if try_tile:
 				for capital_tile in try_capitals:
@@ -50,14 +50,14 @@ static func generate_map(map):
 				try_capitals.append(try_tile)
 			else:
 				break
-		if (try_min_distance > best_min_distance or (try_min_distance == best_min_distance and try_total_distance > best_total_distance)) and len(try_capitals) == len(map.players):
+		if (try_min_distance > best_min_distance or (try_min_distance == best_min_distance and try_total_distance > best_total_distance)) and len(try_capitals) == len(map.game.players):
 			best_min_distance = try_min_distance
 			best_total_distance = try_total_distance
 			best_capitals = try_capitals
 			print(str(best_min_distance) + "  " + str(best_total_distance))
 	
-	for i in len(map.players):
-		best_capitals[i].add_capital(map.players[i])
+	for i in len(map.game.players):
+		best_capitals[i].add_capital(i)
 	
 	var file = File.new()
 	file.open("res://Scripts/city_names.csv", file.READ)
