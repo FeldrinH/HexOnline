@@ -88,10 +88,10 @@ func do_enter_tile(target_tile):
 		on_enter_tile(target_tile)
 
 func on_enter_tile(target_tile):
-	target_tile.set_player(player)
+	target_tile.set_player(player.id)
 	for adjacent_tile in world.find_travelable(target_tile, self, 1):
 		if adjacent_tile.army == null:
-			adjacent_tile.set_player(player)
+			adjacent_tile.set_player(player.id)
 
 func battle(defending_army) -> bool:
 	world.effects.play_battle_effects(position)

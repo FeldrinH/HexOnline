@@ -88,7 +88,7 @@ static func generate_map(map):
 			try_tile.city.make_port()
 			
 	for tile in tiles:
-		tile.create_shoreline()
+		tile.setup_appearance()
 
 static func is_single_tile_island(tile, map) -> bool:
 	for neighbour in map.find_neighbours(tile):

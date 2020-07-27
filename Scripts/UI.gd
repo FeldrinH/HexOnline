@@ -51,5 +51,5 @@ func __active_click(event : InputEvent):
 	elif event.is_action_pressed("ui_mouse_debug"):
 		if world.game.get_our_player():
 			world.rpc("add_unit", active.coord, 20, world.game.get_our_player().id)
-	elif event.is_action_pressed("ui_mouse_right"):
-		print(world.distance_between(selected, active))
+	#elif event.is_action_pressed("ui_mouse_right"):
+		#print(world.distance_between(selected, active))

@@ -43,7 +43,7 @@ puppet func add_capital(player_id: int) -> Node2D:
 	return city
 
 # When a tile's appearance changes related to ingame logic
-func setup_appearance():
+puppet func setup_appearance():
 	match terrain:
 		Util.TERRAIN_GROUND:
 			$Sprites.texture = Util.pick_random(ground_tiles)
@@ -52,6 +52,7 @@ func setup_appearance():
 			$Sprites.texture = Util.pick_random(sea_tiles)
 			base_color = Color(1, 1, 1, 1)
 	update_highlight_appearance()
+	create_shoreline()
 
 # Updates related to appearance & UI
 func update_highlight_appearance():
@@ -83,7 +84,7 @@ func update_border_appearance():
 
 func create_shoreline():
 	for i in range(0,6):
-			var adjacent_tile = manager.get_tile(coordinate + Util.directions[i])
+			var adjacent_tile = world.get_tile(coord + Util.directions[i])
 			if adjacent_tile != null and adjacent_tile.terrain ==  Util.TERRAIN_WATER and self.terrain == Util.TERRAIN_GROUND:
 				shore_sections[i-1].visible = true
 			else:
@@ -102,10 +103,9 @@ func __input_event(viewport, event, shape_idx):
 
 puppet func set_terrain(new_terrain : int):
 	terrain = new_terrain
-	setup_appearance()
 
-func set_player(new_player):
-	player = new_player
+puppet func set_player(new_player_id : int):
+	player = world.game.get_player(new_player_id)
 	update_border_appearance()
 	for adjacent_tile in world.find_neighbours(self):
 		adjacent_tile.update_border_appearance()
