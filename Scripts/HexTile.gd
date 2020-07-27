@@ -31,16 +31,23 @@ func init(tile_world, tile_coord, tile_position, tile_blocked):
 	$Label.text = str(coord)
 
 puppet func add_city(name: String) -> Node2D:
+	remove_city()
 	city = City.instance()
 	self.add_child(city)
 	city.init_name(world, name)
 	return city
 
 puppet func add_capital(player_id: int) -> Node2D:
+	remove_city()
 	city = Capital.instance()
 	self.add_child(city)
 	city.init_capital(world, world.game.get_player(player_id))
 	return city
+
+func remove_city():
+	if city:
+		city.free()
+	city = null
 
 # When a tile's appearance changes related to ingame logic
 puppet func setup_appearance():

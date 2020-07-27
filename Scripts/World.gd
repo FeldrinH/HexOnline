@@ -149,14 +149,12 @@ func __add_row(tiles : Dictionary, row_start : Vector2, row_length : int, dir : 
 
 func map_cleanup():
 	for tile in get_all_tiles():
-		if tile.city != null:
-			tile.city.queue_free()
-			tile.city = null
-			tile.army = null
-			
-	for unit in units.get_children():
-		unit.queue_free()
+		if tile.city:
+			tile.remove_city()
+		tile.army = null
 	
+	for unit in units.get_children():
+		unit.free()
 
 #func filter_can_enter(tiles : Dictionary, army):
 #	for tile in tiles.keys():

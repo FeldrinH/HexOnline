@@ -3,6 +3,8 @@ const port_names = ["New York", "Portland", "San Franscisco"]
 var world
 
 static func generate_map(map):
+	print("MAPGEN: Begin")
+	
 	map.map_cleanup()
 	
 	var tiles = map.get_all_tiles()
@@ -96,6 +98,8 @@ static func generate_map(map):
 			
 	for tile in tiles:
 		tile.setup_appearance()
+	
+	print("MAPGEN: End")
 
 static func is_single_tile_island(tile, map) -> bool:
 	for neighbour in map.find_neighbours(tile):

@@ -70,6 +70,8 @@ func create_server(client_display_name: String):
 func join_server(ip: String, client_display_name: String):
 	cleanup_connections()
 	
+	world.map_cleanup()
+	
 	var peer = NetworkedMultiplayerENet.new()
 	peer.create_client(ip, PORT)
 	get_tree().network_peer = peer
