@@ -2,7 +2,7 @@ extends Node
 
 # Debug helper
 
-onready var debug = $"/root/Root/DebugMenu"
+onready var debug_menu = $"/root/Root/DebugMenu"
 onready var world = $".."
 
 func _ready():
@@ -11,9 +11,18 @@ func _ready():
 # Run after scene tree has initialized
 func autosetup():
 	if OS.has_feature("editor"):
-		autosetup_in_editor()
+		autosetup_debug()
+		if len(OS.get_cmdline_args()) >= 1 and OS.get_cmdline_args()[0] == "--autosetup_editor":
+			autosetup_editor()
+
+# Run on autosetup when started from editor or project manager
+func autosetup_debug():
+	#print("Running debug autosetup...")
+	pass
 
 # Run on autosetup when started from editor
-func autosetup_in_editor():
-	pass
-	#debug.get_node("Misc/HostButton")._pressed()
+func autosetup_editor():
+	print("Running editor autosetup...")
+	world.network.create_server("Server Host Man")
+	world.network.our_client.rpc("select_player", 0)
+	debug_menu.refresh_all()
