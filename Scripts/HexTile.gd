@@ -90,13 +90,16 @@ func create_shoreline():
 			else:
 				shore_sections[i-1].visible = false
 
+func find_neighbours():
+	return world.find_neighbours(self)
+
 func __mouse_entered():
 	world.ui.set_active(self)
 
 func __mouse_exited():
 	if world.ui.active == self:
 		world.ui.set_active(null)
-
+		
 func __input_event(viewport, event, shape_idx):
 	if world.ui.active == self:
 		world.ui.__active_click(event)

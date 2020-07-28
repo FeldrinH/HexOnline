@@ -96,7 +96,6 @@ static func generate_map(map):
 			
 	for tile in tiles:
 		tile.setup_appearance()
-		
 
 static func is_single_tile_island(tile, map) -> bool:
 	for neighbour in map.find_neighbours(tile):
@@ -107,9 +106,16 @@ static func is_single_tile_island(tile, map) -> bool:
 static func find_spawnable(tiles : Array, max_attempts : int) -> Node:
 	for i in max_attempts:
 		var try_tile = Util.pick_random(tiles)
-		if try_tile.terrain == Util.TERRAIN_GROUND and !try_tile.blocked and try_tile.city == null:
+		
+		if try_tile.terrain == Util.TERRAIN_GROUND and !try_tile.blocked and try_tile.city == null and !city_nearby(try_tile):
 			return try_tile
 	return null
+
+static func city_nearby(try_tile) -> bool:
+	for neighbor_tile in try_tile.find_neighbours():
+		if neighbor_tile.city:
+			return true
+	return false
 
 static func find_coast(map, seatiles) -> Array:
 	var coast_tiles = []
