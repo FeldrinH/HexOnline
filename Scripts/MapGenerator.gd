@@ -1,4 +1,3 @@
-const city_names = []
 const port_names = ["New York", "Portland", "San Franscisco"]
 
 var world
@@ -67,6 +66,7 @@ static func generate_map(map):
 	file.open("res://Scripts/city_names.csv", file.READ)
 	
 	var temp_cities = []
+	var city_names = []
 	
 	while !file.eof_reached():
 		temp_cities.append(file.get_line())

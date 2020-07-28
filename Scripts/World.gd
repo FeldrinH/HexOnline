@@ -148,15 +148,13 @@ func __add_row(tiles : Dictionary, row_start : Vector2, row_length : int, dir : 
 			tiles[new_tile] = true
 
 func map_cleanup():
-	var tiles = get_all_tiles()
-	for tile in tiles:
+	for tile in get_all_tiles():
 		if tile.city != null:
 			tile.city.queue_free()
 			tile.city = null
 			tile.army = null
 			
-	var units = units.get_children()
-	for unit in units:
+	for unit in units.get_children():
 		unit.queue_free()
 	
 
