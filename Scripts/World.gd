@@ -67,6 +67,14 @@ func get_tile(coord):
 func get_all_tiles():
 	return __tile_dict.values()
 
+func get_capitals():
+	var capitals = []
+	var tiles = get_all_tiles()
+	for tile in tiles:
+		if tile.city and tile.city.is_capital:
+			capitals.append(tile)
+	return capitals
+
 func generate_army_id(player_id: int):
 	return str(player_id) + "|" + str(network.get_next_id())
 
@@ -138,6 +146,19 @@ func __add_row(tiles : Dictionary, row_start : Vector2, row_length : int, dir : 
 		var new_tile = get_tile(row_start + Vector2(2*dir*i, 0))
 		if new_tile != null:
 			tiles[new_tile] = true
+
+func map_cleanup():
+	var tiles = get_all_tiles()
+	for tile in tiles:
+		if tile.city != null:
+			tile.city.queue_free()
+			tile.city = null
+			tile.army = null
+			
+	var units = units.get_children()
+	for unit in units:
+		unit.queue_free()
+	
 
 #func filter_can_enter(tiles : Dictionary, army):
 #	for tile in tiles.keys():

@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://Sprites/tile.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Player.gd" type="Script" id=2]
@@ -13,6 +13,10 @@
 [ext_resource path="res://Scripts/UI.gd" type="Script" id=11]
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=12]
 [ext_resource path="res://Scripts/Debug.gd" type="Script" id=13]
+[ext_resource path="res://Sprites/city_tile_2.png" type="Texture" id=14]
+[ext_resource path="res://Sprites/city_tile_3.png" type="Texture" id=15]
+[ext_resource path="res://Sprites/city_tile_4.png" type="Texture" id=16]
+[ext_resource path="res://Sprites/forest_tile_1.png" type="Texture" id=17]
 
 [sub_resource type="TileSet" id=1]
 0/name = "BaseTile"
@@ -280,3 +284,19 @@ script = SubResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="city_tile_2" type="Sprite" parent="."]
+position = Vector2( 444.545, 288.937 )
+texture = ExtResource( 14 )
+
+[node name="city_tile_4" type="Sprite" parent="."]
+position = Vector2( 533.23, 329.398 )
+texture = ExtResource( 16 )
+
+[node name="forest_tile_1" type="Sprite" parent="."]
+position = Vector2( 352.781, 270.783 )
+texture = ExtResource( 17 )
+
+[node name="city_tile_3" type="Sprite" parent="."]
+position = Vector2( 488, 285.5 )
+texture = ExtResource( 15 )
