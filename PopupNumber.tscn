@@ -42,8 +42,6 @@ modulate = Color( 1, 0, 0, 1 )
 script = ExtResource( 3 )
 
 [node name="LabelContainer" type="Node2D" parent="."]
-modulate = Color( 1, 1, 1, 0 )
-position = Vector2( 0, -100 )
 
 [node name="Label" type="Label" parent="LabelContainer"]
 margin_left = -13.0

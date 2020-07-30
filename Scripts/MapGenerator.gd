@@ -8,7 +8,7 @@ static func generate_map(map):
 	map.map_cleanup()
 	
 	var tiles = map.get_all_tiles()
-
+	
 	randomize()
 	
 	for tile in tiles:
@@ -31,11 +31,11 @@ static func generate_map(map):
 	for tile in tiles:
 		if noise.get_noise_2dv(tile.position) > 0.4:
 			tile.set_terrain(Util.TERRAIN_WATER)
-
+	
 	for tile in tiles:
 		if is_single_tile_island(tile, map):
 			tile.set_terrain(Util.TERRAIN_WATER)
-
+	
 	var best_min_distance = 0
 	var best_total_distance = 0
 	var best_capitals = null

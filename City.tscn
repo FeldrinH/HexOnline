@@ -11,7 +11,7 @@ use_filter = true
 font_data = ExtResource( 3 )
 
 [node name="City" type="Node2D"]
-z_index = 1
+z_index = 10
 script = ExtResource( 1 )
 
 [node name="PortSprite" type="Sprite" parent="."]

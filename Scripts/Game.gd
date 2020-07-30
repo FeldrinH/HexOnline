@@ -25,11 +25,17 @@ func get_player(id: int):
 func get_our_player() -> Node:
 	return world.network.our_client.player if world.network.our_client else null
 
-func is_our_turn() -> bool:
-	return current_player and current_player.client and current_player.client == world.network.our_client
+# Turn and permission checking utility functions
+# NB: Turn checking currently disabled for debugging!
 
-func is_rpc_sender_turn() -> bool:
-	return current_player and current_player.client and current_player.client.id == get_tree().get_rpc_sender_id()
+func is_our_move_allowed(owning_player: Node) -> bool:
+	return owning_player.client == world.network.our_client # and owning_player == current_player
+
+func is_rpc_sender_move_allowed(owning_player: Node) -> bool:
+	return owning_player.client and owning_player.client.id == get_tree().get_rpc_sender_id() # and owning_player == current_player
+
+#func is_our_turn():
+#	return true # current_player and current_player.client == world.network.our_client
 
 # Clientside functions for ensuring moves are run in sequence and do not overlap
 func await_start_move():

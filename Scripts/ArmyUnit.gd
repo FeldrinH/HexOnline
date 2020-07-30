@@ -15,20 +15,20 @@ var power : int = 0
 
 var on_ship : bool = false
 
-func init(unit_world, starting_tile, starting_power, unit_player):
-	init_detached(unit_world, starting_tile, starting_power, unit_player)
-	do_enter_tile(starting_tile)
+func init(unit_world, starting_tile, starting_power, unit_player, silent: bool):
+	init_detached(unit_world, starting_tile, starting_power, unit_player, silent)
+	do_enter_tile(starting_tile, !silent)
 
-func init_detached(unit_world, starting_tile, starting_power, unit_player):
+func init_detached(unit_world, starting_tile, starting_power, unit_player, silent: bool):
 	world = unit_world
 	player = unit_player
 	$Sprites.modulate = unit_player.unit_color
 	position = starting_tile.position
-	set_power(starting_power)
+	set_power(starting_power, !silent)
 
 remotesync func move_to(target_tile_coord):
 	world.game.await_start_move()
-	if world.game.is_rpc_sender_turn() and world.game.current_player == player:
+	if world.game.is_rpc_sender_move_allowed(player):
 		execute_move_to(world.get_tile(target_tile_coord))
 		world.game.advance_move(1)
 	world.game.end_move()
@@ -48,7 +48,6 @@ func execute_move_to(target_tile):
 		if split_power > 0:
 			var split_unit = split(split_power)
 			split_unit.execute_move_to(target_tile)
-		world.game.end_move()
 		return
 	
 	if target_tile.terrain == Util.TERRAIN_GROUND:
@@ -56,15 +55,15 @@ func execute_move_to(target_tile):
 	elif target_tile.terrain == Util.TERRAIN_WATER:
 		world.effects.play_ship_sound()
 
-	do_enter_tile(null)
+	do_enter_tile(null, true)
 	
 	movement_tween.interpolate_property(self, "position", position, target_tile.position, max(position.distance_to(target_tile.position) / 1000, 0.25), Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 	movement_tween.start()
 	yield(movement_tween, "tween_all_completed")
 	
-	do_enter_tile(target_tile)
+	do_enter_tile(target_tile, true)
 
-func do_enter_tile(target_tile):
+func do_enter_tile(target_tile, do_enter_event: bool):
 	var has_entered = false
 	
 	if target_tile == null:
@@ -84,7 +83,7 @@ func do_enter_tile(target_tile):
 			has_entered = true
 		
 	tile = target_tile
-	if has_entered:
+	if has_entered and do_enter_event:
 		on_enter_tile(target_tile)
 
 func on_enter_tile(target_tile):
@@ -126,7 +125,7 @@ func merge_with(other_army):
 
 func split(split_power):
 	set_power(power - split_power)
-	return world.add_unit_detached(tile, split_power, player)
+	return world.add_unit_detached(tile.coord, split_power, player.id, true)
 
 func can_enter(leave_tile, enter_tile) -> bool:
 	if enter_tile.blocked:
@@ -140,8 +139,9 @@ func can_enter(leave_tile, enter_tile) -> bool:
 	else:
 		return leave_tile.terrain == tile.terrain and enter_tile.terrain == leave_tile.terrain
 
-func set_power(new_power):
-	world.effects.play_number_popup(new_power - power, player.unit_color, position)
+func set_power(new_power, show_popup: bool = true):
+	if show_popup:
+		world.effects.play_number_popup(new_power - power, player.unit_color, position)
 	power = new_power
 	update_appearance()
 	
