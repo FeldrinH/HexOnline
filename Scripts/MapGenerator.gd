@@ -162,4 +162,4 @@ static func can_enter(leave_tile, enter_tile) -> bool:
 		return true
 	else:
 		return enter_tile.terrain == leave_tile.terrain
-	
+

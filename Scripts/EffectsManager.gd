@@ -4,6 +4,7 @@ const marching_clip = preload("res://Sounds/march.ogg")
 const battle_clip = preload("res://Sounds/battle_sound.ogg")
 const ship_clip = preload("res://Sounds/ship_horn_1.ogg")
 
+onready var wasteland_sprite = preload("res://wasteland_tile_1.tscn")
 onready var battle_sound_player : AudioStreamPlayer = $BattleSoundPlayer
 onready var movement_sound_player : AudioStreamPlayer = $MovementSoundPlayer
 onready var ship_sound_player : AudioStreamPlayer = $ShipSoundPlayer
@@ -37,3 +38,9 @@ func play_battle_effects(target_position):
 	battle_particles.emitting = true
 	
 	battle_sound_player.play()
+	
+func make_wasteland(position : Vector2):
+	var wasteland_instance = wasteland_sprite.instance()
+	self.add_child(wasteland_instance)
+	wasteland_instance.position = position
+	wasteland_instance.rotation = rand_range(0, 360)

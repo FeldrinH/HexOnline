@@ -8,7 +8,7 @@ const ArmyUnit = preload("res://ArmyUnit.tscn")
 const HexTile = preload("res://HexTile.tscn")
 const MapGenerator = preload("res://Scripts/MapGenerator.gd")
 const MapSender = preload("res://Scripts/MapSender.gd")
-#const TerrainGroundSprite = preload("res://TerrainGroundSprite.tscn")
+
 #const TerrainGroundTextures = [preload("res://Sprites/Terrain/hex_sprites_blend_1.png"), preload("res://Sprites/Terrain/hex_sprites_blend_2.png"), preload("res://Sprites/Terrain/hex_sprites_blend_3.png")]
 
 onready var terrainsprites : Node2D = $TerrainSpritesContainer

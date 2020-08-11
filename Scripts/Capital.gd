@@ -10,7 +10,7 @@ func init_capital(capital_manager, capital_player):
 	player = capital_player
 	$Sprite.modulate = capital_player.unit_color
 	
-	manager.connect("turn_start", self, "__turn_start")
+	world.connect("turn_start", self, "__turn_start")
 
 func __turn_start():
 	pass

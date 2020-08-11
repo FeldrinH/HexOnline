@@ -51,6 +51,7 @@ func end_move():
 	__cur_move_index += 1
 	assert(__cur_move_index <= __next_free_move_index) # Sanity check
 	emit_signal("__move_ended")
+	
 
 func is_move_active():
 	return __cur_move_index < __next_free_move_index
@@ -66,6 +67,12 @@ func advance_turn():
 	current_player = players[__current_player_index]
 	moves_remaining = MOVES_PER_TURN
 	print("Turn advanced to player " + current_player.name)
+	
+
+func conquer_capital(old_player, new_player):
+	for tile in world.get_all_tiles():
+		if tile.player == old_player and tile.army == null:
+			tile.set_player(new_player.id)
 
 ## Serverside functions for managing turns (called ON server locally, will call functions on client using RPC)
 #func advance_move(moves_made: int):

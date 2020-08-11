@@ -5,6 +5,7 @@ const Capital = preload("res://Capital.tscn")
 const ground_tiles = [preload("res://Sprites/land_tile_4.png"), preload("res://Sprites/land_tile_9.png"), preload("res://Sprites/land_tile_10.png"), preload("res://Sprites/land_tile_11.png"), preload("res://Sprites/land_tile_12.png")]
 const sea_tiles = [preload("res://Sprites/sea_tile_1.png"), preload("res://Sprites/sea_tile_2.png"), preload("res://Sprites/sea_tile_3.png")]
 const base_tile = preload("res://Sprites/tile.png")
+const wasteland_tile = preload("res://Sprites/wasteland_tile_1.png")
 
 onready var sprites : Node2D = $Sprites
 onready var border : Node2D = $Border
@@ -119,3 +120,9 @@ puppet func set_player(new_player_id : int):
 	update_border_appearance()
 	for adjacent_tile in world.find_neighbours(self):
 		adjacent_tile.update_border_appearance()
+		
+#func make_wasteland():
+#	var wasteland = wasteland_tile.new()
+#	self.add_child(wasteland)
+#	wasteland.position = self.position
+#	wasteland.rotation_degrees = randi() % (360 + 1)

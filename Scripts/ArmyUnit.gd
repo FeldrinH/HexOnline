@@ -87,6 +87,8 @@ func do_enter_tile(target_tile, do_enter_event: bool):
 		on_enter_tile(target_tile)
 
 func on_enter_tile(target_tile):
+	if target_tile.city and target_tile.city.is_capital and target_tile.city.player != player:
+		world.game.conquer_capital(target_tile.player, player)
 	target_tile.set_player(player.id)
 	for adjacent_tile in world.find_travelable(target_tile, self, 1):
 		if adjacent_tile.army == null:
@@ -107,6 +109,9 @@ func battle(defending_army) -> bool:
 	else:
 		__apply_loss(defending_army, self)
 		self.queue_free()
+	
+	if randf() < 0.25:
+		world.effects.make_wasteland(self.position)
 	
 	return we_won
 
