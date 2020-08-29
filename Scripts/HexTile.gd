@@ -5,10 +5,12 @@ const Capital = preload("res://Capital.tscn")
 const ground_tiles = [preload("res://Sprites/land_tile_4.png"), preload("res://Sprites/land_tile_9.png"), preload("res://Sprites/land_tile_10.png"), preload("res://Sprites/land_tile_11.png"), preload("res://Sprites/land_tile_12.png")]
 const sea_tiles = [preload("res://Sprites/sea_tile_1.png"), preload("res://Sprites/sea_tile_2.png"), preload("res://Sprites/sea_tile_3.png")]
 const base_tile = preload("res://Sprites/tile.png")
+const city_tiles = [preload("res://Sprites/city_tile_1.png"), preload("res://Sprites/city_tile_2.png")]
 const wasteland_tile = preload("res://Sprites/wasteland_tile_1.png")
 
 onready var sprites : Node2D = $Sprites
 onready var border : Node2D = $Border
+onready var city_sprite = $CitySprite
 onready var border_sections : Array = [$"Border/1", $"Border/2", $"Border/3", $"Border/4", $"Border/5", $"Border/6"]
 onready var shore_sections : Array = [$"Shore/1", $"Shore/2", $"Shore/3", $"Shore/4", $"Shore/5", $"Shore/6"]
 
@@ -36,6 +38,8 @@ puppet func add_city(name: String) -> Node2D:
 	city = City.instance()
 	self.add_child(city)
 	city.init_name(world, name)
+	city_sprite.texture = Util.pick_random(city_tiles)
+	city_sprite.rotation = rand_range(0, 360)
 	return city
 
 puppet func add_capital(player_id: int) -> Node2D:
@@ -47,6 +51,7 @@ puppet func add_capital(player_id: int) -> Node2D:
 
 func remove_city():
 	if city:
+		city_sprite = null
 		city.free()
 	city = null
 
@@ -120,9 +125,4 @@ puppet func set_player(new_player_id : int):
 	update_border_appearance()
 	for adjacent_tile in world.find_neighbours(self):
 		adjacent_tile.update_border_appearance()
-		
-#func make_wasteland():
-#	var wasteland = wasteland_tile.new()
-#	self.add_child(wasteland)
-#	wasteland.position = self.position
-#	wasteland.rotation_degrees = randi() % (360 + 1)
+

@@ -2,7 +2,7 @@ extends Node2D
 
 onready var label = $Label
 onready var port_sprite = $PortSprite
-onready var city_sprite = $CitySprite
+onready var city_sprite = $CityIcon
 
 var world : Node2D = null
 var city_name : String

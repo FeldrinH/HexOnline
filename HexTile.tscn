@@ -38,6 +38,8 @@ polygon = PoolVector2Array( -22.5, -13, 0, -26, 22.5, -13, 22.5, 13, 0, 26, -22.
 [node name="Sprites" type="Sprite" parent="."]
 texture = ExtResource( 1 )
 
+[node name="CitySprite" type="Sprite" parent="."]
+
 [node name="Shore" type="Node2D" parent="."]
 z_index = 1
 
