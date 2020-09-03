@@ -66,11 +66,7 @@ puppet func setup_appearance():
 
 # Updates related to appearance & UI
 func update_highlight_appearance():
-	if world.ui.selected == self:
-		sprites.modulate = Color(0.8,0.8,0)
-	elif world.ui.hovered == self:
-		sprites.modulate = Color(0.6,0,0)
-	elif world.ui.highlighted.has(self):
+	if world.ui.highlighted.has(self):
 		sprites.modulate = base_color.blend(Color(0, 1, 0, 0.7))
 	else:
 		sprites.modulate = base_color

@@ -1,0 +1,16 @@
+0-9 - Tile
+0 - Tile base
+1 - Tile shores
+2 - City overlay
+5 - Tile conquer border
+9 - Tile select/hover border
+
+10-19 - City
+10 - City icon + label
+
+20-29 - Unit
+20 - Unit base + label
+
+30-49 - Effects
+30 - Unit number popups
+40 - Battle particles

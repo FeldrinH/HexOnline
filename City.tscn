@@ -15,13 +15,8 @@ z_index = 10
 script = ExtResource( 1 )
 
 [node name="CitySprite" type="Sprite" parent="."]
-
-[node name="PortSprite" type="Sprite" parent="."]
-visible = false
-position = Vector2( 0, -7.776 )
-rotation = 1.5708
-scale = Vector2( 0.3, 0.3 )
-texture = ExtResource( 2 )
+z_index = 2
+z_as_relative = false
 
 [node name="Label" type="Label" parent="."]
 margin_left = -16.0
@@ -33,6 +28,13 @@ align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="PortIcon" type="Sprite" parent="."]
+visible = false
+position = Vector2( 0, -7.776 )
+rotation = 1.5708
+scale = Vector2( 0.3, 0.3 )
+texture = ExtResource( 2 )
 
 [node name="CityIcon" type="Sprite" parent="."]
 position = Vector2( 0, -8 )

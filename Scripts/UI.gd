@@ -1,6 +1,8 @@
 extends Node
 
 onready var world: Node2D = $".."
+onready var selected_border = $SelectedBorder
+onready var hovered_border = $HoveredBorder
 
 var hovered: Node = null
 var selected: Node = null
@@ -10,17 +12,19 @@ func set_hovered(new_hovered):
 	var previous_hovered = hovered
 	hovered = new_hovered
 	if new_hovered:
-		new_hovered.update_highlight_appearance()
-	if previous_hovered:
-		previous_hovered.update_highlight_appearance()
+		hovered_border.visible = true
+		hovered_border.position = new_hovered.position
+	else:
+		hovered_border.visible = false
 
 func set_selected(new_selected):
 	var previous_selected = selected
 	selected = new_selected
-	if new_selected != null:
-		new_selected.update_highlight_appearance()
-	if previous_selected != null:
-		previous_selected.update_highlight_appearance()
+	if new_selected:
+		selected_border.visible = true
+		selected_border.position = new_selected.position
+	else:
+		selected_border.visible = false
 
 func set_highlighted(tiles : Dictionary):
 	var previous_highlighted = highlighted

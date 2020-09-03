@@ -1,7 +1,7 @@
 extends Node2D
 
 onready var label = $Label
-onready var port_sprite = $PortSprite
+onready var port_icon = $PortIcon
 onready var city_icon = $CityIcon
 onready var city_sprite = $CitySprite
 
@@ -26,5 +26,5 @@ func init_name(city_manager, city_city_name):
 
 puppet func make_port():
 	is_port = true
-	port_sprite.visible = true
+	port_icon.visible = true
 	city_icon.visible = false
