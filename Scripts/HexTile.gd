@@ -9,9 +9,10 @@ const wasteland_tile = preload("res://Sprites/wasteland_tile_1.png")
 
 onready var sprites : Node2D = $Sprites
 onready var border : Node2D = $Border
+onready var shore : Node2D = $Shore
 onready var city_sprite = $CitySprite
-onready var border_sections : Array = [$"Border/1", $"Border/2", $"Border/3", $"Border/4", $"Border/5", $"Border/6"]
-onready var shore_sections : Array = [$"Shore/1", $"Shore/2", $"Shore/3", $"Shore/4", $"Shore/5", $"Shore/6"]
+onready var border_sections : Array = border.get_children()
+onready var shore_sections : Array = shore.get_children()
 
 var base_color : Color = Color(1,1,1)
 
@@ -57,22 +58,19 @@ puppet func setup_appearance():
 	match terrain:
 		Util.TERRAIN_GROUND:
 			$Sprites.texture = Util.pick_random(ground_tiles)
-			base_color = Color(1, 1, 1, 1) #Color(86/255.0, 125/255.0, 70/255.0, 0)
 		Util.TERRAIN_WATER:
 			$Sprites.texture = Util.pick_random(sea_tiles)
-			base_color = Color(1, 1, 1, 1)
-	update_highlight_appearance()
+	show_highlight(false)
 	create_shoreline()
 
 # Updates related to appearance & UI
-func update_highlight_appearance():
-	if world.ui.highlighted.has(self):
+func show_highlight(is_highlighted):
+	if is_highlighted:
 		sprites.modulate = base_color.blend(Color(0, 1, 0, 0.7))
+		shore.modulate = base_color.blend(Color(0, 1, 0, 0.5))
 	else:
 		sprites.modulate = base_color
-	
-#	if player != null:
-#		sprites.modulate += player.unit_color * 0.2
+		shore.modulate = base_color
 
 func update_border_appearance():
 	if player != null:

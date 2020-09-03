@@ -31,10 +31,9 @@ func set_highlighted(tiles : Dictionary):
 	highlighted = tiles
 	
 	for tile in previous_highlighted:
-		tile.update_highlight_appearance()
-		
-	for tile in tiles:
-		tile.update_highlight_appearance()
+		tile.show_highlight(false)
+	for tile in highlighted:
+		tile.show_highlight(true)
 
 func hovered_click(event : InputEvent):
 	if event.is_action_pressed("ui_mouse_left"):
