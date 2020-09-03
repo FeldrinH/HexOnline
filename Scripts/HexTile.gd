@@ -5,7 +5,6 @@ const Capital = preload("res://Capital.tscn")
 const ground_tiles = [preload("res://Sprites/land_tile_4.png"), preload("res://Sprites/land_tile_9.png"), preload("res://Sprites/land_tile_10.png"), preload("res://Sprites/land_tile_11.png"), preload("res://Sprites/land_tile_12.png")]
 const sea_tiles = [preload("res://Sprites/sea_tile_1.png"), preload("res://Sprites/sea_tile_2.png"), preload("res://Sprites/sea_tile_3.png")]
 const base_tile = preload("res://Sprites/tile.png")
-const city_tiles = [preload("res://Sprites/city_tile_1.png"), preload("res://Sprites/city_tile_2.png")]
 const wasteland_tile = preload("res://Sprites/wasteland_tile_1.png")
 
 onready var sprites : Node2D = $Sprites
@@ -38,8 +37,6 @@ puppet func add_city(name: String) -> Node2D:
 	city = City.instance()
 	self.add_child(city)
 	city.init_name(world, name)
-	city_sprite.texture = Util.pick_random(city_tiles)
-	city_sprite.rotation = rand_range(0, 360)
 	return city
 
 puppet func add_capital(player_id: int) -> Node2D:

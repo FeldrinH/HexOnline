@@ -73,6 +73,8 @@ func conquer_capital(old_player, new_player):
 	for tile in world.get_all_tiles():
 		if tile.player == old_player and tile.army == null:
 			tile.set_player(new_player.id)
+			if tile.city.is_capital:
+				tile.capital.player = null
 
 ## Serverside functions for managing turns (called ON server locally, will call functions on client using RPC)
 #func advance_move(moves_made: int):
