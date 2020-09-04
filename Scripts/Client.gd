@@ -10,16 +10,16 @@ func init(client_world: Node, client_id: int, client_display_name: String, playe
 	world = client_world
 	id = client_id
 	display_name = client_display_name
-	__set_player(player)
+	set_player(player)
 	set_name(str(id))
 	set_network_master(id)
 
-func __set_player(new_player: Node):
+func set_player(new_player: Node):
 	if player:
 		player.client = null
 	if new_player:
 		new_player.client = self
 	player = new_player
 
-puppetsync func select_player(new_player_id: int):
-	__set_player(world.game.get_player(new_player_id))
+puppetsync func set_player_id(new_player_id: int):
+	set_player(world.game.get_player(new_player_id))

@@ -19,10 +19,10 @@ func refresh():
 func __selected(index: int):
 	if world.network.our_client:
 		if index > 0:
-			world.network.our_client.rpc("select_player", index - 1)
+			world.network.our_client.rpc("set_player_id", index - 1)
 			print("Selected player: " + world.game.get_our_player().name)
 		else:
-			world.network.our_client.rpc("select_player", null)
+			world.network.our_client.rpc("set_player_id", null)
 			print("Deselected player")
 	else:
 		select(0)

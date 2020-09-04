@@ -5,7 +5,7 @@ static func send_map(world, target_id: int):
 		tile.rpc_id(target_id, "set_terrain", tile.terrain)
 		
 		if tile.player:
-			tile.rpc_id(target_id, "set_player", tile.player.id)
+			tile.rpc_id(target_id, "set_player_id", tile.player.id)
 			
 		if tile.city:
 			if tile.city.is_capital:

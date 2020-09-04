@@ -53,6 +53,17 @@ func remove_city():
 		city.free()
 	city = null
 
+func try_occupy(new_player: Node):	
+	if army and army.player != new_player: # Can't occupy if tile has opposing army
+		return
+	
+	if city and city.is_capital and !city.conquered and city.player != new_player: # Extra checks if occupying capital
+		if !(army and army.player == new_player): # Can't occupy capital if your army is not on tile
+			return
+		city.conquer(new_player)
+	
+	set_player(new_player)
+
 # When a tile's appearance changes related to ingame logic
 puppet func setup_appearance():
 	match terrain:
@@ -111,9 +122,11 @@ func _input_event(viewport, event, shape_idx):
 puppet func set_terrain(new_terrain : int):
 	terrain = new_terrain
 
-puppet func set_player(new_player_id : int):
-	player = world.game.get_player(new_player_id)
+func set_player(new_player: Node):
+	player = new_player
 	update_border_appearance()
 	for adjacent_tile in world.find_neighbours(self):
 		adjacent_tile.update_border_appearance()
 
+puppet func set_player_id(new_player_id : int):
+	set_player(world.game.get_player(new_player_id))

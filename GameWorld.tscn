@@ -146,11 +146,11 @@ script = ExtResource( 3 )
 [node name="UnitNumbers" type="Node2D" parent="World/EffectsManager"]
 z_index = 30
 
-[node name="Popup3" parent="World/EffectsManager/UnitNumbers" instance=ExtResource( 6 )]
-
 [node name="Popup" parent="World/EffectsManager/UnitNumbers" instance=ExtResource( 6 )]
 
 [node name="Popup2" parent="World/EffectsManager/UnitNumbers" instance=ExtResource( 6 )]
+
+[node name="Popup3" parent="World/EffectsManager/UnitNumbers" instance=ExtResource( 6 )]
 
 [node name="BattleSoundPlayer" type="AudioStreamPlayer" parent="World/EffectsManager"]
 

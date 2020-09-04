@@ -87,12 +87,10 @@ func do_enter_tile(target_tile, do_enter_event: bool):
 		on_enter_tile(target_tile)
 
 func on_enter_tile(target_tile):
-	if target_tile.city and target_tile.city.is_capital and target_tile.city.player != player:
-		world.game.conquer_capital(target_tile.player, player)
-	target_tile.set_player(player.id)
+	target_tile.try_occupy(player)
 	for adjacent_tile in world.find_travelable(target_tile, self, 1):
-		if adjacent_tile.army == null:
-			adjacent_tile.set_player(player.id)
+		if adjacent_tile.terrain == target_tile.terrain:
+			adjacent_tile.try_occupy(player)
 
 func battle(defending_army) -> bool:
 	world.effects.play_battle_effects(position)

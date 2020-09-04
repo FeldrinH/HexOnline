@@ -24,5 +24,5 @@ func autosetup_debug():
 func autosetup_editor():
 	print("Running editor autosetup...")
 	world.network.create_server("Server Host Man")
-	world.network.our_client.rpc("select_player", 0)
+	world.network.our_client.rpc("set_player_id", 0)
 	debug_menu.refresh_all()
