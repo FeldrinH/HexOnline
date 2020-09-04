@@ -1,13 +1,12 @@
-extends "City.gd"
+extends "CityBase.gd"
 
 var player: Node = null
 var conquered: bool = false
 
-func _ready():
-	is_capital = true
-
 func init_capital(capital_manager, capital_player):
 	init(capital_manager)
+	is_capital = true
+	
 	player = capital_player
 	player.set_capital(self)
 	$Sprite.modulate = player.unit_color

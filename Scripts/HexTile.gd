@@ -10,7 +10,6 @@ const wasteland_tile = preload("res://Sprites/wasteland_tile_1.png")
 onready var sprites : Node2D = $Sprites
 onready var border : Node2D = $Border
 onready var shore : Node2D = $Shore
-onready var city_sprite = $CitySprite
 onready var border_sections : Array = border.get_children()
 onready var shore_sections : Array = shore.get_children()
 
@@ -49,7 +48,6 @@ puppet func add_capital(player_id: int) -> Node2D:
 
 func remove_city():
 	if city:
-		city_sprite = null
 		city.free()
 	city = null
 
