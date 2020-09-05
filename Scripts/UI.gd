@@ -36,10 +36,14 @@ func set_highlighted(tiles : Dictionary):
 		tile.show_highlight(true)
 
 func hovered_click(event : InputEvent):
+	var our_player = world.network.get_our_player()
+	if !world.game.is_active_player(our_player):
+		return
+	
 	if event.is_action_pressed("ui_mouse_left"):
 		if !world.game.is_move_active():
 			if !selected:
-				if hovered.army and world.game.is_our_move_allowed(hovered.army.player):
+				if hovered.army and world.game.is_move_allowed(our_player, hovered.army.player):
 					set_selected(hovered)
 					set_highlighted(world.find_travelable(hovered, hovered.army, world.game.MOVE_RANGE))
 			else: # selected != null
@@ -52,7 +56,7 @@ func hovered_click(event : InputEvent):
 					set_selected(null)
 					set_highlighted({})
 	elif event.is_action_pressed("ui_mouse_debug"):
-		if world.game.get_our_player():
-			world.rpc("add_unit", hovered.coord, 20, world.game.get_our_player().id, false)
+		if our_player:
+			world.rpc("add_unit", hovered.coord, 20, our_player.id, false)
 	#elif event.is_action_pressed("ui_mouse_right"):
 		#print(world.distance_between(selected, hovered))

@@ -24,6 +24,12 @@ func get_client(id: int) -> Node:
 	else:
 		return null
 
+func get_our_player() -> Node:
+	return our_client.player
+
+func get_rpc_sender_player() -> Node:
+	return get_client(get_tree().get_rpc_sender_id()).player
+
 master func request_add_client(id: int, display_name: String, player_id: int):
 	if get_tree().get_rpc_sender_id() == id:
 		rpc("add_client", id, display_name, player_id)
@@ -86,6 +92,7 @@ func __server_peer_connected(id: int):
 	for client in clients.values():
 		rpc_id(id, "add_client", client.id, client.display_name, client.player.id if client.player else -1)
 	world.send_map(id)
+	world.game.send_state(id)
 	rpc_id(id, "set_synced_values", rng.seed, __next_id)
 	
 	print("Peer connected: " + str(id))
