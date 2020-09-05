@@ -1,8 +1,12 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Sprites/harbor.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/AnimatedBorder.gd" type="Script" id=2]
 [ext_resource path="res://Sprites/tile.png" type="Texture" id=3]
+
+[sub_resource type="StreamTexture" id=2]
+resource_local_to_scene = true
+flags = 4
+load_path = "res://.import/selection_sprite.png-cf2fcdb0c896daa3a23f2eb088440b5a.stex"
 
 [sub_resource type="Animation" id=1]
 resource_name = "RotatingBorder"
@@ -24,8 +28,9 @@ tracks/0/keys = {
 [node name="AnimatedBorder" type="Polygon2D"]
 rotation = -6.28319
 antialiased = true
-texture = ExtResource( 1 )
+texture = SubResource( 2 )
 texture_offset = Vector2( 32, 32 )
+texture_rotation_degrees = 347.31
 polygon = PoolVector2Array( 4.72083e-06, -27, 9.3794e-05, -21, -18, -10.0001, -18, 9.99992, -9.3794e-05, 21, 18, 10.0001, 18, -9.99992, 9.3794e-05, -21, 4.72083e-06, -27, 23.0001, -12.9999, 22.9999, 13.0001, -4.72083e-06, 27, -23.0001, 12.9999, -22.9999, -13.0001 )
 script = ExtResource( 2 )
 __meta__ = {
