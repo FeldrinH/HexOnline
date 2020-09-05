@@ -115,14 +115,13 @@ visible = false
 rotation = -4.46638e-06
 z_index = 9
 color = Color( 1, 0, 0, 1 )
-rotation_offset = 86.0
 
 [node name="HoveredBorder" parent="World/UI" instance=ExtResource( 16 )]
 visible = false
 rotation = -4.46638e-06
 z_index = 9
 color = Color( 0.105882, 0.890196, 0.615686, 1 )
-rotation_offset = 22.0
+rotation_offset = 22.5
 
 [node name="TileMap" type="TileMap" parent="World"]
 position = Vector2( -22, -26 )
