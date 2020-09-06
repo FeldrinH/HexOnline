@@ -106,17 +106,6 @@ func create_shoreline():
 func find_neighbours():
 	return world.find_neighbours(self)
 
-func __mouse_entered():
-	world.ui.set_hovered(self)
-
-func __mouse_exited():
-	if world.ui.hovered == self:
-		world.ui.set_hovered(null)
-
-func _input_event(viewport, event, shape_idx):
-	if world.ui.hovered == self:
-		world.ui.hovered_click(event)
-
 puppet func set_terrain(new_terrain : int):
 	terrain = new_terrain
 

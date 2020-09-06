@@ -1,5 +1,7 @@
 extends Node
 
+signal connection_finalized()
+
 const PORT = 2000
 const MAX_PLAYERS = 4
 
@@ -50,6 +52,9 @@ puppetsync func set_synced_values(rng_seed: int, next_id: int):
 	rng.set_seed(rng_seed)
 	__next_id = next_id
 
+puppetsync func connection_finalized():
+	emit_signal("connection_finalized")
+
 func cleanup_connections():
 	if get_tree().network_peer:
 		get_tree().network_peer = null
@@ -72,6 +77,7 @@ func create_server(client_display_name: String):
 	
 	# Initialize server's client
 	__client_connected_to_server(client_display_name)
+	connection_finalized()
 
 func join_server(ip: String, client_display_name: String):
 	cleanup_connections()
@@ -94,6 +100,7 @@ func __server_peer_connected(id: int):
 	world.send_map(id)
 	world.game.send_state(id)
 	rpc_id(id, "set_synced_values", rng.seed, __next_id)
+	rpc_id(id, "connection_finalized")
 	
 	print("Peer connected: " + str(id))
 

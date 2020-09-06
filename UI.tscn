@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Sprites/selection_sprite.png" type="Texture" id=1]
+[ext_resource path="res://HUD.tscn" type="PackedScene" id=2]
+[ext_resource path="res://AnimatedBorder.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scripts/AnimatedBorder.gd" type="Script" id=4]
+[ext_resource path="res://Scripts/UI.gd" type="Script" id=5]
+
+[node name="UI" type="Node"]
+script = ExtResource( 5 )
+
+[node name="SelectedBorder" type="Polygon2D" parent="." instance=ExtResource( 3 )]
+visible = false
+rotation = -4.46638e-06
+z_index = 9
+color = Color( 1, 0, 0, 1 )
+antialiased = true
+texture = ExtResource( 1 )
+texture_offset = Vector2( 32, 32 )
+polygon = PoolVector2Array( 0.000116126, -26, 8.93276e-05, -20, -16, -10.0001, -16, 8.99993, -8.48612e-05, 19, 17, 9.00008, 17, -9.99992, 8.93276e-05, -20, 0.000116126, -26, 22.0001, -12.9999, 21.9999, 12.0001, -0.000111659, 25, -21.0001, 11.9999, -20.9999, -13.0001 )
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="HoveredBorder" type="Polygon2D" parent="." instance=ExtResource( 3 )]
+visible = false
+rotation = -4.46638e-06
+z_index = 9
+color = Color( 0.105882, 0.890196, 0.615686, 1 )
+antialiased = true
+texture = ExtResource( 1 )
+texture_offset = Vector2( 32, 32 )
+polygon = PoolVector2Array( 0.000116126, -26, 8.93276e-05, -20, -16, -10.0001, -16, 8.99993, -8.48612e-05, 19, 17, 9.00008, 17, -9.99992, 8.93276e-05, -20, 0.000116126, -26, 22.0001, -12.9999, 21.9999, 12.0001, -0.000111659, 25, -21.0001, 11.9999, -20.9999, -13.0001 )
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_group_": true
+}
+rotation_offset = 22.5
+
+[node name="HUD" type="CanvasLayer" parent="." instance=ExtResource( 2 )]

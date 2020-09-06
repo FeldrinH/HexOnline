@@ -15,15 +15,21 @@ onready var terrainsprites : Node2D = $TerrainSpritesContainer
 onready var tiles : Node2D = $TilesContainer
 onready var units : Node2D = $UnitsContainer
 onready var effects : Node2D = $EffectsManager
-
-onready var debug : Node = $Debug
-onready var network : Node = $Network
-onready var game: Node = $Game
-onready var ui: Node = $UI
-
 onready var tilemap : TileMap = $TileMap
 
+var debug: Node
+var network: Node
+var game: Node
+var ui: Node
+
 const __tile_dict : Dictionary = {}
+const __tile_array : Array = []
+
+func _enter_tree():
+	debug = $Debug
+	network = $Network
+	game = $Game
+	ui = $UI
 
 func _ready():
 	randomize()
@@ -47,6 +53,7 @@ func _ready():
 		var hex_coord = Vector2(coord.x * 2 + posmod(coord.y, 2), coord.y)
 		
 		__tile_dict[hex_coord] = tile_instance
+		__tile_array.append(tile_instance)
 		tile_instance.init(self, hex_coord, tilemap.map_to_world(coord), tile_index == 1)
 		tile_instance.set_name(str(hex_coord))
 		
@@ -65,7 +72,7 @@ func get_tile(coord):
 
 # Slow, should only be used during map generation
 func get_all_tiles():
-	return __tile_dict.values()
+	return __tile_array
 
 func get_capitals():
 	var capitals = []
