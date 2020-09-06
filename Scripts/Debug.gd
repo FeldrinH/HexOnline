@@ -1,12 +1,27 @@
-extends Node
+extends CanvasLayer
 
-# Debug helper
-
-onready var debug_menu = $"/root/Root/DebugMenu"
+var initialized = false
+onready var menu_root = $MenuRoot
 onready var world = $".."
 
 func _ready():
-	$"/root".connect("ready", self, "autosetup")
+	world.connect("ready", self, "initialize")
+	world.connect("ready", self, "autosetup")
+
+func initialize():
+	menu_root.propagate_call("init", [world])
+	initialized = true
+
+func _input(event: InputEvent):
+	if event.is_action_pressed("ui_toggle_debug_menu") and initialized:
+		menu_root.visible = !menu_root.visible
+		if menu_root.visible:
+			refresh_all()
+
+func refresh_all():
+	assert(initialized)
+	menu_root.propagate_call("refresh")
+
 
 # Run after scene tree has initialized
 func autosetup():
@@ -25,4 +40,4 @@ func autosetup_editor():
 	print("Running editor autosetup...")
 	world.network.create_server("Server Host Man")
 	world.network.our_client.rpc("set_player_id", 0)
-	debug_menu.refresh_all()
+	refresh_all()

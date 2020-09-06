@@ -1,8 +1,10 @@
 extends OptionButton
 
-onready var world: Node = get_node("/root/Root/World")
+var world: Node = null
 
-func _ready():
+func init(init_world):
+	world = init_world
+	
 	add_item("None")
 	for player in world.game.players:
 		add_item(player.name)

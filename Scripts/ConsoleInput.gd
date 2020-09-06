@@ -1,8 +1,10 @@
 extends LineEdit
 
+var world: Node = null
 var compiled_expression: Expression = Expression.new()
-onready var root: Node = get_node("/root/Root")
-onready var world: Node = get_node("/root/Root/World")
+
+func init(init_world):
+	world = init_world
 
 func _gui_input(event):
 	if event.is_action_pressed("ui_accept"):
@@ -13,7 +15,7 @@ func execute_line():
 	if parse_error:
 		print("> PARSE ERROR: " + compiled_expression.get_error_text())
 	else:
-		var result = compiled_expression.execute([world, OS], root)
+		var result = compiled_expression.execute([world, OS], null)
 		if compiled_expression.has_execute_failed():
 			print("> ERROR: " + compiled_expression.get_error_text())
 		else:
