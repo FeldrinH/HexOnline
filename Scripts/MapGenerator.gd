@@ -6,7 +6,7 @@ var world
 static func generate_map(map):
 	print("MAPGEN: Begin")
 	
-	map.map_cleanup()
+	map.clear_map()
 	
 	var tiles = map.get_all_tiles()
 	

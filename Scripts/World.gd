@@ -11,26 +11,16 @@ const MapSender = preload("res://Scripts/MapSender.gd")
 
 #const TerrainGroundTextures = [preload("res://Sprites/Terrain/hex_sprites_blend_1.png"), preload("res://Sprites/Terrain/hex_sprites_blend_2.png"), preload("res://Sprites/Terrain/hex_sprites_blend_3.png")]
 
-onready var terrainsprites : Node2D = $TerrainSpritesContainer
 onready var forestsprites : Node2D = $ForestSpritesContainer
 onready var tiles : Node2D = $TilesContainer
 onready var units : Node2D = $UnitsContainer
 onready var effects : Node2D = $EffectsManager
 onready var tilemap : TileMap = $TileMap
 
-var debug: Node
-var network: Node
-var game: Node
-var ui: Node
+onready var game: Node = $Game
 
 const __tile_dict : Dictionary = {}
 const __tile_array : Array = []
-
-func _enter_tree():
-	debug = $Debug
-	network = $Network
-	game = $Game
-	ui = $UI
 
 func _ready():
 	randomize()
@@ -68,6 +58,15 @@ func generate_map():
 func send_map(target_id: int):
 	MapSender.send_map(self, target_id)
 
+func clear_map():
+	for tile in get_all_tiles():
+		if tile.city:
+			tile.remove_city()
+		tile.army = null
+	
+	for unit in units.get_children():
+		unit.free()
+
 func get_tile(coord):
 	return __tile_dict.get(coord, null)
 
@@ -84,7 +83,7 @@ func get_capitals():
 	return capitals
 
 func generate_army_id(player_id: int):
-	return str(player_id) + "|" + str(network.get_next_id())
+	return str(player_id) + "|" + str(Network.get_next_id())
 
 remotesync func add_unit(starting_tile_coord: Vector2, starting_power: int, player_id: int, silent: bool, name_override: String = "") -> Node2D:
 	var unit_instance = ArmyUnit.instance()
@@ -154,15 +153,6 @@ func __add_row(tiles : Dictionary, row_start : Vector2, row_length : int, dir : 
 		var new_tile = get_tile(row_start + Vector2(2*dir*i, 0))
 		if new_tile != null:
 			tiles[new_tile] = true
-
-func map_cleanup():
-	for tile in get_all_tiles():
-		if tile.city:
-			tile.remove_city()
-		tile.army = null
-	
-	for unit in units.get_children():
-		unit.free()
 
 #func filter_can_enter(tiles : Dictionary, army):
 #	for tile in tiles.keys():

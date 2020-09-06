@@ -1,59 +1,59 @@
 extends Node
 
-signal connection_finalized()
+signal client_connecting(id) # Emitted on server when client is connecting, so initial data can be sent from other nodes
+signal client_connected(id, profile) # Emitted on all sides after a new client has connected
+signal our_client_connected() # Emitted on client after all server-side initial data has been sent
 
 const PORT = 2000
 const MAX_PLAYERS = 4
 
-const Client = preload("res://Client.tscn")
-
-onready var world: Node2D = $".."
-
 var clients: Dictionary = {}
-var our_client: Node = null
 var is_server: bool = false
 
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var __next_id: int = 0
 
+var our_id: int = -1
+var our_profile: Dictionary = { "display_name": OS.get_environment("USERNAME") }
+
+# Networking utility functions for use during game
 func get_next_id() -> int:
 	__next_id += 1
 	return __next_id
 
-func get_client(id: int) -> Node:
+func get_profile(id: int) -> Node:
 	if clients.has(id):
 		return clients[id]
 	else:
 		return null
 
-func get_our_player() -> Node:
-	return our_client.player
+#func get_our_id() -> int:
+#	return our_id
 
-func get_rpc_sender_player() -> Node:
-	return get_client(get_tree().get_rpc_sender_id()).player
+func get_rpc_sender_id() -> int:
+	return get_tree().get_rpc_sender_id()
 
-master func request_add_client(id: int, display_name: String, player_id: int):
+# Networking RPC functions
+func add_client(id: int, profile: Dictionary):
+	clients[id] = profile
+
+puppetsync func add_remote_client(id: int, profile: Dictionary):
+	if !clients.has(id):
+		add_client(id, profile)
+	
+	emit_signal("client_connected", id, profile)
+
+master func request_add_client(id: int, profile: Dictionary):
 	if get_tree().get_rpc_sender_id() == id:
-		rpc("add_client", id, display_name, player_id)
-		print("Joined: " + display_name)
-
-puppetsync func add_client(id: int, display_name: String, player_id: int) -> Node:
-	if clients.has(id):
-		return clients[id] # Client exists
-	
-	var client = Client.instance()
-	client.init(world, id, display_name, world.game.get_player(player_id))
-	add_child(client)
-	clients[id] = client
-	
-	return client
+		rpc("add_remote_client", id, profile)
+		print("Joined: " + profile.display_name)
 
 puppetsync func set_synced_values(rng_seed: int, next_id: int):
 	rng.set_seed(rng_seed)
 	__next_id = next_id
 
-puppetsync func connection_finalized():
-	emit_signal("connection_finalized")
+puppetsync func our_client_connected():
+	emit_signal("our_client_connected")
 
 func cleanup_connections():
 	if get_tree().network_peer:
@@ -61,10 +61,9 @@ func cleanup_connections():
 	get_tree().disconnect("network_peer_connected", self, "__server_peer_connected")
 	get_tree().disconnect("connected_to_server", self, "__client_connected_to_server")
 
-func create_server(client_display_name: String):
+func create_server():
 	cleanup_connections()
 	
-	world.generate_map()
 	rng.randomize()
 	
 	var peer = NetworkedMultiplayerENet.new()
@@ -76,38 +75,36 @@ func create_server(client_display_name: String):
 	print("Server created")
 	
 	# Initialize server's client
-	__client_connected_to_server(client_display_name)
-	connection_finalized()
+	__client_connected_to_server()
 
-func join_server(ip: String, client_display_name: String):
+func join_server(ip: String):
 	cleanup_connections()
-	
-	world.map_cleanup()
 	
 	var peer = NetworkedMultiplayerENet.new()
 	peer.create_client(ip, PORT)
 	get_tree().network_peer = peer
 	is_server = false
-	get_tree().connect("connected_to_server", self, "__client_connected_to_server", [client_display_name])
+	get_tree().connect("connected_to_server", self, "__client_connected_to_server")
 	
 	print("Connecting...")
 
 # Run on server when new client connects
 func __server_peer_connected(id: int):
 	# Send existing clients to new client
-	for client in clients.values():
-		rpc_id(id, "add_client", client.id, client.display_name, client.player.id if client.player else -1)
-	world.send_map(id)
-	world.game.send_state(id)
+	for client_id in clients:
+		rpc_id(id, "add_remote_client", client_id, clients[client_id])
+	
+	emit_signal("client_connecting", id)
+	
 	rpc_id(id, "set_synced_values", rng.seed, __next_id)
-	rpc_id(id, "connection_finalized")
+	rpc_id(id, "our_client_connected")
 	
 	print("Peer connected: " + str(id))
 
 # Run on client when connected to server
-func __client_connected_to_server(client_display_name: String):
-	var id = get_tree().get_network_unique_id()
-	our_client = add_client(id, client_display_name, -1)
-	rpc("request_add_client", id, client_display_name, -1)
+func __client_connected_to_server():
+	our_id = get_tree().get_network_unique_id()
 	
-	print("Connected to server: " + str(id))
+	rpc("request_add_client", our_id, our_profile)
+	
+	print("Connected to server: " + str(our_id))

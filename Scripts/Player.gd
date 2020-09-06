@@ -7,7 +7,7 @@ export var unit_color : Color
 var world : Node2D = null
 
 var id: int = -1
-var client: Node = null
+var client_id: int = -1
 var capital: Node2D = null
 
 func init(player_world, player_id):
