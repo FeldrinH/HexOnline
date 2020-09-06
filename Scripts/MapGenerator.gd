@@ -1,4 +1,5 @@
-const port_names = ["New York", "Portland", "San Franscisco"]
+const forest_tiles = [preload("res://Sprites/forest_tile_1.png"), preload("res://Sprites/forest_tile_2.png"), preload("res://Sprites/forest_tile_3.png")]
+const forest_object = preload("res://forest_tile.tscn")
 
 var world
 
@@ -69,10 +70,13 @@ static func generate_map(map):
 	
 	var temp_cities = []
 	var city_names = []
+	var port_names = []
 	
 	while !file.eof_reached():
 		temp_cities.append(file.get_line())
 	file.close()
+	
+	var coast_tiles = find_coast(map, seatiles)
 	
 	# Picks 10 random city names from list
 	for i in 10:
@@ -80,18 +84,37 @@ static func generate_map(map):
 		city_names.append(temp_cities[index])
 		temp_cities.remove(index)
 	
+	# Picks 10 random port names from list
+	for i in 5:
+		var index = randi() % temp_cities.size()
+		port_names.append(temp_cities[index])
+		temp_cities.remove(index)
+		
 	# Adds cities
 	for name in city_names:
 		var try_tile = find_spawnable(tiles, 10)
-		if try_tile != null:
+		if try_tile:
 			try_tile.add_city(name)
 	
 	# Adds ports
-	for port_name in port_names:
-		var try_tile = find_spawnable(find_coast(map, seatiles), 10)
-		if try_tile != null:
-			try_tile.add_city(port_name)
-			try_tile.city.make_port()
+	for name in port_names:
+		var try_tile = find_spawnable(coast_tiles, 10)
+		if try_tile:
+			if !try_tile.city:
+				try_tile.add_city(name)
+				try_tile.city.make_port()
+			else:
+				try_tile.city.make_port()
+	
+	# Adds forests
+	for i in range(5):
+		var try_tile = find_spawnable(tiles, 5) 
+		if try_tile and try_tile.terrain != Util.TERRAIN_WATER and !coast_tiles.has(try_tile):
+			var forest_instance = forest_object.instance()
+			map.forestsprites.add_child(forest_instance)
+			forest_instance.position = try_tile.position
+			forest_instance.texture = Util.pick_random(forest_tiles)
+			forest_instance.rotation = rand_range(0, 360)
 	
 	if !capitals_reachable(map):
 		generate_map(map)

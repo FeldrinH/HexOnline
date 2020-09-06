@@ -12,6 +12,7 @@ const MapSender = preload("res://Scripts/MapSender.gd")
 #const TerrainGroundTextures = [preload("res://Sprites/Terrain/hex_sprites_blend_1.png"), preload("res://Sprites/Terrain/hex_sprites_blend_2.png"), preload("res://Sprites/Terrain/hex_sprites_blend_3.png")]
 
 onready var terrainsprites : Node2D = $TerrainSpritesContainer
+onready var forestsprites : Node2D = $ForestSpritesContainer
 onready var tiles : Node2D = $TilesContainer
 onready var units : Node2D = $UnitsContainer
 onready var effects : Node2D = $EffectsManager
