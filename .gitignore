@@ -11,3 +11,7 @@ export_presets.cfg
 data_*/
 
 ProductionFiles
+
+# Krita files
+*.png-autosave.kra
+*.png~
