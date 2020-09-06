@@ -109,6 +109,8 @@ unit_color = Color( 0.298039, 0.878431, 0.0862745, 1 )
 script = ExtResource( 2 )
 unit_color = Color( 0.870588, 0.878431, 0.0862745, 1 )
 
+[node name="Timer" type="Timer" parent="World/Game"]
+
 [node name="UI" type="Node" parent="World"]
 script = ExtResource( 11 )
 
@@ -244,6 +246,8 @@ tile_data = PoolIntArray( 65537, 1, 0, 65538, 1, 0, 65539, 1, 0, 65540, 1, 0, 65
 [node name="TerrainSpritesContainer" type="Node2D" parent="World"]
 visible = false
 position = Vector2( -130, -150 )
+
+[node name="ForestSpritesContainer" type="Node2D" parent="World"]
 
 [node name="TilesContainer" type="Node2D" parent="World"]
 

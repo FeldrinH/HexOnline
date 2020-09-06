@@ -8,8 +8,10 @@ const MOVES_PER_TURN = 5
 onready var world: Node2D = $".."
 onready var players : Array = $Players.get_children()
 
+onready var timer : Timer = $Timer
 onready var current_player : Node = players[0]
 var moves_remaining: int = MOVES_PER_TURN
+var turn_length = 5 #seconds
 
 #var __current_player_index: int = 0
 var __cur_move_index: int = 0
