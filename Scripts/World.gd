@@ -1,9 +1,5 @@
 extends Node2D
 
-signal turn_start(starting_player)
-signal turn_end(ending_player)
-signal unit_enter(unit)
-
 const ArmyUnit = preload("res://ArmyUnit.tscn")
 const HexTile = preload("res://HexTile.tscn")
 const MapGenerator = preload("res://Scripts/MapGenerator.gd")
@@ -17,7 +13,9 @@ onready var units : Node2D = $UnitsContainer
 onready var effects : Node2D = $EffectsManager
 onready var tilemap : TileMap = $TileMap
 
+onready var network: Node = $Network
 onready var game: Node = $Game
+onready var ui: Node = $UI
 
 const __tile_dict : Dictionary = {}
 const __tile_array : Array = []
@@ -83,7 +81,7 @@ func get_capitals():
 	return capitals
 
 func generate_army_id(player_id: int):
-	return str(player_id) + "|" + str(Network.get_next_id())
+	return str(player_id) + "|" + str(network.get_next_id())
 
 remotesync func add_unit(starting_tile_coord: Vector2, starting_power: int, player_id: int, silent: bool, name_override: String = "") -> Node2D:
 	var unit_instance = ArmyUnit.instance()

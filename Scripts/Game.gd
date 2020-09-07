@@ -1,6 +1,7 @@
 extends Node
 
-signal move_ended()
+signal turn_start(starting_player)
+signal turn_end(ending_player)
 
 const MOVE_RANGE = 2 # tiles
 const MOVES_PER_TURN = 5

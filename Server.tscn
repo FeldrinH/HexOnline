@@ -1,15 +1,7 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Scripts/Server.gd" type="Script" id=1]
+[ext_resource path="res://Scripts/ServerWorld.gd" type="Script" id=1]
 [ext_resource path="res://World.tscn" type="PackedScene" id=2]
-[ext_resource path="res://WorldUI.tscn" type="PackedScene" id=3]
-[ext_resource path="res://LobbyUI.tscn" type="PackedScene" id=4]
 
-[node name="Main" type="Node"]
+[node name="World" instance=ExtResource( 2 )]
 script = ExtResource( 1 )
-
-[node name="World" parent="." instance=ExtResource( 2 )]
-
-[node name="WorldUI" parent="." instance=ExtResource( 3 )]
-
-[node name="LobbyUI" parent="." instance=ExtResource( 4 )]

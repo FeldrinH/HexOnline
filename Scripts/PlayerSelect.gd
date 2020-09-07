@@ -12,17 +12,17 @@ func init(init_world):
 	connect("item_selected", self, "__selected")
 
 func refresh():
-	if world.game.our_player:
+	if world.network.get_our_player():
 		select(world.game.our_player.id + 1)
 	else:
 		select(0)
 
 func __selected(index: int):
-	if Network.our_id != -1:
+	if world.network.is_connected:
 		if index > 0:
-			world.game.rpc("request_select_player", index - 1)
+			world.network.our_client.rpc("select_player", index - 1)
 		else:
-			world.game.rpc("request_select_player", -1)
+			world.network.our_client.rpc("select_player", -1)
 	else:
 		select(0)
 		print("ERROR: No client, start or join server first")

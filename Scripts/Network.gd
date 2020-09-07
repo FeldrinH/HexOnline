@@ -1,8 +1,8 @@
 extends Node
 
-signal client_connecting(id, client) # Emitted on server when client is connecting, so initial data can be sent from other nodes
-signal client_connected(id, client) # Emitted on all sides after a new client has connected
-signal our_client_connected() # Emitted on client after all server-side initial data has been sent
+signal client_connected(id, client) # Emitted on all clients/server after a new client has connected
+signal client_initializing(id, client) # Emitted on server when client is connecting, when initial data should be sent
+signal client_initialized() # Emitted on client/server after local client has fully initialized
 
 const Client = preload("res://Client.tscn")
 
@@ -41,24 +41,36 @@ func get_rpc_sender_player() -> Node:
 master func register_client(profile: Dictionary):
 	var id = get_tree().get_rpc_sender_id()
 	if !clients.has(id):
-		rpc("add_remote_client", id, profile)
+		print("SERVER: New client connected: " + profile.display_name)
 		
-		for client in clients.values():
-			rpc_id(id, "add_remote_client", client.id, client.profile, client.player.id if client.player else -1)
+		rpc("add_remote_client", id, profile, -1)
 		
-		emit_signal("client_connecting", id, get_client(id))
+		if id != get_tree().get_network_unique_id():
+			initialize_client(id)
 		
-		rpc_id(id, "set_synced_values", rng.seed, __next_id)
-		rpc_id(id, "our_client_connected")
+		rpc_id(id, "client_initialized")
+
+func initialize_client(id: int):
+	for client in clients.values():
+		rpc_id(id, "add_remote_client", client.id, client.profile, client.player.id if client.player else -1)
 		
-		print("Client connected: " + profile.display_name)
+	world.send_map(id)
+	world.game.send_state(id)
+	emit_signal("client_initializing", id, get_client(id))
+	
+	rpc_id(id, "set_synced_values", rng.seed, __next_id)
 
 puppetsync func add_remote_client(id: int, profile: Dictionary, player_id: int):
 	if !clients.has(id):
+		print("CLEINT: New client connected: " + profile.display_name)
+		
 		var new_client = Client.instance()
 		new_client.init(world, id, profile, player_id)
 		add_child(new_client)
 		clients[id] = new_client
+		
+		if id == get_tree().get_network_unique_id():
+			our_client = new_client
 		
 		emit_signal("client_connected", id, new_client)
 
@@ -66,10 +78,11 @@ puppetsync func set_synced_values(rng_seed: int, next_id: int):
 	rng.set_seed(rng_seed)
 	__next_id = next_id
 
-puppetsync func our_client_connected():
+puppetsync func client_initialized():
 	is_connected = true
-	emit_signal("our_client_connected")
-	print("Our client connected: " + str(our_client.id))
+	emit_signal("client_initialized")
+	
+	print("CLIENT: Our client initialized: " + str(our_client.id))
 
 # Server lifecycle functions
 func cleanup_connections():
