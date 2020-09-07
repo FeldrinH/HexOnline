@@ -28,7 +28,7 @@ func init_detached(unit_world, starting_tile, starting_power, unit_player, silen
 
 remotesync func move_to(target_tile_coord):
 	world.game.await_start_move()
-	if world.game.is_move_allowed(Network.get_rpc_sender_id(), player):
+	if world.game.is_move_allowed(world.network.get_rpc_sender_player(), player):
 		execute_move_to(world.get_tile(target_tile_coord))
 		world.game.advance_move(1)
 	world.game.end_move()

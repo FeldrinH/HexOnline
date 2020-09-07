@@ -17,6 +17,9 @@ const directions = [
 static func pick_random(array : Array):
 	return array[randi() % array.size()]
 
+#static func get_id(obj: Node) -> int:
+#	return obj.id if obj else -1
+
 static func create_prefilled_array(size: int, prefill_element) -> Array:
 	var array = []
 	for i in size:

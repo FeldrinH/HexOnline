@@ -54,14 +54,14 @@ func __on_tile_input_event(_viewport, event: InputEvent, _shape_idx, tile: Node2
 	if !event.is_action_type() or tile != hovered:
 		return
 	
-	var our_player = world.game.our_player
+	var our_player = world.network.get_our_player()
 	if !world.game.is_active_player(our_player):
 		return
 	
 	if event.is_action_pressed("ui_mouse_left"):
 		if !world.game.is_move_active():
 			if !selected:
-				if hovered.army and world.game.is_move_allowed(our_player.client_id, hovered.army.player):
+				if hovered.army and world.game.is_move_allowed(our_player, hovered.army.player):
 					set_selected(hovered)
 					set_highlighted(world.find_travelable(hovered, hovered.army, world.game.MOVE_RANGE))
 			else: # selected != null

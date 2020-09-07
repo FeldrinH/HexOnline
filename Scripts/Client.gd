@@ -1,27 +1,35 @@
 extends Node
 
-#signal player_changed(new_player)
+signal player_changed(new_player)
 
-#var world: Node
+var world: Node
 
 var id: int
-var display_name: String
-#var player: Node
+var profile: Dictionary
+var player: Node
 
-func init(client_id: int, client_display_name: String):
+func init(client_world: Node, client_id: int, client_profile: Dictionary, client_player):
+	world = client_world
 	id = client_id
-	display_name = client_display_name
-	#set_player(player)
+	profile = client_profile
+	set_player_id(client_player)
 	set_name(str(id))
-	#set_network_master(id)
 
-#func set_player(new_player: Node):
-#	if player:
-#		player.client = null
-#	if new_player:
-#		new_player.client = self
-#	player = new_player
-#	emit_signal("player_changed", player)
-#
-#puppetsync func set_player_id(new_player_id: int):
-#	set_player(world.game.get_player(new_player_id))
+func __set_player(new_player: Node):
+	player = new_player
+	emit_signal("player_changed", player)
+
+puppetsync func set_player_id(new_player_id: Node):
+	var new_player = world.game.get_player(new_player_id)
+	
+	if player:
+		player.__set_client(null)
+	if new_player:
+		if new_player.client:
+			new_player.client.__set_player(null)
+		new_player.__set_client(self)
+	__set_player(new_player)
+
+master func select_player(new_player_id: int):
+	if get_tree().get_rpc_sender_id() == id and !world.game.get_player(new_player_id).client:
+		rpc("set_player_id", new_player_id)

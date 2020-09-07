@@ -1,14 +1,14 @@
 extends Node
 
-#export var id : int = -1
-#export var display_name: String
+signal client_changed(new_client)
+
 export var unit_color : Color
 
-var world : Node2D = null
+var world : Node2D
 
 var id: int = -1
-var client_id: int = -1
-var capital: Node2D = null
+var client: Node
+var capital: Node2D
 
 func init(player_world, player_id):
 	world = player_world
@@ -16,6 +16,10 @@ func init(player_world, player_id):
 
 func set_capital(new_capital):
 	capital = new_capital
+
+func __set_client(new_client):
+	client = new_client
+	emit_signal("client_changed", client)
 
 func conquer(conquering_player):
 	for tile in world.get_all_tiles():
