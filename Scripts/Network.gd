@@ -43,10 +43,20 @@ puppetsync func add_remote_client(id: int, profile: Dictionary):
 	
 	emit_signal("client_connected", id, profile)
 
-master func request_add_client(id: int, profile: Dictionary):
-	if get_tree().get_rpc_sender_id() == id:
-		rpc("add_remote_client", id, profile)
-		print("Joined: " + profile.display_name)
+# Run on server when new client announces itself
+master func request_register_client(profile: Dictionary):
+	var id = get_rpc_sender_id()
+	rpc("add_remote_client", id, profile)
+	
+	for client_id in clients:
+		rpc_id(id, "add_remote_client", client_id, clients[client_id])
+	
+	emit_signal("client_connecting", id)
+	
+	rpc_id(id, "set_synced_values", rng.seed, __next_id)
+	rpc_id(id, "our_client_connected")
+	
+	print("Client connected: " + profile.display_name)
 
 puppetsync func set_synced_values(rng_seed: int, next_id: int):
 	rng.set_seed(rng_seed)
@@ -54,11 +64,12 @@ puppetsync func set_synced_values(rng_seed: int, next_id: int):
 
 puppetsync func our_client_connected():
 	emit_signal("our_client_connected")
+	print("Our client connected: " + str(our_id))
 
+# Server lifecycle functions
 func cleanup_connections():
 	if get_tree().network_peer:
 		get_tree().network_peer = null
-	get_tree().disconnect("network_peer_connected", self, "__server_peer_connected")
 	get_tree().disconnect("connected_to_server", self, "__client_connected_to_server")
 
 func create_server():
@@ -70,7 +81,6 @@ func create_server():
 	peer.create_server(PORT, MAX_PLAYERS)
 	get_tree().network_peer = peer
 	is_server = true
-	get_tree().connect("network_peer_connected", self, "__server_peer_connected")
 	
 	print("Server created")
 	
@@ -86,25 +96,10 @@ func join_server(ip: String):
 	is_server = false
 	get_tree().connect("connected_to_server", self, "__client_connected_to_server")
 	
-	print("Connecting...")
-
-# Run on server when new client connects
-func __server_peer_connected(id: int):
-	# Send existing clients to new client
-	for client_id in clients:
-		rpc_id(id, "add_remote_client", client_id, clients[client_id])
-	
-	emit_signal("client_connecting", id)
-	
-	rpc_id(id, "set_synced_values", rng.seed, __next_id)
-	rpc_id(id, "our_client_connected")
-	
-	print("Peer connected: " + str(id))
+	print("Client created")
 
 # Run on client when connected to server
 func __client_connected_to_server():
 	our_id = get_tree().get_network_unique_id()
 	
-	rpc("request_add_client", our_id, our_profile)
-	
-	print("Connected to server: " + str(our_id))
+	rpc("request_register_client", our_profile)
