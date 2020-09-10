@@ -67,8 +67,10 @@ puppet func setup_appearance():
 	match terrain:
 		Util.TERRAIN_GROUND:
 			$Sprites.texture = Util.pick_random(ground_tiles)
+			$Sprites.z_index = 0
 		Util.TERRAIN_WATER:
 			$Sprites.texture = Util.pick_random(sea_tiles)
+			$Sprites.z_index = 3
 	show_highlight(false)
 	create_shoreline()
 

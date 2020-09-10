@@ -1,7 +1,9 @@
 0-9 - Tile
-0 - Tile base
-1 - Tile shores
-2 - City overlay
+0 - Tile ground
+1 - Forest
+2 - City sprite
+3 - Tile water
+4 - Tile shores
 5 - Tile conquer border
 9 - Tile select/hover border
 
