@@ -8,3 +8,5 @@ func _ready():
 	ui.show("HUD")
 	ui.show("Overlay")
 	ui.show("DebugMenu")
+	
+	game.start_game()

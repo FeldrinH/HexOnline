@@ -20,13 +20,37 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="Root"]
-margin_left = 10.6908
-margin_top = 11.5817
-margin_right = 50.6908
-margin_bottom = 25.5817
+[node name="OurLabel" type="Label" parent="Root"]
+margin_left = 16.0397
+margin_top = 12.0
+margin_right = 123.04
+margin_bottom = 50.0
 custom_fonts/font = SubResource( 1 )
 text = "None"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TurnLabel" type="Label" parent="Root"]
+margin_left = 882.868
+margin_top = 7.74008
+margin_right = 1008.87
+margin_bottom = 45.7401
+custom_fonts/font = SubResource( 1 )
+text = "None"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MoveLabel" type="Label" parent="Root"]
+margin_left = 926.638
+margin_top = 53.5343
+margin_right = 1005.64
+margin_bottom = 91.5343
+custom_fonts/font = SubResource( 1 )
+text = "0"
+align = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
