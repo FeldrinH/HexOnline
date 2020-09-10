@@ -2,11 +2,16 @@ extends CanvasLayer
 
 var world: Node
 
+onready var timer_label = $Root/TimerLabel
+
 func init(init_world):
 	world = init_world
 	world.network.our_client.connect("player_changed", self, "__on_our_client_player_changed")
 	world.game.connect("active_player_changed", self, "__on_active_player_changed")
 	world.game.connect("moves_remaining_changed", self, "__on_moves_remaining_changed")
+
+func _process(delta):
+	timer_label.text = str(ceil(world.game.timer.time_left))
 
 func __on_our_client_player_changed(player: Node):
 	if player:

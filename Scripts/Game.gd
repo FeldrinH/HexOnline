@@ -6,7 +6,7 @@ signal __move_ended()
 
 const MOVE_RANGE = 2 # tiles
 const MOVES_PER_TURN = 5
-const MOVE_LENGTH = 5 # seconds
+const TURN_LENGTH = 15 # seconds
 
 onready var world: Node2D = $".."
 onready var timer : Timer = $Timer
@@ -72,7 +72,7 @@ puppetsync func advance_turn_to(new_player_id, new_moves_remaining: int):
 	emit_signal("active_player_changed", current_player)
 	emit_signal("moves_remaining_changed", moves_remaining)
 	
-	timer.start(moves_remaining * MOVE_LENGTH)
+	timer.start(TURN_LENGTH)
 	
 	print("Turn advanced to player " + current_player.name)
 	

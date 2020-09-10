@@ -32,10 +32,10 @@ __meta__ = {
 }
 
 [node name="TurnLabel" type="Label" parent="Root"]
-margin_left = 882.868
-margin_top = 7.74008
-margin_right = 1008.87
-margin_bottom = 45.7401
+margin_left = 844.704
+margin_top = 8.86254
+margin_right = 970.706
+margin_bottom = 46.8626
 custom_fonts/font = SubResource( 1 )
 text = "None"
 align = 2
@@ -44,10 +44,22 @@ __meta__ = {
 }
 
 [node name="MoveLabel" type="Label" parent="Root"]
-margin_left = 926.638
-margin_top = 53.5343
-margin_right = 1005.64
-margin_bottom = 91.5343
+margin_left = 928.883
+margin_top = 9.7583
+margin_right = 1007.88
+margin_bottom = 47.7583
+custom_fonts/font = SubResource( 1 )
+text = "0"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimerLabel" type="Label" parent="Root"]
+margin_left = 907.877
+margin_top = 53.7551
+margin_right = 1005.88
+margin_bottom = 91.7551
 custom_fonts/font = SubResource( 1 )
 text = "0"
 align = 2
