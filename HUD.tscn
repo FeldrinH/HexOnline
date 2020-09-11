@@ -30,3 +30,25 @@ text = "None"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="TimerLabel" type="Label" parent="Root"]
+margin_left = 168.841
+margin_top = 11.582
+margin_right = 333.841
+margin_bottom = 49.582
+custom_fonts/font = SubResource( 1 )
+text = "Time Left: "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimerText" type="Label" parent="Root"]
+margin_left = 334.0
+margin_top = 11.582
+margin_right = 380.0
+margin_bottom = 49.582
+custom_fonts/font = SubResource( 1 )
+text = "15"
+__meta__ = {
+"_edit_use_anchors_": false
+}

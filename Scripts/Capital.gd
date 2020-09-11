@@ -3,6 +3,8 @@ extends "CityBase.gd"
 var player: Node = null
 var conquered: bool = false
 
+onready var label = $Label
+
 func init_capital(capital_manager, capital_player):
 	init(capital_manager)
 	is_capital = true

@@ -69,14 +69,14 @@ static func generate_map(map):
 	file.open("res://Scripts/city_names.csv", file.READ)
 	
 	var temp_cities = []
-	var city_names = []
-	var port_names = []
 	
 	while !file.eof_reached():
 		temp_cities.append(file.get_line())
 	file.close()
 	
 	var coast_tiles = find_coast(map, seatiles)
+	var city_names = []
+	var port_names = []
 	
 	# Picks 10 random city names from list
 	for i in 10:

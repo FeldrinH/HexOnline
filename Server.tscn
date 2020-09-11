@@ -5,3 +5,9 @@
 
 [node name="World" instance=ExtResource( 2 )]
 script = ExtResource( 1 )
+
+[node name="HoveredBorder" parent="UI/Overlay" index="1"]
+polygon = PoolVector2Array( 0.000116126, -26, 9.15527e-05, -20, -16, -10.0001, -16, 8.99993, -8.48612e-05, 19, 17, 9.00008, 17, -9.99992, 8.93276e-05, -20, 0.000116126, -26, 22.0001, -12.9999, 21.9999, 12.0001, -0.000111659, 25, -21.0001, 11.9999, -20.9999, -13.0001 )
+
+[node name="BattleParticles" parent="EffectsManager" index="4"]
+position = Vector2( 0, -0.594604 )

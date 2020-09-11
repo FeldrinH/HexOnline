@@ -81,7 +81,11 @@ func do_enter_tile(target_tile, do_enter_event: bool):
 		else:
 			target_tile.army = self
 			has_entered = true
-		
+#			if target_tile.city and target_tile.player != player:
+#				if power + 10 <= max_power:
+#					set_power(power + 10, true)
+#				else:
+#					set_power(max_power, false)
 	tile = target_tile
 	if has_entered and do_enter_event:
 		on_enter_tile(target_tile)
@@ -115,13 +119,7 @@ func battle(defending_army) -> bool:
 
 func __apply_loss(winning_army, losing_army):
 	winning_army.set_power(max(winning_army.power - round(losing_army.power * world.network.rng.randf_range(0.75, 1)), 1))
-
-func add_forces():
-	if power + 10 < max_power:
-		power += 10
-	else:
-		power = max_power
-
+	
 func merge_with(other_army):
 	set_power(power + other_army.power)
 	other_army.queue_free()

@@ -60,6 +60,7 @@ func await_start_move():
 	
 	assert(__cur_move_index == this_move_index) # Sanity check
 
+
 func end_move():
 	__cur_move_index += 1
 	assert(__cur_move_index <= __next_free_move_index) # Sanity check
