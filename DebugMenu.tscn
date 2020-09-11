@@ -21,6 +21,7 @@ __meta__ = {
 }
 
 [node name="JoinIP" type="LineEdit" parent="MenuRoot"]
+visible = false
 anchor_left = 0.0236399
 anchor_top = 0.777266
 anchor_right = 0.0236399
@@ -36,6 +37,7 @@ __meta__ = {
 }
 
 [node name="ClientName" type="LineEdit" parent="MenuRoot"]
+visible = false
 margin_left = 23.5823
 margin_top = 431.608
 margin_right = 166.582
@@ -47,6 +49,7 @@ __meta__ = {
 }
 
 [node name="HostButton" type="Button" parent="MenuRoot"]
+visible = false
 margin_left = 22.7498
 margin_top = 502.067
 margin_right = 119.75
@@ -57,9 +60,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 expression = "network.create_server(input2.text)"
-input2 = NodePath("../../../../../../Server/World/UI/DebugMenu/MenuRoot/ClientName")
+input2 = NodePath("../ClientName")
 
 [node name="JoinButton" type="Button" parent="MenuRoot"]
+visible = false
 margin_left = 23.2499
 margin_top = 543.272
 margin_right = 121.25
@@ -70,8 +74,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 expression = "network.join_server(input1.text, input2.text)"
-input1 = NodePath("../../../../../../Server/World/UI/DebugMenu/MenuRoot/JoinIP")
-input2 = NodePath("../../../../../../Server/World/UI/DebugMenu/MenuRoot/ClientName")
+input1 = NodePath("../JoinIP")
+input2 = NodePath("../ClientName")
 
 [node name="ConsoleInput" type="LineEdit" parent="MenuRoot"]
 margin_left = 153.624
