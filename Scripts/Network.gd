@@ -62,7 +62,7 @@ func initialize_client(id: int):
 
 puppetsync func add_remote_client(id: int, profile: Dictionary, player_id: int):
 	if !clients.has(id):
-		print("CLEINT: New client connected: " + profile.display_name)
+		print("CLIENT: New client connected: " + profile.display_name)
 		
 		var new_client = Client.instance()
 		new_client.init(world, id, profile, player_id)

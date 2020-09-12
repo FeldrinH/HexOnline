@@ -21,8 +21,12 @@ _global_script_class_icons={
 [application]
 
 config/name="HexGame"
-run/main_scene="res://Server.tscn"
+run/main_scene="res://ServerWorld.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+SceneManager="*res://Scripts/SceneManager.gd"
 
 [display]
 
