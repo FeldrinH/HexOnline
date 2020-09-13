@@ -1,4 +1,4 @@
-const forest_tiles = [preload("res://Sprites/forest_tile_1.png"), preload("res://Sprites/forest_tile_2.png"), preload("res://Sprites/forest_tile_3.png")]
+const forest_tiles = [preload("res://Sprites/forest_tile_1.png"), preload("res://Sprites/forest_tile_2.png"), preload("res://Sprites/forest_tile_3.png"), preload("res://Sprites/forest_tile_4.png"), preload("res://Sprites/forest_tile_5.png")]
 const forest_object = preload("res://forest_tile.tscn")
 
 var world
@@ -14,6 +14,7 @@ static func generate_map(map):
 	
 	for tile in tiles:
 		tile.set_terrain(Util.TERRAIN_GROUND)
+		tile.set_type(Util.TYPE_REGULAR)
 	
 	var seatiles = [map.get_tile(Vector2(15, 1))]
 	
@@ -36,6 +37,21 @@ static func generate_map(map):
 	for tile in tiles:
 		if is_single_tile_island(tile, map):
 			tile.set_terrain(Util.TERRAIN_WATER)
+	
+	var file = File.new()
+	file.open("res://Scripts/city_names.csv", file.READ)
+	
+	var temp_cities = []
+	
+	while !file.eof_reached():
+		temp_cities.append(file.get_line())
+	file.close()
+	
+	var coast_tiles = find_coast(map, seatiles)
+	var city_names = []
+	var port_names = []
+	var capital_names = []
+	var city_tiles = []
 	
 	var best_min_distance = 0
 	var best_total_distance = 0
@@ -62,21 +78,14 @@ static func generate_map(map):
 			best_capitals = try_capitals
 			#print(str(best_min_distance) + "  " + str(best_total_distance))
 	
+	# Picks 4 random capital names from list
+	for i in 4:
+		var index = randi() % temp_cities.size()
+		capital_names.append(temp_cities[index])
+		temp_cities.remove(index)
+	
 	for i in len(map.game.players):
-		best_capitals[i].add_capital(i)
-	
-	var file = File.new()
-	file.open("res://Scripts/city_names.csv", file.READ)
-	
-	var temp_cities = []
-	
-	while !file.eof_reached():
-		temp_cities.append(file.get_line())
-	file.close()
-	
-	var coast_tiles = find_coast(map, seatiles)
-	var city_names = []
-	var port_names = []
+		best_capitals[i].add_capital(i, capital_names[i])
 	
 	# Picks 10 random city names from list
 	for i in 10:
@@ -95,6 +104,7 @@ static func generate_map(map):
 		var try_tile = find_spawnable(tiles, 10)
 		if try_tile:
 			try_tile.add_city(name)
+			city_tiles.append(try_tile)
 	
 	# Adds ports
 	for name in port_names:
@@ -115,6 +125,14 @@ static func generate_map(map):
 			forest_instance.position = try_tile.position
 			forest_instance.texture = Util.pick_random(forest_tiles)
 			forest_instance.rotation = rand_range(0, 360)
+	
+	# Adds fields
+	for i in range(5):
+		var try_tile = Util.pick_random(city_tiles)
+		for j in range(rand_range(0, 6)):
+			var field_tile = Util.pick_random(map.find_neighbours(try_tile))
+			if field_tile:
+				field_tile.set_type(Util.TYPE_FIELD)
 	
 	if !capitals_reachable(map):
 		generate_map(map)

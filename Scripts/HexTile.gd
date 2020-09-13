@@ -3,6 +3,7 @@ extends Area2D
 const City = preload("res://City.tscn")
 const Capital = preload("res://Capital.tscn")
 const ground_tiles = [preload("res://Sprites/land_tile_4.png"), preload("res://Sprites/land_tile_9.png"), preload("res://Sprites/land_tile_10.png"), preload("res://Sprites/land_tile_11.png"), preload("res://Sprites/land_tile_12.png")]
+const field_tiles = [preload("res://Sprites/field_tile_1.png"), preload("res://Sprites/field_tile_2.png")]
 const sea_tiles = [preload("res://Sprites/sea_tile_1.png"), preload("res://Sprites/sea_tile_2.png"), preload("res://Sprites/sea_tile_3.png")]
 const base_tile = preload("res://Sprites/tile.png")
 const wasteland_tile = preload("res://Sprites/wasteland_tile_1.png")
@@ -19,6 +20,7 @@ var world: Node
 var coord: Vector2
 var blocked: bool
 var terrain: int
+var type: int
 
 var player: Node = null
 var army: Node2D = null
@@ -36,14 +38,14 @@ puppet func add_city(name: String) -> Node2D:
 	remove_city()
 	city = City.instance()
 	self.add_child(city)
-	city.init_name(world, name)
+	city.init(world, name)
 	return city
 
-puppet func add_capital(player_id: int) -> Node2D:
+puppet func add_capital(player_id: int, city_name) -> Node2D:
 	remove_city()
 	city = Capital.instance()
 	self.add_child(city)
-	city.init_capital(world, world.game.get_player(player_id))
+	city.init_capital(world, world.game.get_player(player_id), city_name)
 	return city
 
 func remove_city():
@@ -66,8 +68,12 @@ func try_occupy(new_player: Node):
 puppet func setup_appearance():
 	match terrain:
 		Util.TERRAIN_GROUND:
-			$Sprites.texture = Util.pick_random(ground_tiles)
 			$Sprites.z_index = 0
+			match type:
+				Util.TYPE_FIELD:
+					$Sprites.texture = Util.pick_random(field_tiles)
+				Util.TYPE_REGULAR:
+					$Sprites.texture = Util.pick_random(ground_tiles)
 		Util.TERRAIN_WATER:
 			$Sprites.texture = Util.pick_random(sea_tiles)
 			$Sprites.z_index = 3
@@ -110,6 +116,9 @@ func find_neighbours():
 
 puppet func set_terrain(new_terrain : int):
 	terrain = new_terrain
+
+puppet func set_type(new_type : int):
+	type = new_type
 
 func set_player(new_player: Node):
 	player = new_player

@@ -5,6 +5,11 @@ enum {
 	TERRAIN_WATER
 }
 
+enum { 
+	TYPE_REGULAR 
+	TYPE_FIELD 
+}
+
 const directions = [
 	Vector2(-2,  0),
 	Vector2(-1, -1),
