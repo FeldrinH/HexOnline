@@ -7,7 +7,8 @@ enum {
 
 enum { 
 	TYPE_REGULAR 
-	TYPE_FIELD 
+	TYPE_FIELD
+	TYPE_MOUNTAIN
 }
 
 const directions = [

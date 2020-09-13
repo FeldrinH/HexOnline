@@ -3,7 +3,8 @@ extends Area2D
 const City = preload("res://City.tscn")
 const Capital = preload("res://Capital.tscn")
 const ground_tiles = [preload("res://Sprites/land_tile_4.png"), preload("res://Sprites/land_tile_9.png"), preload("res://Sprites/land_tile_10.png"), preload("res://Sprites/land_tile_11.png"), preload("res://Sprites/land_tile_12.png")]
-const field_tiles = [preload("res://Sprites/field_tile_1.png"), preload("res://Sprites/field_tile_2.png")]
+const field_tiles = [preload("res://Sprites/field_tile_1.png"), preload("res://Sprites/field_tile_2.png"), preload("res://Sprites/field_tile_3.png")]
+const mountain_tiles = [preload("res://Sprites/mountain_tile_1.png"), preload("res://Sprites/mountain_tile_2.png"), preload("res://Sprites/mountain_tile_3.png")]
 const sea_tiles = [preload("res://Sprites/sea_tile_1.png"), preload("res://Sprites/sea_tile_2.png"), preload("res://Sprites/sea_tile_3.png")]
 const base_tile = preload("res://Sprites/tile.png")
 const wasteland_tile = preload("res://Sprites/wasteland_tile_1.png")
@@ -74,6 +75,8 @@ puppet func setup_appearance():
 					$Sprites.texture = Util.pick_random(field_tiles)
 				Util.TYPE_REGULAR:
 					$Sprites.texture = Util.pick_random(ground_tiles)
+				Util.TYPE_MOUNTAIN:
+					$Sprites.texture = Util.pick_random(mountain_tiles)
 		Util.TERRAIN_WATER:
 			$Sprites.texture = Util.pick_random(sea_tiles)
 			$Sprites.z_index = 3
