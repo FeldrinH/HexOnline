@@ -39,7 +39,7 @@ func is_move_allowed(calling_player: Node, owning_player: Node) -> bool:
 
 # Networking game state on initial join
 func send_state(target_id: int):
-	rpc_id(target_id, "set_turn_to", current_player.id if current_player else -1, moves_remaining)
+	rpc_id(target_id, "advance_turn_to", current_player.id if current_player else -1, moves_remaining)
 
 # RPCs for game events and actions
 puppetsync func start_game():
