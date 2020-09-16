@@ -4,7 +4,8 @@ const City = preload("res://City.tscn")
 const Capital = preload("res://Capital.tscn")
 const ground_tiles = [preload("res://Sprites/land_tile_4.png"), preload("res://Sprites/land_tile_9.png"), preload("res://Sprites/land_tile_10.png"), preload("res://Sprites/land_tile_11.png"), preload("res://Sprites/land_tile_12.png")]
 const field_tiles = [preload("res://Sprites/field_tile_1.png"), preload("res://Sprites/field_tile_2.png"), preload("res://Sprites/field_tile_3.png")]
-const mountain_tiles = [preload("res://Sprites/mountain_tile_1.png"), preload("res://Sprites/mountain_tile_2.png"), preload("res://Sprites/mountain_tile_3.png")]
+const mountain_tiles = [preload("res://Sprites/mountain_tile_1.png"), preload("res://Sprites/mountain_tile_2.png"), preload("res://Sprites/mountain_tile_3.png"), preload("res://Sprites/mountain_tile_4.png"), preload("res://Sprites/mountain_tile_5.png"), preload("res://Sprites/mountain_tile_6.png")]
+const forest_tiles = [preload("res://Sprites/forest_tile_new_1.png"), preload("res://Sprites/forest_tile_new_2.png"), preload("res://Sprites/forest_tile_new_3.png")]
 const sea_tiles = [preload("res://Sprites/sea_tile_1.png"), preload("res://Sprites/sea_tile_2.png"), preload("res://Sprites/sea_tile_3.png")]
 const base_tile = preload("res://Sprites/tile.png")
 const wasteland_tile = preload("res://Sprites/wasteland_tile_1.png")
@@ -77,6 +78,13 @@ puppet func setup_appearance():
 					$Sprites.texture = Util.pick_random(ground_tiles)
 				Util.TYPE_MOUNTAIN:
 					$Sprites.texture = Util.pick_random(mountain_tiles)
+					if rand_range(0, 1) > 0.5:
+						$Sprites.rotation = 180
+				Util.TYPE_FOREST:
+					$Sprites.texture = Util.pick_random(forest_tiles)
+					$Sprites.z_index = 3
+					if rand_range(0, 1) > 0.5:
+						$Sprites.rotation = 180
 		Util.TERRAIN_WATER:
 			$Sprites.texture = Util.pick_random(sea_tiles)
 			$Sprites.z_index = 3

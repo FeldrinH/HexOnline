@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/hex_sprites_blend_1.png-4ecca25f5b568d8207bb3ea7ad63f781.stex"
+path="res://.import/mountain_tile_4.png-7afc05c77dd6befb6a80e8614c94a004.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Terrain/hex_sprites_blend_1.png"
-dest_files=[ "res://.import/hex_sprites_blend_1.png-4ecca25f5b568d8207bb3ea7ad63f781.stex" ]
+source_file="res://Sprites/mountain_tile_4.png"
+dest_files=[ "res://.import/mountain_tile_4.png-7afc05c77dd6befb6a80e8614c94a004.stex" ]
 
 [params]
 

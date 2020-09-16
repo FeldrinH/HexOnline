@@ -9,6 +9,7 @@ enum {
 	TYPE_REGULAR 
 	TYPE_FIELD
 	TYPE_MOUNTAIN
+	TYPE_FOREST
 }
 
 const directions = [

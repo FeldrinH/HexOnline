@@ -132,6 +132,7 @@ func find_in_radius(center_tile, radius : int) -> Dictionary:
 func find_travelable(center_tile, army, distance : int) -> Dictionary:
 	var neighbors : Dictionary = {}
 	__add_neighbors(neighbors, center_tile, army,  distance)
+# warning-ignore:return_value_discarded
 	neighbors.erase(center_tile)
 	return neighbors
 

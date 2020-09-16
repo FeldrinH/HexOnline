@@ -88,7 +88,7 @@ static func generate_map(map):
 		best_capitals[i].add_capital(i, capital_names[i])
 	
 	# Picks 10 random city names from list
-	for i in 10:
+	for i in 12:
 		var index = randi() % temp_cities.size()
 		city_names.append(temp_cities[index])
 		temp_cities.remove(index)
@@ -117,33 +117,38 @@ static func generate_map(map):
 				try_tile.city.make_port()
 	
 	# Adds forests
+#	for i in range(5):
+#		var try_tile = find_spawnable(tiles, 5) 
+#		if try_tile and try_tile.terrain != Util.TERRAIN_WATER and !coast_tiles.has(try_tile):
+#			var forest_instance = forest_object.instance()
+#			map.forestsprites.add_child(forest_instance)
+#			forest_instance.position = try_tile.position
+#			forest_instance.texture = Util.pick_random(forest_tiles)
+#			forest_instance.rotation = rand_range(0, 360)
+
 	for i in range(5):
-		var try_tile = find_spawnable(tiles, 5) 
-		if try_tile and try_tile.terrain != Util.TERRAIN_WATER and !coast_tiles.has(try_tile):
-			var forest_instance = forest_object.instance()
-			map.forestsprites.add_child(forest_instance)
-			forest_instance.position = try_tile.position
-			forest_instance.texture = Util.pick_random(forest_tiles)
-			forest_instance.rotation = rand_range(0, 360)
-	
+		var try_tile = find_spawnable(tiles, 5)
+		var range_length = rand_range(2, 6)
+		if try_tile:
+			generate_forests(map, try_tile, range_length, 1)	
+		
 	# Adds fields
 	for i in range(7):
 		var try_tile = Util.pick_random(city_tiles)
 		for j in range(rand_range(0, 5)):
 			var neighbours = map.find_neighbours(try_tile)
 			var field_tile = Util.pick_random(neighbours)
-			if field_tile:
+			if field_tile and field_tile.type != Util.TYPE_FOREST:
 				field_tile.set_type(Util.TYPE_FIELD)
 				neighbours.erase(field_tile)
 		city_tiles.erase(try_tile)
 	
 	# Adds mountains
-	for i in range(4):
+	for i in range(5):
 		var try_tile = find_spawnable(tiles, 5)
 		var range_length = rand_range(2, 6)
-		if try_tile and try_tile.type != Util.TYPE_FIELD:
-			generate_mountains(map, try_tile, range_length, 1)
-				
+		if try_tile and try_tile.type != Util.TYPE_FIELD and try_tile.type != Util.TYPE_FOREST:
+			generate_mountains(map, try_tile, range_length, 1)		
 	
 	if !capitals_reachable(map):
 		generate_map(map)
@@ -188,7 +193,7 @@ static func capitals_reachable(map) -> bool:
 	var reached_capitals = []
 	var travelled_tiles = {}
 	capitals_reachable_util(map, starting_capital.coord, reached_capitals, travelled_tiles)
-	if reached_capitals.size() == 4:
+	if reached_capitals.size() == map.game.players.size():
 		print("reached all capitals")
 		return true 
 	else:
@@ -220,8 +225,16 @@ static func generate_mountains(map, try_tile, range_length : int, index : int):
 	else:
 		if !try_tile.type == Util.TYPE_MOUNTAIN:
 			try_tile.set_type(Util.TYPE_MOUNTAIN)
-			var rand = rand_range(0, 1)
-			if rand >= 0.5:
-				try_tile.rotation = 180
 		generate_mountains(map, Util.pick_random(map.find_neighbours(try_tile)), range_length, index + 1)
-	
+
+static func generate_forests(map, try_tile, range_length : int, index : int):
+	if range_length <= index:
+		return
+	else:
+		if !try_tile.type == Util.TYPE_FOREST:
+			try_tile.set_type(Util.TYPE_FOREST)
+			
+		for i in range(randi()%4+1):
+			var neighbour = Util.pick_random(map.find_neighbours(try_tile))
+			if neighbour.city == null and neighbour.type != Util.TYPE_MOUNTAIN and neighbour.type != Util.TYPE_FIELD:
+				generate_forests(map, neighbour, range_length, index + 1)

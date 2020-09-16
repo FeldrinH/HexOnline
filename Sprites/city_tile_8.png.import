@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/land_tile_3.png-14657fb585a45fdc7fdcb426bcee37c8.stex"
+path="res://.import/city_tile_8.png-e966e8222e553b7ac9fd4390d5b99017.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/land_tile_3.png"
-dest_files=[ "res://.import/land_tile_3.png-14657fb585a45fdc7fdcb426bcee37c8.stex" ]
+source_file="res://Sprites/city_tile_8.png"
+dest_files=[ "res://.import/city_tile_8.png-e966e8222e553b7ac9fd4390d5b99017.stex" ]
 
 [params]
 

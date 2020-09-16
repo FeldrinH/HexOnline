@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/land_tile_6.png-0d543acc14302022c197406965a32810.stex"
+path="res://.import/mountain_tile_6.png-ecb5ffd50b02a92d61c6abbf1428cf7e.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/land_tile_6.png"
-dest_files=[ "res://.import/land_tile_6.png-0d543acc14302022c197406965a32810.stex" ]
+source_file="res://Sprites/mountain_tile_6.png"
+dest_files=[ "res://.import/mountain_tile_6.png-ecb5ffd50b02a92d61c6abbf1428cf7e.stex" ]
 
 [params]
 
