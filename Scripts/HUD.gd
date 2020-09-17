@@ -7,7 +7,7 @@ onready var timer_label = $Root/TimerLabel
 func init(init_world):
 	world = init_world
 	world.network.our_client.connect("player_changed", self, "__on_our_client_player_changed")
-	world.game.connect("active_player_changed", self, "__on_active_player_changed")
+	world.game.connect("turn_changed", self, "__on_turn_changed")
 	world.game.connect("moves_remaining_changed", self, "__on_moves_remaining_changed")
 
 func _process(delta):
@@ -21,7 +21,7 @@ func __on_our_client_player_changed(player: Node):
 		$Root/OurLabel.text = "None"
 		$Root/OurLabel.modulate = Color.white
 
-func __on_active_player_changed(player: Node):
+func __on_turn_changed(player: Node):
 	if player:
 		$Root/TurnLabel.text = player.name
 		$Root/TurnLabel.modulate = player.unit_color

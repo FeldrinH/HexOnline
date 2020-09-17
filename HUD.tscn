@@ -20,11 +20,18 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="OurLabel" type="Label" parent="Root"]
-margin_left = 16.0397
-margin_top = 12.0
-margin_right = 123.04
+[node name="Panel" type="Panel" parent="Root"]
+margin_right = 1025.0
 margin_bottom = 50.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OurLabel" type="Label" parent="Root"]
+margin_left = 17.7215
+margin_top = 6.11372
+margin_right = 124.722
+margin_bottom = 44.1137
 custom_fonts/font = SubResource( 1 )
 text = "None"
 __meta__ = {
@@ -32,10 +39,10 @@ __meta__ = {
 }
 
 [node name="TurnLabel" type="Label" parent="Root"]
-margin_left = 844.704
-margin_top = 8.86254
-margin_right = 970.706
-margin_bottom = 46.8626
+margin_left = 643.73
+margin_top = 6.33985
+margin_right = 769.732
+margin_bottom = 44.3399
 custom_fonts/font = SubResource( 1 )
 text = "None"
 align = 2
@@ -44,10 +51,10 @@ __meta__ = {
 }
 
 [node name="MoveLabel" type="Label" parent="Root"]
-margin_left = 928.883
-margin_top = 9.7583
-margin_right = 1007.88
-margin_bottom = 47.7583
+margin_left = 727.909
+margin_top = 7.23561
+margin_right = 806.906
+margin_bottom = 45.2356
 custom_fonts/font = SubResource( 1 )
 text = "0"
 align = 2
@@ -55,11 +62,23 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="TimeLabel" type="Label" parent="Root"]
+margin_left = 813.091
+margin_top = 5.1591
+margin_right = 960.091
+margin_bottom = 43.1591
+custom_fonts/font = SubResource( 1 )
+text = "Time:"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="TimerLabel" type="Label" parent="Root"]
-margin_left = 907.877
-margin_top = 53.7551
-margin_right = 1005.88
-margin_bottom = 91.7551
+margin_left = 948.682
+margin_top = 7.236
+margin_right = 1005.68
+margin_bottom = 45.236
 custom_fonts/font = SubResource( 1 )
 text = "0"
 align = 2

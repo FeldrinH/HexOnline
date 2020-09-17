@@ -167,5 +167,6 @@ process_material = SubResource( 4 )
 texture = ExtResource( 16 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2( 562, 343 )
+position = Vector2( 562, 315 )
 current = true
+editor_draw_limits = true

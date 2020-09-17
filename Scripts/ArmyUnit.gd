@@ -5,7 +5,7 @@ var army_unit = load("res://ArmyUnit.tscn")
 onready var label = $Label
 onready var movement_tween = $MovementTween
 
-const max_power = 100
+const MAX_POWER = 100
 
 var world = null
 
@@ -45,8 +45,8 @@ func execute_move_to(target_tile):
 		update_appearance()
 	
 	# If combined army would exeed max power, send detachment and stay in current tile
-	if target_tile.army and target_tile.army.player == player and power + target_tile.army.power > max_power:
-		var split_power = max_power - target_tile.army.power
+	if target_tile.army and target_tile.army.player == player and power + target_tile.army.power > MAX_POWER:
+		var split_power = MAX_POWER - target_tile.army.power
 		if split_power > 0:
 			var split_unit = split(split_power)
 			split_unit.execute_move_to(target_tile)
@@ -83,11 +83,6 @@ func do_enter_tile(target_tile, do_enter_event: bool):
 		else:
 			target_tile.army = self
 			has_entered = true
-#			if target_tile.city and target_tile.player != player:
-#				if power + 10 <= max_power:
-#					set_power(power + 10, true)
-#				else:
-#					set_power(max_power, false)
 	tile = target_tile
 	if has_entered and do_enter_event:
 		on_enter_tile(target_tile)
@@ -143,6 +138,8 @@ func can_enter(leave_tile, enter_tile) -> bool:
 		return leave_tile.terrain == tile.terrain and enter_tile.terrain == leave_tile.terrain
 
 func set_power(new_power, show_popup: bool = true):
+	if new_power - power == 0:
+		show_popup = false
 	if show_popup:
 		world.effects.play_number_popup(new_power - power, player.unit_color, position)
 	power = new_power

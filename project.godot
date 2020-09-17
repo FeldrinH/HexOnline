@@ -30,6 +30,7 @@ SceneManager="*res://Scripts/SceneManager.gd"
 
 [display]
 
+window/size/height=660
 window/size/resizable=false
 
 [editor]

@@ -153,6 +153,9 @@ func __add_row(tiles : Dictionary, row_start : Vector2, row_length : int, dir : 
 		if new_tile != null:
 			tiles[new_tile] = true
 
+func get_all_units():
+	return units.get_children()
+
 #func filter_can_enter(tiles : Dictionary, army):
 #	for tile in tiles.keys():
 #		if !tile.can_enter(army):

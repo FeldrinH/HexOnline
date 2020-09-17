@@ -1,12 +1,13 @@
 extends Node
 
-signal active_player_changed(new_active_player)
+signal turn_changed(new_active_player)
 signal moves_remaining_changed(new_moves_remaining)
 signal __move_ended()
 
 const MOVE_RANGE = 2 # tiles
 const MOVES_PER_TURN = 5
 const TURN_LENGTH = 15 # seconds
+const TURN_REINFORCEMENTS = 10
 
 onready var world: Node2D = $".."
 onready var timer : Timer = $Timer
@@ -25,7 +26,8 @@ func _ready():
 		players[i].init(world, i)
 	timer.connect("timeout", self, "__on_turn_timer_timeout")
 	connect("moves_remaining_changed", self, "__on_moves_remaining_changed")
-
+	connect("turn_changed", self, "add_forces")
+	
 func get_player(id: int) -> Node:
 	return players[id] if id >= 0 else null
 
@@ -69,7 +71,7 @@ puppetsync func advance_turn_to(new_player_id, new_moves_remaining: int):
 	current_player = get_player(new_player_id)
 	moves_remaining = new_moves_remaining
 	
-	emit_signal("active_player_changed", current_player)
+	emit_signal("turn_changed", current_player)
 	emit_signal("moves_remaining_changed", moves_remaining)
 	
 	timer.start(TURN_LENGTH)
@@ -105,3 +107,12 @@ func __on_moves_remaining_changed(new_moves_remaining: int):
 func __on_turn_timer_timeout():
 	if world.network.is_server:
 		advance_turn()
+
+func add_forces(player):
+	for i in world.get_all_units():
+		if i.tile.city:
+			if i.power + TURN_REINFORCEMENTS <= 100:
+				i.set_power(i.power + 10, true)
+			else:
+				i.set_power(i.MAX_POWER, false)
+
