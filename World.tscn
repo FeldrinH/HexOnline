@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Scripts/Network.gd" type="Script" id=1]
 [ext_resource path="res://DebugMenu.tscn" type="PackedScene" id=2]
@@ -11,7 +11,6 @@
 [ext_resource path="res://AnimatedBorder.tscn" type="PackedScene" id=15]
 [ext_resource path="res://Sprites/cavalry.png" type="Texture" id=16]
 [ext_resource path="res://HUD.tscn" type="PackedScene" id=17]
-[ext_resource path="res://PopupNumber.tscn" type="PackedScene" id=20]
 [ext_resource path="res://Sprites/tile.png" type="Texture" id=22]
 
 [sub_resource type="TileSet" id=1]
@@ -138,15 +137,6 @@ z_index = 1
 
 [node name="EffectsManager" type="Node2D" parent="."]
 script = ExtResource( 8 )
-
-[node name="UnitNumbers" type="Node2D" parent="EffectsManager"]
-z_index = 30
-
-[node name="Popup" parent="EffectsManager/UnitNumbers" instance=ExtResource( 20 )]
-
-[node name="Popup2" parent="EffectsManager/UnitNumbers" instance=ExtResource( 20 )]
-
-[node name="Popup3" parent="EffectsManager/UnitNumbers" instance=ExtResource( 20 )]
 
 [node name="BattleSoundPlayer" type="AudioStreamPlayer" parent="EffectsManager"]
 

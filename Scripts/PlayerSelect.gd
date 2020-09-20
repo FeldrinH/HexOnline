@@ -13,7 +13,7 @@ func init(init_world):
 
 func refresh():
 	if world.network.get_our_player():
-		select(world.game.our_player.id + 1)
+		select(world.network.get_our_player().id + 1)
 	else:
 		select(0)
 

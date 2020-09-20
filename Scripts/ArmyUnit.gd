@@ -4,6 +4,7 @@ var army_unit = load("res://ArmyUnit.tscn")
 
 onready var label = $Label
 onready var movement_tween = $MovementTween
+onready var popup = $Popup
 
 const MAX_POWER = 100
 
@@ -138,10 +139,8 @@ func can_enter(leave_tile, enter_tile) -> bool:
 		return leave_tile.terrain == tile.terrain and enter_tile.terrain == leave_tile.terrain
 
 func set_power(new_power, show_popup: bool = true):
-	if new_power - power == 0:
-		show_popup = false
-	if show_popup:
-		world.effects.play_number_popup(new_power - power, player.unit_color, position)
+	if new_power - power != 0 and show_popup:
+		play_number_popup(new_power - power)
 	power = new_power
 	update_appearance()
 	
@@ -160,3 +159,6 @@ func update_appearance():
 			$Sprites/SpriteArtillery.visible = true
 	else:
 		$Sprites/SpriteIronclad.visible = true
+
+func play_number_popup(number: int):
+	popup.play_popup(number, player.unit_color)

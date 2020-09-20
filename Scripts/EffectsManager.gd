@@ -23,10 +23,6 @@ func _ready():
 #
 #	audio_player.play()
 
-func play_number_popup(number : int, color : Color, anchor_position : Vector2):
-	popups[popup_index].play_popup(number, color, anchor_position)
-	popup_index = (popup_index + 1) % len(popups)
-
 func play_movement_effects():
 	movement_sound_player.play()
 

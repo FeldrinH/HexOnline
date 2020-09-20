@@ -38,7 +38,7 @@ tracks/1/keys = {
 }
 
 [node name="Popup" type="Node2D"]
-modulate = Color( 1, 0, 0, 1 )
+modulate = Color( 1, 1, 1, 0 )
 script = ExtResource( 3 )
 
 [node name="LabelContainer" type="Node2D" parent="."]
