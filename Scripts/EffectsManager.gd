@@ -9,8 +9,6 @@ onready var battle_sound_player : AudioStreamPlayer = $BattleSoundPlayer
 onready var movement_sound_player : AudioStreamPlayer = $MovementSoundPlayer
 onready var ship_sound_player : AudioStreamPlayer = $ShipSoundPlayer
 onready var battle_particles : Particles2D = $BattleParticles
-onready var popups : Array = $UnitNumbers.get_children()
-var popup_index : int = 0
 
 func _ready():
 	movement_sound_player.stream = marching_clip
