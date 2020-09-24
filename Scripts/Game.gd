@@ -114,15 +114,11 @@ func __on_turn_timer_timeout():
 
 func add_forces(player):
 	for i in world.get_all_units():
-		if i.tile.city and !i.tile.city.is_capital:
-			if i.power + TURN_REINFORCEMENTS <= 100:
-				i.set_power(i.power + 10, true)
+		if i.tile.player == player and i.tile.city:
+			if i.tile.city.is_capital:
+				i.set_power(max(i.power + 20, i.MAX_POWER), true)
 			else:
-				i.set_power(i.MAX_POWER, false)
-		elif i.tile.city and i.tile.city.is_capital:
-			if i.power + 20 <= 100:
-				i.set_power(i.power + 20, true)
-			else:
-				i.set_power(i.MAX_POWER, false)
+				i.set_power(max(i.power + 10, i.MAX_POWER), true)
+	
 	if !player.capital.city_tile.army:
-		world.add_unit(player.capital.city_tile.coord, 20, player.id, true)	
+		world.add_unit(player.capital.city_tile.coord, 20, player.id, false)
