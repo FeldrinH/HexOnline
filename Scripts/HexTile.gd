@@ -40,14 +40,14 @@ puppet func add_city(name: String) -> Node2D:
 	remove_city()
 	city = City.instance()
 	self.add_child(city)
-	city.init(world, name)
+	city.init(world, name, self)
 	return city
 
 puppet func add_capital(player_id: int, city_name) -> Node2D:
 	remove_city()
 	city = Capital.instance()
 	self.add_child(city)
-	city.init_capital(world, world.game.get_player(player_id), city_name)
+	city.init_capital(world, world.game.get_player(player_id), city_name, self)
 	return city
 
 func remove_city():

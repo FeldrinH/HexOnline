@@ -130,7 +130,7 @@ static func generate_map(map):
 		var try_tile = find_spawnable(tiles, 5)
 		var range_length = rand_range(2, 6)
 		if try_tile:
-			generate_forests(map, try_tile, range_length, 1)	
+			generate_forests(map, try_tile, range_length, 1, coast_tiles)	
 		
 	# Adds fields
 	for i in range(7):
@@ -227,7 +227,7 @@ static func generate_mountains(map, try_tile, range_length : int, index : int):
 			try_tile.set_type(Util.TYPE_MOUNTAIN)
 		generate_mountains(map, Util.pick_random(map.find_neighbours(try_tile)), range_length, index + 1)
 
-static func generate_forests(map, try_tile, range_length : int, index : int):
+static func generate_forests(map, try_tile, range_length : int, index : int, coast_tiles):
 	if range_length <= index:
 		return
 	else:
@@ -236,5 +236,5 @@ static func generate_forests(map, try_tile, range_length : int, index : int):
 			
 		for i in range(randi()%4+1):
 			var neighbour = Util.pick_random(map.find_neighbours(try_tile))
-			if neighbour.city == null and neighbour.type != Util.TYPE_MOUNTAIN and neighbour.type != Util.TYPE_FIELD:
-				generate_forests(map, neighbour, range_length, index + 1)
+			if neighbour.city == null and neighbour.type != Util.TYPE_MOUNTAIN and neighbour.type != Util.TYPE_FIELD and !coast_tiles.has(neighbour):
+				generate_forests(map, neighbour, range_length, index + 1, coast_tiles)
