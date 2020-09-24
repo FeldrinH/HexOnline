@@ -15,6 +15,9 @@ func init(client_world: Node, client_id: int, client_profile: Dictionary, client
 	set_player_id(client_player_id)
 	set_name(str(id))
 
+func cleanup():
+	set_player_id(-1)
+
 func __set_player(new_player: Node):
 	player = new_player
 	emit_signal("player_changed", player)
