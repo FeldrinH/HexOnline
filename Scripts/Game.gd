@@ -12,7 +12,8 @@ const TURN_REINFORCEMENTS = 10
 onready var world: Node2D = $".."
 onready var timer : Timer = $Timer
 
-onready var players : Array = $Players.get_children()
+onready var __all_players: Array = $Players.get_children()
+onready var players: Array = __all_players
 
 onready var current_player : Node = null
 var moves_remaining: int = MOVES_PER_TURN
@@ -30,6 +31,9 @@ func _ready():
 	
 func get_player(id: int) -> Node:
 	return players[id] if id >= 0 else null
+
+func set_player_count(count: int):
+	players = __all_players.slice(0, count)
 
 # Turn and permission checking utility functions
 # NB: Turn checking currently disabled for debugging!
@@ -63,7 +67,7 @@ func advance_move_to(new_moves_remaining: int):
 	
 	print(str(moves_remaining) + " moves remaining")
 
-puppetsync func advance_turn_to(new_player_id, new_moves_remaining: int):
+puppetsync func advance_turn_to(new_player_id, new_moves_remaining: int, new_turn_lenght: int = TURN_LENGTH):
 	var __ = await_start_move()
 	if __ is GDScriptFunctionState:
 		yield(__, "completed")
@@ -74,7 +78,7 @@ puppetsync func advance_turn_to(new_player_id, new_moves_remaining: int):
 	emit_signal("turn_changed", current_player)
 	emit_signal("moves_remaining_changed", moves_remaining)
 	
-	timer.start(TURN_LENGTH)
+	timer.start(new_turn_lenght)
 	
 	print("Turn advanced to player " + current_player.name)
 	

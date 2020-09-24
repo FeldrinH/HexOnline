@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Scripts/PlayerSelectButton.gd" type="Script" id=1]
+[ext_resource path="res://Roboto-Bold.ttf" type="DynamicFontData" id=2]
+
+[sub_resource type="Theme" id=1]
+
+[sub_resource type="DynamicFont" id=2]
+size = 24
+font_data = ExtResource( 2 )
+
+[node name="PlayerSelectButton" type="Button"]
+margin_right = 641.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 0, 50 )
+theme = SubResource( 1 )
+custom_fonts/font = SubResource( 2 )
+text = "Player name"
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
