@@ -18,3 +18,15 @@ margin_bottom = 244.66
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="CloseButton" type="Button" parent="."]
+anchor_right = 0.043
+anchor_bottom = 0.054
+margin_left = 366.0
+margin_top = 540.0
+margin_right = 613.968
+margin_bottom = 536.36
+text = "Close"
+__meta__ = {
+"_edit_use_anchors_": false
+}

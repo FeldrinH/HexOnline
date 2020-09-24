@@ -10,3 +10,8 @@ func init(init_world):
 		var button = PlayerSelectButton.instance()
 		button.init(world, player)
 		$PlayerButtons.add_child(button)
+	
+	$CloseButton.connect("pressed", self, "_on_close_button_pressed")
+
+func _on_close_button_pressed():
+	world.ui.hide(name)
