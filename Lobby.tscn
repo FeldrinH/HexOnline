@@ -19,14 +19,28 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CloseButton" type="Button" parent="."]
+[node name="MapGenButton" type="Button" parent="."]
+visible = false
 anchor_right = 0.043
 anchor_bottom = 0.054
 margin_left = 366.0
 margin_top = 540.0
 margin_right = 613.968
 margin_bottom = 536.36
-text = "Close"
+text = "Generate map"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StartButton" type="Button" parent="."]
+visible = false
+anchor_right = 0.043
+anchor_bottom = 0.054
+margin_left = 366.0
+margin_top = 540.0
+margin_right = 613.968
+margin_bottom = 536.36
+text = "Start game"
 __meta__ = {
 "_edit_use_anchors_": false
 }

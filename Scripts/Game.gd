@@ -47,10 +47,6 @@ func is_move_allowed(calling_player: Node, owning_player: Node) -> bool:
 func send_state(target_id: int):
 	rpc_id(target_id, "advance_turn_to", current_player.id if current_player else -1, moves_remaining)
 
-# RPCs for game events and actions
-puppetsync func start_game():
-	advance_turn_to(0, MOVES_PER_TURN)
-
 # Turn management functions
 # Call on client at the end of every move
 func advance_move():
@@ -59,6 +55,10 @@ func advance_move():
 # Call on server at end of turn
 func advance_turn():
 	rpc("advance_turn_to", (current_player.id + 1) % len(players), MOVES_PER_TURN)
+
+# RPCs and utility functions for turn management
+puppetsync func start_game():
+	advance_turn_to(0, MOVES_PER_TURN)
 
 func advance_move_to(new_moves_remaining: int):
 	moves_remaining = new_moves_remaining

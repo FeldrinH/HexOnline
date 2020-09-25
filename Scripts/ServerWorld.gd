@@ -5,10 +5,3 @@ func _ready():
 	
 	ui.show("Lobby")
 	ui.show("HUD")
-	
-	yield(generate_map(), "completed")
-	
-	ui.show("Overlay")
-	ui.show("DebugMenu")
-	
-	game.start_game()

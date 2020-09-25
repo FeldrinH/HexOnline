@@ -2,7 +2,7 @@ extends CanvasLayer
 
 var world: Node
 
-onready var timer_label = $Root/TimerLabel
+onready var timer_label = $Turn/TimerLabel
 
 func init(init_world):
 	world = init_world
@@ -18,21 +18,20 @@ func _process(delta):
 
 func __on_our_client_player_changed(player: Node):
 	if player:
-		$Root/OurLabel.text = player.name
-		$Root/OurLabel.modulate = player.unit_color
+		$Shared/OurLabel.text = player.name
+		$Shared/OurLabel.modulate = player.unit_color
 	else:
-		$Root/OurLabel.text = "None"
-		$Root/OurLabel.modulate = Color.white
+		$Shared/OurLabel.text = "None"
+		$Shared/OurLabel.modulate = Color.white
 
 func __on_turn_changed(player: Node):
 	if player:
-		$Root/TurnLabel.text = player.name
-		$Root/TurnLabel.modulate = player.unit_color
-		$Root/MoveLabel.modulate = player.unit_color
+		$Turn/TurnLabel.text = player.name
+		$Turn/TurnLabel.modulate = player.unit_color
+		$Turn/MoveLabel.modulate = player.unit_color
+		$Turn.visible = true
 	else:
-		$Root/TurnLabel.text = "None"
-		$Root/TurnLabel.modulate = Color.white
-		$Root/MoveLabel.modulate = Color.white
+		$Turn.visible = false
 
 func __on_moves_remaining_changed(moves_remaining: int):
-	$Root/MoveLabel.text = str(moves_remaining)
+	$Turn/MoveLabel.text = str(moves_remaining)
