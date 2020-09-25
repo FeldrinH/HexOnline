@@ -49,12 +49,13 @@ func _ready():
 		tiles.add_child(tile_instance)
 	
 	tilemap.queue_free()
+	
+	setup_tiles_appearance()
 
 func generate_map():
 	var mapgen_coroutine = MapGenerator.generate_map(self)
 	while mapgen_coroutine is GDScriptFunctionState and mapgen_coroutine.is_valid():
-		for tile in get_all_tiles():
-			tile.setup_appearance()
+		setup_tiles_appearance()
 		yield(get_tree(), "idle_frame")
 		mapgen_coroutine = mapgen_coroutine.resume()
 
@@ -73,9 +74,12 @@ func clear_map():
 func get_tile(coord):
 	return __tile_dict.get(coord, null)
 
-# Slow, should only be used during map generation
 func get_all_tiles():
 	return __tile_array
+
+puppetsync func setup_tiles_appearance():
+	for tile in __tile_array:
+		tile.setup_appearance()
 
 func get_capitals():
 	var capitals = []

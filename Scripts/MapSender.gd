@@ -16,8 +16,7 @@ static func send_map(world, target_id: int):
 				if tile.city.is_port:
 					tile.city.rpc_id(target_id, "make_port")
 	
-	for tile in tiles:
-		tile.rpc_id(target_id, "setup_appearance")
+	world.rpc_id(target_id, "setup_tiles_appearance")
 	
 	for unit in world.units.get_children():
 		world.rpc_id(target_id, "add_unit", unit.tile.coord, unit.power, unit.player.id, true, unit.name)

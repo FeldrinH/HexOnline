@@ -162,9 +162,7 @@ static func generate_map(map):
 		yield()
 		
 		if capitals_reachable(map):
-			for tile in tiles:
-				tile.setup_appearance()
-			
+			map.setup_tiles_appearance()
 			print("MAPGEN: Finished")
 			return
 		
