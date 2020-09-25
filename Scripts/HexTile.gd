@@ -70,24 +70,24 @@ func try_occupy(new_player: Node):
 puppet func setup_appearance():
 	match terrain:
 		Util.TERRAIN_GROUND:
-			$Sprites.z_index = 0
+			sprites.z_index = 0
 			match type:
 				Util.TYPE_FIELD:
-					$Sprites.texture = Util.pick_random(field_tiles)
+					sprites.texture = Util.pick_random(field_tiles)
 				Util.TYPE_REGULAR:
-					$Sprites.texture = Util.pick_random(ground_tiles)
+					sprites.texture = Util.pick_random(ground_tiles)
 				Util.TYPE_MOUNTAIN:
-					$Sprites.texture = Util.pick_random(mountain_tiles)
+					sprites.texture = Util.pick_random(mountain_tiles)
 					if rand_range(0, 1) > 0.5:
-						$Sprites.rotation = 180
+						sprites.rotation = 180
 				Util.TYPE_FOREST:
-					$Sprites.texture = Util.pick_random(forest_tiles)
-					$Sprites.z_index = 3
+					sprites.texture = Util.pick_random(forest_tiles)
+					sprites.z_index = 3
 					if rand_range(0, 1) > 0.5:
-						$Sprites.rotation = 180
+						sprites.rotation = 180
 		Util.TERRAIN_WATER:
-			$Sprites.texture = Util.pick_random(sea_tiles)
-			$Sprites.z_index = 3
+			sprites.texture = Util.pick_random(sea_tiles)
+			sprites.z_index = 3
 	show_highlight(false)
 	create_shoreline()
 

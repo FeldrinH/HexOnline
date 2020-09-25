@@ -1,6 +1,6 @@
 extends Node
 
-signal turn_changed(new_active_player)
+signal current_player_changed(new_active_player)
 signal moves_remaining_changed(new_moves_remaining)
 signal __move_ended()
 
@@ -27,7 +27,6 @@ func _ready():
 		players[i].init(world, i)
 	timer.connect("timeout", self, "__on_turn_timer_timeout")
 	connect("moves_remaining_changed", self, "__on_moves_remaining_changed")
-	connect("turn_changed", self, "add_forces")
 	
 func get_player(id: int) -> Node:
 	return players[id] if id >= 0 else null
@@ -45,21 +44,39 @@ func is_move_allowed(calling_player: Node, owning_player: Node) -> bool:
 
 # Networking game state on initial join
 func send_state(target_id: int):
-	rpc_id(target_id, "advance_turn_to", current_player.id if current_player else -1, moves_remaining)
+	if current_player:
+		rpc_id(target_id, "advance_turn_to", current_player.id, moves_remaining, timer.time_left)
 
 # Turn management functions
 # Call on client at the end of every move
 func advance_move():
 	advance_move_to(moves_remaining - 1)
 
-# Call on server at end of turn
-func advance_turn():
-	rpc("advance_turn_to", (current_player.id + 1) % len(players), MOVES_PER_TURN)
+# Call by RPC at end of turn
+puppetsync func advance_turn(new_player_id, new_moves_remaining):
+	var __ = await_start_move()
+	if __ is GDScriptFunctionState:
+		yield(__, "completed")
+	
+	advance_turn_to(new_player_id, new_moves_remaining)
+	add_forces(new_player_id)
+	
+	rpc("add_forces", current_player.id)
+	
+	end_move()
 
-# RPCs and utility functions for turn management
+# Call by RPC at start of game
 puppetsync func start_game():
+	var __ = await_start_move()
+	if __ is GDScriptFunctionState:
+		yield(__, "completed")
+	
 	advance_turn_to(0, MOVES_PER_TURN)
+	add_forces(0)
+	
+	end_move()
 
+# Utility functions for turn management
 func advance_move_to(new_moves_remaining: int):
 	moves_remaining = new_moves_remaining
 	
@@ -67,22 +84,29 @@ func advance_move_to(new_moves_remaining: int):
 	
 	print(str(moves_remaining) + " moves remaining")
 
-puppetsync func advance_turn_to(new_player_id, new_moves_remaining: int, new_turn_lenght: int = TURN_LENGTH):
-	var __ = await_start_move()
-	if __ is GDScriptFunctionState:
-		yield(__, "completed")
-	
+puppetsync func advance_turn_to(new_player_id: int, new_moves_remaining: int, new_turn_lenght: int = TURN_LENGTH):
 	current_player = get_player(new_player_id)
 	moves_remaining = new_moves_remaining
 	
-	emit_signal("turn_changed", current_player)
+	emit_signal("current_player_changed", current_player)
 	emit_signal("moves_remaining_changed", moves_remaining)
 	
 	timer.start(new_turn_lenght)
 	
 	print("Turn advanced to player " + current_player.name)
+
+func add_forces(player_id: int):
+	var player = get_player(player_id)
 	
-	end_move()
+	for unit in world.get_all_units():
+		if unit.player == player and unit.tile.city:
+			if unit.tile.city.is_capital and !unit.tile.city.conquered:
+				unit.set_power(min(unit.power + 20, unit.MAX_POWER), true)
+			else:
+				unit.set_power(min(unit.power + 10, unit.MAX_POWER), true)
+	
+	if !player.capital.city_tile.army and !player.capital.conquered:
+		world.add_unit(player.capital.city_tile.coord, 20, player.id, false)
 
 # Clientside functions for ensuring moves are run in sequence and do not overlap
 func await_start_move():
@@ -93,7 +117,6 @@ func await_start_move():
 		yield(self, "__move_ended")
 	
 	assert(__cur_move_index == this_move_index) # Sanity check
-
 
 func end_move():
 	__cur_move_index += 1
@@ -106,19 +129,8 @@ func is_move_active():
 # Event handlers
 func __on_moves_remaining_changed(new_moves_remaining: int):
 	if world.network.is_server and new_moves_remaining <= 0:
-		advance_turn()
+		rpc("advance_turn", (current_player.id + 1) % len(players), MOVES_PER_TURN)
 
 func __on_turn_timer_timeout():
 	if world.network.is_server:
-		advance_turn()
-
-func add_forces(player):
-	for i in world.get_all_units():
-		if i.tile.player == player and i.tile.city:
-			if i.tile.city.is_capital:
-				i.set_power(min(i.power + 20, i.MAX_POWER), true)
-			else:
-				i.set_power(min(i.power + 10, i.MAX_POWER), true)
-	
-	if !player.capital.city_tile.army:
-		world.add_unit(player.capital.city_tile.coord, 20, player.id, false)
+		rpc("advance_turn", (current_player.id + 1) % len(players), MOVES_PER_TURN)

@@ -77,7 +77,7 @@ func get_tile(coord):
 func get_all_tiles():
 	return __tile_array
 
-puppetsync func setup_tiles_appearance():
+puppet func setup_tiles_appearance():
 	for tile in __tile_array:
 		tile.setup_appearance()
 
@@ -92,14 +92,14 @@ func get_capitals():
 func generate_army_id(player_id: int):
 	return str(player_id) + "|" + str(network.get_next_id())
 
-remotesync func add_unit(starting_tile_coord: Vector2, starting_power: int, player_id: int, silent: bool, name_override: String = "") -> Node2D:
+puppetsync func add_unit(starting_tile_coord: Vector2, starting_power: int, player_id: int, silent: bool, name_override: String = "") -> Node2D:
 	var unit_instance = ArmyUnit.instance()
 	units.add_child(unit_instance)
 	unit_instance.init(self, get_tile(starting_tile_coord), starting_power, game.get_player(player_id), silent)
 	unit_instance.set_name(generate_army_id(player_id) if name_override == "" else name_override)
 	return unit_instance
 	
-remotesync func add_unit_detached(starting_tile_coord: Vector2, starting_power: int, player_id: int, silent: bool, name_override: String = "") -> Node2D:
+func add_unit_detached(starting_tile_coord: Vector2, starting_power: int, player_id: int, silent: bool, name_override: String = "") -> Node2D:
 	var unit_instance = ArmyUnit.instance()
 	units.add_child(unit_instance)
 	unit_instance.init_detached(self, get_tile(starting_tile_coord), starting_power, game.get_player(player_id), silent)

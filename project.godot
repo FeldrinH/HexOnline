@@ -68,4 +68,4 @@ ui_toggle_debug_menu={
 
 [rendering]
 
-environment/default_clear_color=Color( 0.372549, 0.752941, 0.2, 1 )
+environment/default_clear_color=Color( 0.521569, 0.631373, 0.211765, 1 )

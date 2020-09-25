@@ -1,7 +1,7 @@
 const forest_tiles = [preload("res://Sprites/forest_tile_1.png"), preload("res://Sprites/forest_tile_2.png"), preload("res://Sprites/forest_tile_3.png"), preload("res://Sprites/forest_tile_4.png"), preload("res://Sprites/forest_tile_5.png")]
 const forest_object = preload("res://forest_tile.tscn")
 
-static func generate_map(map):
+static func generate_map(map: Node):
 	print("MAPGEN: Started")
 	while true:
 		map.clear_map()
@@ -16,14 +16,14 @@ static func generate_map(map):
 		
 		yield()
 		
-		var seatiles = [map.get_tile(Vector2(15, 1))]
+		var seagen_tiles = [map.get_tile(Vector2(15, 1))]
 		
-		while seatiles.size() < 60:
-			var expand_at = Util.pick_random(seatiles)
+		while seagen_tiles.size() < 60:
+			var expand_at = Util.pick_random(seagen_tiles)
 			var neighbor = Util.pick_random(map.find_neighbours(expand_at))
 			if neighbor.terrain != Util.TERRAIN_WATER:
 				neighbor.set_terrain(Util.TERRAIN_WATER)
-				seatiles.append(neighbor)
+				seagen_tiles.append(neighbor)
 		
 		var noise = OpenSimplexNoise.new()
 		noise.octaves = 2
@@ -47,11 +47,8 @@ static func generate_map(map):
 			temp_cities.append(file.get_line())
 		file.close()
 		
-		var coast_tiles = find_coast(map, seatiles)
-		var city_names = []
-		var port_names = []
-		var capital_names = []
-		var city_tiles = []
+		var coast_tiles = find_coast(tiles)
+		var inland_tiles = find_inland(tiles)
 		
 		yield()
 		
@@ -66,7 +63,7 @@ static func generate_map(map):
 			var try_total_distance = 0
 			var try_capitals = []
 			for player in map.game.players:
-				var try_tile = find_spawnable(tiles, 20)
+				var try_tile = find_spawnable(inland_tiles, 20)
 				if try_tile:
 					for capital_tile in try_capitals:
 						var new_distance = map.distance_between(try_tile, capital_tile)
@@ -86,29 +83,34 @@ static func generate_map(map):
 		yield()
 		
 		# Picks 4 random capital names from list
+		var capital_names = []
 		for i in 4:
 			var index = randi() % temp_cities.size()
 			capital_names.append(temp_cities[index])
 			temp_cities.remove(index)
 		
-		for i in len(map.game.players):
-			best_capitals[i].add_capital(i, capital_names[i])
-		
 		# Picks 10 random city names from list
+		var city_names = []
 		for i in 12:
 			var index = randi() % temp_cities.size()
 			city_names.append(temp_cities[index])
 			temp_cities.remove(index)
 		
 		# Picks 10 random port names from list
+		var port_names = []
 		for i in 5:
 			var index = randi() % temp_cities.size()
 			port_names.append(temp_cities[index])
 			temp_cities.remove(index)
-			
+		
+		# Adds capitals
+		for i in len(map.game.players):
+			best_capitals[i].add_capital(i, capital_names[i])
+		
 		# Adds cities
+		var city_tiles = []
 		for name in city_names:
-			var try_tile = find_spawnable(tiles, 10)
+			var try_tile = find_spawnable(inland_tiles, 10)
 			if try_tile:
 				try_tile.add_city(name)
 				city_tiles.append(try_tile)
@@ -182,20 +184,31 @@ static func find_spawnable(tiles : Array, max_attempts : int) -> Node:
 			return try_tile
 	return null
 
-static func city_nearby(try_tile) -> bool:
+static func city_nearby(try_tile: Node) -> bool:
 	for neighbor_tile in try_tile.find_neighbours():
 		if neighbor_tile.city:
 			return true
 	return false
 
-static func find_coast(map, seatiles) -> Array:
-	var coast_tiles = []
-	for seatile in seatiles:
-		var neighbors = map.find_neighbours(seatile)
-		for tile in neighbors:
-			if tile.terrain == Util.TERRAIN_GROUND and !tile.blocked:
-				coast_tiles.append(tile)
+static func water_nearby(try_tile: Node) -> bool:
+	for neighbor_tile in try_tile.find_neighbours():
+		if neighbor_tile.terrain == Util.TERRAIN_WATER:
+			return true
+	return false
+
+static func find_coast(tiles: Array) -> Array:
+	var coast_tiles: = []
+	for coasttile in tiles:
+		if coasttile.terrain == Util.TERRAIN_GROUND and !coasttile.blocked and water_nearby(coasttile):
+			coast_tiles.append(coasttile)
 	return coast_tiles
+
+static func find_inland(tiles: Array) -> Array:
+	var inland_tiles: = []
+	for landtile in tiles:
+		if landtile.terrain == Util.TERRAIN_GROUND and !landtile.blocked and !water_nearby(landtile):
+			inland_tiles.append(landtile)
+	return inland_tiles
 
 static func capitals_reachable(map) -> bool:
 	var capitals = map.get_capitals()

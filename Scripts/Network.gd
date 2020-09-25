@@ -115,10 +115,10 @@ func create_server(our_profile: Dictionary):
 	is_server = true
 	get_tree().connect("network_peer_disconnected ", self, "_server_on_client_disconnected")
 	
-	print("Server created")
-	
 	# Initialize server's client
 	_client_on_connected_to_server(our_profile)
+	
+	print("Server created")
 
 func join_server(ip: String, our_profile: Dictionary):
 	cleanup_connections()

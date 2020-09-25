@@ -21,12 +21,12 @@ func init(init_world):
 func _on_mapgen_button_pressed():
 	$MapGenButton.disabled = true
 	yield(world.generate_map(), "completed")
+	world.send_map(0)
 	$MapGenButton.visible = false
 	$StartButton.visible = true
 
 func _on_start_button_pressed():
 	if world.network.is_server:
-		world.send_map(0)
 		world.game.rpc("start_game")
 	world.ui.hide(name)
 	world.ui.show("Overlay")

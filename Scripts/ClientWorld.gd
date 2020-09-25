@@ -6,7 +6,4 @@ func _ready():
 
 func __on_client_initialized():
 	ui.show("Lobby")
-	
 	ui.show("HUD")
-	ui.show("Overlay")
-	ui.show("DebugMenu")
