@@ -116,9 +116,9 @@ func add_forces(player):
 	for i in world.get_all_units():
 		if i.tile.player == player and i.tile.city:
 			if i.tile.city.is_capital:
-				i.set_power(max(i.power + 20, i.MAX_POWER), true)
+				i.set_power(min(i.power + 20, i.MAX_POWER), true)
 			else:
-				i.set_power(max(i.power + 10, i.MAX_POWER), true)
+				i.set_power(min(i.power + 10, i.MAX_POWER), true)
 	
 	if !player.capital.city_tile.army:
 		world.add_unit(player.capital.city_tile.coord, 20, player.id, false)
