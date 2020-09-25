@@ -51,7 +51,12 @@ func _ready():
 	tilemap.queue_free()
 
 func generate_map():
-	MapGenerator.generate_map(self)
+	var mapgen_coroutine = MapGenerator.generate_map(self)
+	while mapgen_coroutine is GDScriptFunctionState and mapgen_coroutine.is_valid():
+		for tile in get_all_tiles():
+			tile.setup_appearance()
+		yield(get_tree(), "idle_frame")
+		mapgen_coroutine = mapgen_coroutine.resume()
 
 func send_map(target_id: int):
 	MapSender.send_map(self, target_id)
