@@ -148,6 +148,8 @@ script = ExtResource( 8 )
 [node name="ShipSoundPlayer" type="AudioStreamPlayer" parent="EffectsManager"]
 volume_db = -10.0
 
+[node name="AnnouncementSoundPlayer" type="AudioStreamPlayer" parent="EffectsManager"]
+
 [node name="BattleParticles" type="Particles2D" parent="EffectsManager"]
 z_index = 40
 emitting = false
@@ -158,8 +160,6 @@ speed_scale = 1.3
 explosiveness = 0.4
 process_material = SubResource( 4 )
 texture = ExtResource( 16 )
-
-[node name="AnnouncementSoundPlayer" type="AudioStreamPlayer" parent="EffectsManager"]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( 562, 315 )
