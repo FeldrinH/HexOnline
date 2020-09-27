@@ -168,7 +168,6 @@ static func generate_map(map: Node):
 			print("MAPGEN: Finished")
 			return
 		
-	map.effects.play_announcement()
 		print("MAPGEN: Retrying")
 
 static func is_single_tile_island(tile, map) -> bool:

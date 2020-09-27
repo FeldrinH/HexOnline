@@ -73,6 +73,7 @@ puppetsync func start_game():
 	
 	advance_turn_to(0, MOVES_PER_TURN)
 	add_forces(0)
+	world.effects.play_announcement()
 	
 	end_move()
 
