@@ -156,6 +156,7 @@ static func generate_map(map):
 	for tile in tiles:
 		tile.setup_appearance()
 	
+	map.effects.play_announcement()
 	print("MAPGEN: End")
 
 static func is_single_tile_island(tile, map) -> bool:

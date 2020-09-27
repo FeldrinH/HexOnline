@@ -25,3 +25,4 @@ func conquer(conquering_player):
 	for tile in world.get_all_tiles():
 		if tile.player == self:
 			tile.try_occupy(conquering_player)
+	world.effects.play_announcement()
