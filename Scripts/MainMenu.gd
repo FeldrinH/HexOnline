@@ -3,7 +3,7 @@ extends Node
 var world: Node
 
 func _ready():
-	$SettingsMenu/VSlider.value = SettingsManager.get_shared("volume")
+	$MainMenuButtons/VSlider.value = SettingsManager.get_shared("volume")
 
 func set_volume(slider_value):
 	SettingsManager.set_shared("volume", slider_value)
@@ -15,12 +15,12 @@ func exit_game():
 func close_menu():
 	world.ui.hide("MainMenu")
 
-func open_settings_menu():
-	$MainMenuButtons.visible = false
-	$SettingsMenu.visible = true
-	$BackButton.visible = true
-	
-func close_settings_menu():
-	$MainMenuButtons.visible = true	
-	$SettingsMenu.visible = false
-	$BackButton.visible = false
+#func open_settings_menu():
+#	$MainMenuButtons.visible = false
+#	$SettingsMenu.visible = true
+#	$BackButton.visible = true
+#
+#func close_settings_menu():
+#	$MainMenuButtons.visible = true
+#	$SettingsMenu.visible = false
+#	$BackButton.visible = false

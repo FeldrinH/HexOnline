@@ -4,6 +4,8 @@
 [ext_resource path="res://Sprites/lobby_button_1.png" type="Texture" id=2]
 
 [sub_resource type="StyleBoxFlat" id=1]
+corner_detail = 1
+anti_aliasing = false
 
 [node name="TextureButton" type="TextureButton"]
 margin_right = 256.0

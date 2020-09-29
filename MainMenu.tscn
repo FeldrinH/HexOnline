@@ -10,10 +10,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -117.0
-margin_top = -61.0
-margin_right = 120.0
-margin_bottom = 63.0
+margin_left = -148.5
+margin_top = -72.5
+margin_right = 148.5
+margin_bottom = 72.5
 size_flags_horizontal = 0
 size_flags_vertical = 0
 custom_constants/separation = 13
@@ -22,64 +22,39 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ResumeButton" type="Button" parent="MainMenuButtons"]
-margin_top = 19.0
-margin_right = 237.0
-margin_bottom = 39.0
-text = "Resume Game"
-
-[node name="SettingsButton" type="Button" parent="MainMenuButtons"]
-margin_top = 52.0
-margin_right = 237.0
-margin_bottom = 72.0
-text = "Settings"
-
-[node name="QuitButton" type="Button" parent="MainMenuButtons"]
-margin_top = 85.0
-margin_right = 237.0
-margin_bottom = 105.0
-text = "Quit"
-
-[node name="BackButton" type="Button" parent="."]
-visible = false
-margin_right = 126.0
-margin_bottom = 33.0
-text = "Back"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="SettingsMenu" type="Control" parent="."]
-visible = false
-margin_right = 40.0
-margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="SettingsMenu"]
-margin_left = 422.664
-margin_top = 218.347
-margin_right = 519.664
-margin_bottom = 232.347
+[node name="Label" type="Label" parent="MainMenuButtons"]
+margin_top = 18.0
+margin_right = 297.0
+margin_bottom = 32.0
 text = "Master Volume"
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VSlider" type="VSlider" parent="SettingsMenu"]
-margin_left = 455.164
-margin_top = 252.347
-margin_right = 487.164
-margin_bottom = 384.347
+[node name="VSlider" type="HSlider" parent="MainMenuButtons"]
+margin_top = 45.0
+margin_right = 297.0
+margin_bottom = 61.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
 max_value = 1.0
 step = 0.05
 value = 1.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+tick_count = 11
+ticks_on_borders = true
+
+[node name="ResumeButton" type="Button" parent="MainMenuButtons"]
+margin_top = 74.0
+margin_right = 297.0
+margin_bottom = 94.0
+text = "Resume Game"
+
+[node name="QuitButton" type="Button" parent="MainMenuButtons"]
+margin_top = 107.0
+margin_right = 297.0
+margin_bottom = 127.0
+text = "Quit"
+[connection signal="value_changed" from="MainMenuButtons/VSlider" to="." method="set_volume"]
 [connection signal="pressed" from="MainMenuButtons/ResumeButton" to="." method="close_menu"]
-[connection signal="pressed" from="MainMenuButtons/SettingsButton" to="." method="open_settings_menu"]
 [connection signal="pressed" from="MainMenuButtons/QuitButton" to="." method="exit_game"]
-[connection signal="pressed" from="BackButton" to="." method="close_settings_menu"]
-[connection signal="value_changed" from="SettingsMenu/VSlider" to="." method="set_volume"]
