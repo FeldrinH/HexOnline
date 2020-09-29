@@ -9,8 +9,7 @@ var hovered: Node = null
 var selected: Node = null
 var highlighted: Dictionary = {}
 
-func init(init_world):
-	world = init_world
+func _ready():
 	for tile in world.get_all_tiles():
 		tile.connect("input_event", self, "__on_tile_input_event", [tile])
 		tile.connect("mouse_entered", self, "__on_tile_mouse_entered", [tile])

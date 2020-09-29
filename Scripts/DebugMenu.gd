@@ -1,10 +1,10 @@
 extends CanvasLayer
 
 var world: Node
+
 onready var menu_root = $MenuRoot
 
-func init(init_world):
-	world = init_world
+func _ready():
 	menu_root.propagate_call("init", [world])
 
 func _input(event: InputEvent):

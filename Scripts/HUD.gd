@@ -4,8 +4,7 @@ var world: Node
 
 onready var timer_label = $Turn/TimerLabel
 
-func init(init_world):
-	world = init_world
+func _ready():
 	world.network.our_client.connect("player_changed", self, "__on_our_client_player_changed")
 	world.game.connect("current_player_changed", self, "__on_current_player_changed")
 	world.game.connect("moves_remaining_changed", self, "__on_moves_remaining_changed")

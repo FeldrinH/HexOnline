@@ -1,13 +1,13 @@
 extends Node
 
-var world
-var vol_min = 0.000001
+var world: Node
 
-func init(world):
-	self.world = world
+func _ready():
+	$SettingsMenu/VSlider.value = SettingsManager.get_shared("volume")
 
 func set_volume(slider_value):
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), (log(slider_value)/log(10)) * 20)
+	SettingsManager.set_shared("volume", slider_value)
+	SettingsManager.apply_volume()
 
 func exit_game():
 	get_tree().quit()
