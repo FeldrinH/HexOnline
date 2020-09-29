@@ -1,0 +1,41 @@
+[gd_scene format=2]
+
+[node name="StartMenu" type="CanvasLayer"]
+
+[node name="NameLabel" type="Label" parent="."]
+margin_left = 192.0
+margin_top = 313.0
+margin_right = 234.0
+margin_bottom = 327.0
+text = "Name:"
+
+[node name="NameBox" type="LineEdit" parent="."]
+margin_left = 238.0
+margin_top = 308.0
+margin_right = 348.0
+margin_bottom = 332.0
+size_flags_horizontal = 3
+max_length = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="IPLabel" type="Label" parent="."]
+margin_left = 192.568
+margin_top = 347.459
+margin_right = 215.568
+margin_bottom = 361.459
+text = "IP:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="IPEdit" type="LineEdit" parent="."]
+margin_left = 238.0
+margin_top = 342.0
+margin_right = 348.0
+margin_bottom = 366.0
+max_length = 15
+__meta__ = {
+"_edit_use_anchors_": false
+}

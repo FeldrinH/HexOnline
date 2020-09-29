@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Scripts/HUD.gd" type="Script" id=1]
 [ext_resource path="res://Roboto-Bold.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Sprites/menu_icon.png" type="Texture" id=3]
 
 [sub_resource type="DynamicFont" id=1]
 size = 32
@@ -46,9 +47,9 @@ __meta__ = {
 }
 
 [node name="TurnLabel" type="Label" parent="Turn"]
-margin_left = 643.73
+margin_left = 574.318
 margin_top = 6.33985
-margin_right = 769.732
+margin_right = 700.32
 margin_bottom = 44.3399
 custom_fonts/font = SubResource( 1 )
 text = "None"
@@ -58,9 +59,9 @@ __meta__ = {
 }
 
 [node name="MoveLabel" type="Label" parent="Turn"]
-margin_left = 727.909
+margin_left = 658.497
 margin_top = 7.23561
-margin_right = 806.906
+margin_right = 737.494
 margin_bottom = 45.2356
 custom_fonts/font = SubResource( 1 )
 text = "0"
@@ -70,9 +71,9 @@ __meta__ = {
 }
 
 [node name="TimeLabel" type="Label" parent="Turn"]
-margin_left = 813.091
+margin_left = 743.679
 margin_top = 5.1591
-margin_right = 960.091
+margin_right = 890.679
 margin_bottom = 43.1591
 custom_fonts/font = SubResource( 1 )
 text = "Time:"
@@ -82,9 +83,9 @@ __meta__ = {
 }
 
 [node name="TimerLabel" type="Label" parent="Turn"]
-margin_left = 948.682
+margin_left = 879.27
 margin_top = 7.236
-margin_right = 1005.68
+margin_right = 936.268
 margin_bottom = 45.236
 custom_fonts/font = SubResource( 1 )
 text = "0"
@@ -92,3 +93,17 @@ align = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="TextureButton" type="TextureButton" parent="."]
+margin_left = 960.47
+margin_top = 4.47571
+margin_right = 1055.47
+margin_bottom = 68.4757
+rect_scale = Vector2( 0.64, 0.64 )
+size_flags_horizontal = 5
+texture_normal = ExtResource( 3 )
+stretch_mode = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="TextureButton" to="." method="toggle_main_menu"]

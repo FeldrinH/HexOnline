@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://Scripts/Network.gd" type="Script" id=1]
 [ext_resource path="res://DebugMenu.tscn" type="PackedScene" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Scripts/Game.gd" type="Script" id=6]
 [ext_resource path="res://Lobby.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Scripts/EffectsManager.gd" type="Script" id=8]
+[ext_resource path="res://MainMenu.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Scripts/World.gd" type="Script" id=13]
 [ext_resource path="res://AnimatedBorder.tscn" type="PackedScene" id=15]
 [ext_resource path="res://Sprites/cavalry.png" type="Texture" id=16]
@@ -122,6 +123,9 @@ rotation_offset = 22.5
 [node name="DebugMenu" parent="UI" instance=ExtResource( 2 )]
 
 [node name="Lobby" parent="UI" instance=ExtResource( 7 )]
+
+[node name="MainMenu" parent="UI" instance=ExtResource( 9 )]
+layer = 10
 
 [node name="TileMap" type="TileMap" parent="."]
 position = Vector2( -22, -26 )

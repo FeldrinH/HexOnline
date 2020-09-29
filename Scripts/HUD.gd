@@ -35,3 +35,6 @@ func __on_current_player_changed(player: Node):
 
 func __on_moves_remaining_changed(moves_remaining: int):
 	$Turn/MoveLabel.text = str(moves_remaining)
+
+func toggle_main_menu():
+	world.ui.show("MainMenu")

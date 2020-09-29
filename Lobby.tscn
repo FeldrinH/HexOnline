@@ -11,10 +11,11 @@ anchor_left = 0.183
 anchor_top = 0.142
 anchor_right = 0.399
 anchor_bottom = 0.449
-margin_left = 0.607986
+margin_left = 197.608
 margin_top = -0.720001
 margin_right = 420.424
 margin_bottom = 244.66
+alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }

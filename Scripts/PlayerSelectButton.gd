@@ -1,4 +1,4 @@
-extends Button
+extends TextureButton
 
 var world: Node
 var player: Node
@@ -13,14 +13,14 @@ func init(button_world, button_player):
 func update_appearance():
 	match player.client:
 		null:
-			text = player.name
-			modulate = player.unit_color
+			$Label.text = player.name
+			$Panel.modulate = player.unit_color
 		world.network.our_client:
-			text = "* " + player.name + " (" + player.client.profile.display_name + ") *"
-			modulate = player.unit_color.lightened(0.2)
+			$Label.text = "* " + player.name + " (" + player.client.profile.display_name + ") *"
+			$Panel.modulate = player.unit_color.lightened(0.2)
 		_:
-			text = player.name + " (" + player.client.profile.display_name + ")"
-			modulate = player.unit_color.darkened(0.2)
+			$Label.text = player.name + " (" + player.client.profile.display_name + ")"
+			$Panel.modulate = player.unit_color.darkened(0.2)
 
 func _pressed():
 	if player.client == world.network.our_client:
