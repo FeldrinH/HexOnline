@@ -26,7 +26,7 @@ config/icon="res://icon.png"
 
 [autoload]
 
-SceneManager="*res://Scripts/SceneManager.gd"
+SettingsManager="*res://Scripts/SettingsManager.gd"
 
 [display]
 

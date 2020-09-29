@@ -15,3 +15,6 @@ ProductionFiles
 # Krita files
 *.png-autosave.kra
 *.png~
+
+# User settings
+user_settings.json
