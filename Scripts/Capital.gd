@@ -17,3 +17,6 @@ func conquer(conquering_player):
 	
 	conquered = true
 	player.conquer(conquering_player)
+	
+	if world.network.is_server:
+		world.game.check_win_conditions()

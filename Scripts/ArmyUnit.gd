@@ -14,6 +14,8 @@ var player = null
 var tile = null
 var power : int = 0
 
+var last_turn: int = -1
+
 var on_ship : bool = false
 
 func init(unit_world, starting_tile, starting_power, unit_player, silent: bool):
@@ -32,9 +34,10 @@ remotesync func move_to(target_tile_coord):
 	var __ = world.game.await_start_move()
 	if __ is GDScriptFunctionState:
 		yield(__, "completed")
-	if world.game.is_move_allowed(sender_player, player):
-		world.game.advance_move()
-		yield(execute_move_to(world.get_tile(target_tile_coord)), "completed")
+	if world.game.is_move_allowed(sender_player, self):
+		var move_coroutine = execute_move_to(world.get_tile(target_tile_coord))
+		if move_coroutine is GDScriptFunctionState:
+			yield(move_coroutine, "completed")
 	world.game.end_move()
 
 func execute_move_to(target_tile):
@@ -50,15 +53,19 @@ func execute_move_to(target_tile):
 	if target_tile.army and target_tile.army.player == player and power + target_tile.army.power > MAX_POWER:
 		var split_power = MAX_POWER - target_tile.army.power
 		if split_power > 0:
+			last_turn = world.game.current_turn
 			var split_unit = split(split_power)
-			split_unit.execute_move_to(target_tile)
+			yield(split_unit.execute_move_to(target_tile), "completed")
 		return
+	
+	last_turn = world.game.current_turn
+	world.game.advance_move()
 	
 	if target_tile.terrain == Util.TERRAIN_GROUND:
 		world.effects.play_movement_effects()
 	elif target_tile.terrain == Util.TERRAIN_WATER:
 		world.effects.play_ship_sound()
-
+	
 	do_enter_tile(null, true)
 	
 	movement_tween.interpolate_property(self, "position", position, target_tile.position, max(position.distance_to(target_tile.position) / 1000, 0.25), Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
