@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Lobby.gd" type="Script" id=1]
+[ext_resource path="res://Sprites/lobby_button_2.png" type="Texture" id=2]
 
 [node name="Lobby" type="CanvasLayer"]
 layer = 10
@@ -20,28 +21,50 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MapGenButton" type="Button" parent="."]
-visible = false
+[node name="MapGenButton" type="TextureButton" parent="."]
 anchor_right = 0.043
 anchor_bottom = 0.054
-margin_left = 366.0
-margin_top = 540.0
-margin_right = 613.968
-margin_bottom = 536.36
-text = "Generate map"
+margin_left = 395.367
+margin_top = 498.728
+margin_right = 643.335
+margin_bottom = 495.088
+texture_normal = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="StartButton" type="Button" parent="."]
+[node name="Label2" type="Label" parent="MapGenButton"]
+margin_left = 84.3373
+margin_top = 9.66428
+margin_right = 174.337
+margin_bottom = 40.6643
+text = "Generate Map
+"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StartButton" type="TextureButton" parent="."]
 visible = false
-anchor_right = 0.043
-anchor_bottom = 0.054
-margin_left = 366.0
-margin_top = 540.0
-margin_right = 613.968
-margin_bottom = 536.36
-text = "Start game"
+margin_left = 395.113
+margin_top = 497.895
+margin_right = 651.113
+margin_bottom = 537.895
+texture_normal = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="StartButton"]
+margin_left = 91.4927
+margin_top = 9.89664
+margin_right = 162.493
+margin_bottom = 23.8966
+text = "Start Game"
+align = 1
+valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
