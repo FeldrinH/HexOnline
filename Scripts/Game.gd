@@ -2,6 +2,8 @@ extends Node
 
 signal current_player_changed(new_active_player)
 signal moves_remaining_changed(new_moves_remaining)
+signal players_changed()
+#signal game_won(winner)
 signal __move_ended()
 
 const MOVE_RANGE = 2 # tiles
@@ -16,6 +18,7 @@ onready var __all_players: Array = $Players.get_children()
 onready var players: Array = __all_players
 
 onready var current_player : Node = null
+var current_turn: int = -1
 var moves_remaining: int = MOVES_PER_TURN
 
 #var __current_player_index: int = 0
@@ -27,20 +30,33 @@ func _ready():
 		players[i].init(world, i)
 	timer.connect("timeout", self, "__on_turn_timer_timeout")
 	connect("moves_remaining_changed", self, "__on_moves_remaining_changed")
-	
+
 func get_player(id: int) -> Node:
 	return players[id] if id >= 0 else null
 
-func set_player_count(count: int):
-	players = __all_players.slice(0, count)
+func get_selected_players_count() -> int:
+	var count := 0
+	for player in __all_players:
+		if player.client:
+			count += 1
+	return count
+
+func remove_unselected_players():
+	players = []
+	for player in __all_players:
+		if player.client:
+			players.append(player)
+	for i in len(players):
+		players[i].init(world, i)
+	emit_signal("players_changed")
 
 # Turn and permission checking utility functions
 # NB: Turn checking currently disabled for debugging!
 func is_active_player(compared_player: Node) -> bool:
 	return true # current_player and compared_player == current_player and moves_remaining > 0
 
-func is_move_allowed(calling_player: Node, owning_player: Node) -> bool:
-	return calling_player == owning_player and is_active_player(calling_player)
+func is_move_allowed(calling_player: Node, move_unit: Node) -> bool:
+	return move_unit.player == calling_player and move_unit.last_turn != current_turn and is_active_player(calling_player)
 
 # Networking game state on initial join
 func send_state(target_id: int):
@@ -52,6 +68,14 @@ func send_state(target_id: int):
 func advance_move():
 	advance_move_to(moves_remaining - 1)
 
+# Call on server at end of turn
+func call_advance_turn():
+	var next_player = get_player((current_player.id + 1) % len(players))
+	while next_player.capital.conquered:
+		next_player = get_player((next_player.id + 1) % len(players))
+	
+	rpc("advance_turn", next_player.id, MOVES_PER_TURN)
+
 # Call by RPC at end of turn
 puppetsync func advance_turn(new_player_id, new_moves_remaining):
 	var __ = await_start_move()
@@ -60,6 +84,7 @@ puppetsync func advance_turn(new_player_id, new_moves_remaining):
 	
 	advance_turn_to(new_player_id, new_moves_remaining)
 	add_forces(new_player_id)
+	current_turn += 1
 	
 	rpc("add_forces", current_player.id)
 	
@@ -73,6 +98,7 @@ puppetsync func start_game():
 	
 	advance_turn_to(0, MOVES_PER_TURN)
 	add_forces(0)
+	current_turn = 0
 	world.effects.play_announcement()
 	
 	end_move()
@@ -109,6 +135,29 @@ func add_forces(player_id: int):
 	if !player.capital.city_tile.army and !player.capital.conquered:
 		world.add_unit(player.capital.city_tile.coord, 20, player.id, false)
 
+func get_winner() -> Node:
+	var remaining_player = null
+	for player in players:
+		if !player.capital.conquered:
+			if remaining_player:
+				return null
+			remaining_player = player
+	return remaining_player
+
+func check_win_conditions():
+	var winner = get_winner()
+	if winner:
+		rpc("announce_winner", winner.id)
+
+puppetsync func announce_winner(winner_id: int):
+	var winner = get_player(winner_id)
+	world.ui.hide("Overlay")
+	world.ui.hide("DebugMenu")
+	if winner == world.network.get_our_player():
+		world.ui.show("WinScreen")
+	else:
+		world.ui.show("LossScreen")
+
 # Clientside functions for ensuring moves are run in sequence and do not overlap
 func await_start_move():
 	var this_move_index = __next_free_move_index
@@ -130,8 +179,8 @@ func is_move_active():
 # Event handlers
 func __on_moves_remaining_changed(new_moves_remaining: int):
 	if world.network.is_server and new_moves_remaining <= 0:
-		rpc("advance_turn", (current_player.id + 1) % len(players), MOVES_PER_TURN)
+		call_advance_turn()
 
 func __on_turn_timer_timeout():
 	if world.network.is_server:
-		rpc("advance_turn", (current_player.id + 1) % len(players), MOVES_PER_TURN)
+		call_advance_turn()
