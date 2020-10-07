@@ -22,10 +22,14 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="."]
-margin_left = 25.0
-margin_top = 9.0
-margin_right = 226.0
-margin_bottom = 23.0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -99.5
+margin_top = -9.0
+margin_right = 101.5
+margin_bottom = 11.0
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 align = 1
