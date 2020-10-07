@@ -1,7 +1,11 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Lobby.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/lobby_button_2.png" type="Texture" id=2]
+[ext_resource path="res://OperaLyricsSmooth-OOJo.ttf" type="DynamicFontData" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+font_data = ExtResource( 3 )
 
 [node name="Lobby" type="CanvasLayer"]
 layer = 10
@@ -34,10 +38,12 @@ __meta__ = {
 }
 
 [node name="Label2" type="Label" parent="MapGenButton"]
-margin_left = 84.3373
-margin_top = 9.66428
-margin_right = 174.337
-margin_bottom = 40.6643
+margin_left = 68.6216
+margin_top = 6.0
+margin_right = 193.622
+margin_bottom = 49.0
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Generate Map
 "
 align = 1
@@ -47,7 +53,6 @@ __meta__ = {
 }
 
 [node name="StartButton" type="TextureButton" parent="."]
-visible = false
 margin_left = 395.113
 margin_top = 497.895
 margin_right = 651.113
@@ -62,6 +67,8 @@ margin_left = 91.4927
 margin_top = 9.89664
 margin_right = 162.493
 margin_bottom = 23.8966
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Start Game"
 align = 1
 valign = 1

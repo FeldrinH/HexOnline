@@ -1,14 +1,18 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Scripts/HUD.gd" type="Script" id=1]
-[ext_resource path="res://Roboto-Bold.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://OperaLyricsSmooth-OOJo.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Sprites/menu_icon.png" type="Texture" id=3]
 [ext_resource path="res://Sprites/hud_ribbon.png" type="Texture" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 32
 outline_size = 1
-outline_color = Color( 0, 0, 0, 1 )
+extra_spacing_char = 1
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 32
 extra_spacing_char = 1
 font_data = ExtResource( 2 )
 
@@ -34,6 +38,8 @@ margin_top = 6.11372
 margin_right = 124.722
 margin_bottom = 44.1137
 custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_colors/font_outline_modulate = Color( 1, 1, 1, 1 )
 text = "None"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -54,6 +60,8 @@ margin_top = 6.33985
 margin_right = 700.32
 margin_bottom = 44.3399
 custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_colors/font_outline_modulate = Color( 1, 1, 1, 1 )
 text = "None"
 align = 2
 __meta__ = {
@@ -66,6 +74,8 @@ margin_top = 7.23561
 margin_right = 737.494
 margin_bottom = 45.2356
 custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_colors/font_outline_modulate = Color( 1, 1, 1, 1 )
 text = "0"
 align = 2
 __meta__ = {
@@ -77,7 +87,8 @@ margin_left = 743.679
 margin_top = 5.1591
 margin_right = 890.679
 margin_bottom = 43.1591
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Time:"
 align = 2
 __meta__ = {
@@ -89,7 +100,8 @@ margin_left = 879.27
 margin_top = 7.236
 margin_right = 936.268
 margin_bottom = 45.236
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "0"
 align = 2
 __meta__ = {

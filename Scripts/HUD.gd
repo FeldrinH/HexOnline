@@ -18,16 +18,15 @@ func _process(delta):
 func __on_our_client_player_changed(player: Node):
 	if player:
 		$Shared/OurLabel.text = player.name
-		$Shared/OurLabel.modulate = player.unit_color
+		$Shared/OurLabel.set("custom_colors/font_outline_modulate", player.unit_color)
 	else:
-		$Shared/OurLabel.text = "None"
-		$Shared/OurLabel.modulate = Color.white
+		$Shared/OurLabel.text = ""
 
 func __on_current_player_changed(player: Node):
 	if player:
 		$Turn/TurnLabel.text = player.name
-		$Turn/TurnLabel.modulate = player.unit_color
-		$Turn/MoveLabel.modulate = player.unit_color
+		$Turn/TurnLabel.set("custom_colors/font_outline_modulate", player.unit_color)
+		$Turn/MoveLabel.set("custom_colors/font_outline_modulate", player.unit_color)
 		$Turn.visible = true
 	else:
 		$Turn.visible = false
