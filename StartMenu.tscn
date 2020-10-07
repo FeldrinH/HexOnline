@@ -21,7 +21,7 @@ margin_top = 211.434
 margin_right = 606.919
 margin_bottom = 235.434
 size_flags_horizontal = 3
-max_length = 12
+max_length = 14
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -60,7 +60,7 @@ script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-expression = "tree.change_scene(\"res://ServerWorld.tscn\")"
+expression = "get_tree().change_scene(\"res://ServerWorld.tscn\")"
 
 [node name="JoinButton" type="Button" parent="."]
 margin_left = 532.919
@@ -72,4 +72,4 @@ script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-expression = "get_tree().change_scene(\"res://ServerWorld.tscn\")"
+expression = "get_tree().change_scene(\"res://ClientWorld.tscn\")"

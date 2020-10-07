@@ -34,7 +34,7 @@ func _exit_tree():
 		print("ERROR: Failed to write to settings file")
 	f.close()
 
-func apply_volume(new_volume=null):
+func apply_volume():
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), log(get_shared("volume")) / log10 * 20)
 
 func set_shared(identifier: String, new_value):
