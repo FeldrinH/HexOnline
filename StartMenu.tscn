@@ -1,41 +1,75 @@
-[gd_scene format=2]
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scripts/SettingsVarBox.gd" type="Script" id=1]
+[ext_resource path="res://Scripts/ScriptedButton.gd" type="Script" id=2]
 
 [node name="StartMenu" type="CanvasLayer"]
 
 [node name="NameLabel" type="Label" parent="."]
-margin_left = 192.0
-margin_top = 313.0
-margin_right = 234.0
-margin_bottom = 327.0
+margin_left = 368.469
+margin_top = 216.361
+margin_right = 410.469
+margin_bottom = 230.361
 text = "Name:"
-
-[node name="NameBox" type="LineEdit" parent="."]
-margin_left = 238.0
-margin_top = 308.0
-margin_right = 348.0
-margin_bottom = 332.0
-size_flags_horizontal = 3
-max_length = 10
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="NameBox" type="LineEdit" parent="."]
+margin_left = 414.919
+margin_top = 211.434
+margin_right = 606.919
+margin_bottom = 235.434
+size_flags_horizontal = 3
+max_length = 12
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+variable_name = "profile.display_name"
+
 [node name="IPLabel" type="Label" parent="."]
-margin_left = 192.568
-margin_top = 347.459
-margin_right = 215.568
-margin_bottom = 361.459
+margin_left = 379.628
+margin_top = 364.802
+margin_right = 402.628
+margin_bottom = 378.802
 text = "IP:"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="IPEdit" type="LineEdit" parent="."]
-margin_left = 238.0
-margin_top = 342.0
-margin_right = 348.0
-margin_bottom = 366.0
+margin_left = 406.675
+margin_top = 357.928
+margin_right = 516.675
+margin_bottom = 381.928
 max_length = 15
+script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+variable_name = "ip"
+
+[node name="HostButton" type="Button" parent="."]
+margin_left = 400.562
+margin_top = 301.304
+margin_right = 614.562
+margin_bottom = 328.304
+text = "Start server & host game"
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+expression = "tree.change_scene(\"res://ServerWorld.tscn\")"
+
+[node name="JoinButton" type="Button" parent="."]
+margin_left = 532.919
+margin_top = 354.434
+margin_right = 617.919
+margin_bottom = 381.434
+text = "Join game"
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+expression = "get_tree().change_scene(\"res://ServerWorld.tscn\")"
