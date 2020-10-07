@@ -10,8 +10,11 @@ func _enter_tree():
 
 func show(element_name: String):
 	var element = __elements[element_name]
-	element.world = world
-	add_child(element)
+	if !element.is_inside_tree():
+		element.world = world
+		add_child(element)
 
 func hide(element_name: String):
-	remove_child(__elements[element_name])
+	var element: Node = __elements[element_name]
+	if element.is_inside_tree():
+		remove_child(element)
