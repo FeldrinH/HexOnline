@@ -3,7 +3,7 @@ extends Node2D
 const marching_clip = preload("res://Sounds/march.ogg")
 const battle_clip = preload("res://Sounds/battle_sound.ogg")
 const ship_clip = preload("res://Sounds/ship_horn_1.ogg")
-const announcement_clip = preload("res://Sounds/announcement.ogg")
+const announcement_clip = preload("res://Sounds/start_sound.wav")
 
 onready var wasteland_sprite = preload("res://wasteland_tile_1.tscn")
 onready var battle_sound_player : AudioStreamPlayer = $BattleSoundPlayer
