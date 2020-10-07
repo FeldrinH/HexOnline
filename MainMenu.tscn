@@ -76,14 +76,21 @@ ticks_on_borders = true
 [node name="ResumeButton" type="TextureButton" parent="MainMenuButtons"]
 margin_top = 72.0
 margin_right = 297.0
-margin_bottom = 104.0
+margin_bottom = 94.0
+rect_min_size = Vector2( 0, 32 )
 texture_normal = ExtResource( 2 )
+expand = true
+stretch_mode = 3
 
 [node name="Label" type="Label" parent="MainMenuButtons/ResumeButton"]
-margin_left = 76.5134
-margin_top = 6.67853
-margin_right = 199.513
-margin_bottom = 26.6785
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -47.0
+margin_top = -7.00002
+margin_right = 47.0
+margin_bottom = 7.00002
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Resume Game"
@@ -96,14 +103,21 @@ __meta__ = {
 [node name="QuitButton" type="TextureButton" parent="MainMenuButtons"]
 margin_top = 117.0
 margin_right = 297.0
-margin_bottom = 149.0
+margin_bottom = 139.0
+rect_min_size = Vector2( 0, 32 )
 texture_normal = ExtResource( 2 )
+expand = true
+stretch_mode = 3
 
 [node name="Label2" type="Label" parent="MainMenuButtons/QuitButton"]
-margin_left = 85.7509
-margin_top = -4.11188
-margin_right = 179.751
-margin_bottom = 38.8881
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -47.0
+margin_top = -15.5
+margin_right = 47.0
+margin_bottom = 15.5
 custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Exit"
