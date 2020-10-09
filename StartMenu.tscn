@@ -55,10 +55,13 @@ margin_left = 400.562
 margin_top = 301.304
 margin_right = 614.562
 margin_bottom = 328.304
+custom_colors/font_color_disabled = Color( 0, 0, 0, 1 )
+custom_colors/font_color_hover = Color( 0, 0, 0, 1 )
 text = "Start server & host game"
 script = ExtResource( 2 )
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_use_anchors_": false,
+"_editor_description_": ""
 }
 expression = "get_tree().change_scene(\"res://ServerWorld.tscn\")"
 
