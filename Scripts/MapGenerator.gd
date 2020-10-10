@@ -1,6 +1,3 @@
-const forest_tiles = [preload("res://Sprites/forest_tile_1.png"), preload("res://Sprites/forest_tile_2.png"), preload("res://Sprites/forest_tile_3.png"), preload("res://Sprites/forest_tile_4.png"), preload("res://Sprites/forest_tile_5.png")]
-const forest_object = preload("res://forest_tile.tscn")
-
 static func generate_map(map: Node):
 	print("MAPGEN: Started")
 	while true:
@@ -39,7 +36,7 @@ static func generate_map(map: Node):
 				tile.set_terrain(Util.TERRAIN_WATER)
 		
 		var file = File.new()
-		file.open("res://Scripts/city_names.csv", file.READ)
+		file.open("res://Data/city_names.txt", File.READ)
 		
 		var temp_cities = []
 		

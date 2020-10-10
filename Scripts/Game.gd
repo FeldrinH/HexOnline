@@ -43,18 +43,24 @@ func get_selected_players_count() -> int:
 	return count
 
 func remove_unselected_players():
+	var new_players_global_ids := []
+	for global_id in len(__all_players):
+		if __all_players[global_id].client:
+			new_players_global_ids.append(global_id)
+	rpc("__update_players", new_players_global_ids)
+
+puppetsync func __update_players(new_players_global_ids: Array):
 	players = []
-	for player in __all_players:
-		if player.client:
-			players.append(player)
-	for i in len(players):
-		players[i].init(world, i)
+	for i in len(new_players_global_ids):
+		var next_player = __all_players[new_players_global_ids[i]]
+		players.append(next_player)
+		next_player.init(world, i)
 	emit_signal("players_changed")
 
 # Turn and permission checking utility functions
 # NB: Turn checking currently disabled for debugging!
 func is_active_player(compared_player: Node) -> bool:
-	return true # current_player and compared_player == current_player and moves_remaining > 0
+	return current_player and compared_player == current_player and moves_remaining > 0
 
 func is_move_allowed(calling_player: Node, move_unit: Node) -> bool:
 	return move_unit.player == calling_player and move_unit.last_turn != current_turn and is_active_player(calling_player)

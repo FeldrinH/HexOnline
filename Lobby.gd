@@ -24,11 +24,11 @@ func setup_player_buttons():
 		$PlayerButtons.add_child(button)
 
 func _on_mapgen_button_pressed():
-	#if world.game.get_selected_players_count() < 2:
-	#	return
+	if world.game.get_selected_players_count() < 2:
+		return
 	
 	$MapGenButton.disabled = true
-	#world.game.remove_unselected_players()
+	world.game.remove_unselected_players()
 	yield(world.generate_map(), "completed")
 	world.send_map(0)
 	$MapGenButton.visible = false

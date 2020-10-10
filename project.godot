@@ -20,9 +20,10 @@ _global_script_class_icons={
 
 [application]
 
-config/name="HexGame"
+config/name="HexOnline"
 run/main_scene="res://StartMenu.tscn"
-config/icon="res://icon.png"
+config/icon="res://Sprites/cavalry.png"
+config/windows_native_icon="res://cavalry.ico"
 
 [autoload]
 
