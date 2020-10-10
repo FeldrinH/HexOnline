@@ -17,7 +17,8 @@ onready var timer : Timer = $Timer
 onready var __all_players: Array = $Players.get_children()
 onready var players: Array = __all_players
 
-onready var current_player : Node = null
+var winner: Node = null
+var current_player : Node = null
 var current_turn: int = -1
 var moves_remaining: int = MOVES_PER_TURN
 
@@ -135,7 +136,7 @@ func add_forces(player_id: int):
 	if !player.capital.city_tile.army and !player.capital.conquered:
 		world.add_unit(player.capital.city_tile.coord, 20, player.id, false)
 
-func get_winner() -> Node:
+func __find_winner() -> Node:
 	var remaining_player = null
 	for player in players:
 		if !player.capital.conquered:
@@ -144,19 +145,30 @@ func get_winner() -> Node:
 			remaining_player = player
 	return remaining_player
 
-func check_win_conditions():
-	var winner = get_winner()
-	if winner:
-		rpc("announce_winner", winner.id)
+# Called on server when a player loses
+func player_lost(loser: Node, conqueror: Node):
+	loser.rpc("do_loss", conqueror.id)
+	
+	rpc("announce_loser", loser.id)
+	var found_winner = __find_winner()
+	if found_winner:
+		rpc("announce_winner", found_winner.id)
+
+puppetsync func announce_loser(loser_id: int):
+	world.effects.play_announcement()
+	
+	var loser = get_player(loser_id)
+	if loser == world.network.get_our_player():
+		world.ui.hide("Overlay")
+		world.ui.hide("DebugMenu")
+		world.ui.show("LossScreen")
 
 puppetsync func announce_winner(winner_id: int):
-	var winner = get_player(winner_id)
+	winner = get_player(winner_id)
 	world.ui.hide("Overlay")
 	world.ui.hide("DebugMenu")
-	if winner == world.network.get_our_player():
-		world.ui.show("WinScreen")
-	else:
-		world.ui.show("LossScreen")
+	world.ui.hide("LossScreen")
+	world.ui.show("WinScreen")
 
 # Clientside functions for ensuring moves are run in sequence and do not overlap
 func await_start_move():

@@ -11,12 +11,11 @@ func init_capital(capital_manager, capital_player, city_name, tile):
 	player.set_capital(self)
 	$Sprite.modulate = player.unit_color
 
-func conquer(conquering_player):
-	if conquered or conquering_player == player: # Sanity checks
+func conquer(conqueror: Node):
+	if conquered or conqueror == player: # Sanity checks
 		return
 	
 	conquered = true
-	player.conquer(conquering_player)
 	
 	if world.network.is_server:
-		world.game.check_win_conditions()
+		world.game.player_lost(player, conqueror)
