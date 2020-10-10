@@ -1,4 +1,4 @@
-extends Button
+extends TextureButton
 
 export(String, MULTILINE) var expression
 export(NodePath) var input1

@@ -13,8 +13,8 @@ data_*/
 ProductionFiles
 
 # Krita files
-*.png-autosave.kra
 *.png~
+*.kra
 
 # User settings
 user_settings.json

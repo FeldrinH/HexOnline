@@ -1,10 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Scripts/DebugMenu.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/PlayerSelect.gd" type="Script" id=2]
 [ext_resource path="res://Scripts/ExecuteButton.gd" type="Script" id=3]
 [ext_resource path="res://Scripts/ConsoleInput.gd" type="Script" id=4]
-[ext_resource path="res://Scripts/ScriptedButton.gd" type="Script" id=5]
 
 [node name="DebugMenu" type="CanvasLayer"]
 layer = 2
@@ -19,63 +18,6 @@ mouse_filter = 2
 __meta__ = {
 "_edit_use_anchors_": true
 }
-
-[node name="JoinIP" type="LineEdit" parent="MenuRoot"]
-visible = false
-anchor_left = 0.0236399
-anchor_top = 0.777266
-anchor_right = 0.0236399
-anchor_bottom = 0.777266
-margin_left = -0.919935
-margin_top = 3.35995
-margin_right = 143.08
-margin_bottom = 30.36
-text = "localhost"
-caret_blink = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ClientName" type="LineEdit" parent="MenuRoot"]
-visible = false
-margin_left = 23.5823
-margin_top = 431.608
-margin_right = 166.582
-margin_bottom = 458.608
-text = "Client display name"
-caret_blink = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="HostButton" type="Button" parent="MenuRoot"]
-visible = false
-margin_left = 22.7498
-margin_top = 502.067
-margin_right = 119.75
-margin_bottom = 535.067
-text = "Create Server"
-script = ExtResource( 5 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-expression = "network.create_server(input2.text)"
-input2 = NodePath("../ClientName")
-
-[node name="JoinButton" type="Button" parent="MenuRoot"]
-visible = false
-margin_left = 23.2499
-margin_top = 543.272
-margin_right = 121.25
-margin_bottom = 576.272
-text = "Join Server"
-script = ExtResource( 5 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-expression = "network.join_server(input1.text, input2.text)"
-input1 = NodePath("../JoinIP")
-input2 = NodePath("../ClientName")
 
 [node name="ConsoleInput" type="LineEdit" parent="MenuRoot"]
 margin_left = 153.624

@@ -1,7 +1,17 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Scripts/SettingsVarBox.gd" type="Script" id=1]
-[ext_resource path="res://Scripts/ScriptedButton.gd" type="Script" id=2]
+[ext_resource path="res://Sprites/lobby_button_1.png" type="Texture" id=2]
+[ext_resource path="res://Sprites/lobby_button_2.png" type="Texture" id=3]
+[ext_resource path="res://OperaLyricsSmooth-OOJo.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://Scripts/ScriptedButton.gd" type="Script" id=5]
+
+[sub_resource type="DynamicFont" id=1]
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 12
+font_data = ExtResource( 4 )
 
 [node name="StartMenu" type="CanvasLayer"]
 
@@ -50,29 +60,57 @@ __meta__ = {
 }
 variable_name = "ip"
 
-[node name="HostButton" type="Button" parent="."]
+[node name="HostButton" type="TextureButton" parent="."]
 margin_left = 400.562
 margin_top = 301.304
 margin_right = 614.562
 margin_bottom = 328.304
-custom_colors/font_color_disabled = Color( 0, 0, 0, 1 )
-custom_colors/font_color_hover = Color( 0, 0, 0, 1 )
-text = "Start server & host game"
-script = ExtResource( 2 )
+texture_normal = ExtResource( 2 )
+script = ExtResource( 5 )
 __meta__ = {
-"_edit_use_anchors_": false,
-"_editor_description_": ""
+"_edit_use_anchors_": false
 }
 expression = "get_tree().change_scene(\"res://ServerWorld.tscn\")"
 
-[node name="JoinButton" type="Button" parent="."]
-margin_left = 532.919
-margin_top = 354.434
-margin_right = 617.919
-margin_bottom = 381.434
-text = "Join game"
-script = ExtResource( 2 )
+[node name="Label" type="Label" parent="HostButton"]
+margin_left = 28.6227
+margin_top = 5.61234
+margin_right = 205.623
+margin_bottom = 25.6123
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.364706, 0.290196, 0.290196, 1 )
+text = "Host Server & Play"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="JoinButton" type="TextureButton" parent="."]
+margin_left = 533.0
+margin_top = 354.0
+margin_right = 633.0
+margin_bottom = 387.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture_normal = ExtResource( 3 )
+expand = true
+script = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 expression = "get_tree().change_scene(\"res://ClientWorld.tscn\")"
+
+[node name="Label2" type="Label" parent="JoinButton"]
+margin_left = -2.987
+margin_top = 7.57651
+margin_right = 106.013
+margin_bottom = 27.5765
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.364706, 0.290196, 0.290196, 1 )
+text = "Join Server"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
