@@ -62,9 +62,9 @@ func execute_move_to(target_tile):
 	world.game.advance_move()
 	
 	if target_tile.terrain == Util.TERRAIN_GROUND:
-		world.effects.play_movement_effects()
+		world.effects.play_sound("infantry_movement")
 	elif target_tile.terrain == Util.TERRAIN_WATER:
-		world.effects.play_ship_sound()
+		world.effects.play_sound("ship_movement")
 	
 	do_enter_tile(null, true)
 	

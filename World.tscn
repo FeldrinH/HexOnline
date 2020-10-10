@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://Scripts/Network.gd" type="Script" id=1]
 [ext_resource path="res://DebugMenu.tscn" type="PackedScene" id=2]
@@ -9,10 +9,15 @@
 [ext_resource path="res://Lobby.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Scripts/EffectsManager.gd" type="Script" id=8]
 [ext_resource path="res://MainMenu.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Sounds/ship_horn_1.ogg" type="AudioStream" id=10]
+[ext_resource path="res://Sounds/start_sound.wav" type="AudioStream" id=11]
+[ext_resource path="res://Sounds/march.ogg" type="AudioStream" id=12]
 [ext_resource path="res://Scripts/World.gd" type="Script" id=13]
+[ext_resource path="res://Sounds/battle_sound.ogg" type="AudioStream" id=14]
 [ext_resource path="res://AnimatedBorder.tscn" type="PackedScene" id=15]
 [ext_resource path="res://Sprites/cavalry.png" type="Texture" id=16]
 [ext_resource path="res://HUD.tscn" type="PackedScene" id=17]
+[ext_resource path="res://Sounds/announcement.ogg" type="AudioStream" id=18]
 [ext_resource path="res://Sprites/tile.png" type="Texture" id=22]
 
 [sub_resource type="TileSet" id=1]
@@ -145,14 +150,23 @@ z_index = 1
 [node name="EffectsManager" type="Node2D" parent="."]
 script = ExtResource( 8 )
 
-[node name="BattleSoundPlayer" type="AudioStreamPlayer" parent="EffectsManager"]
+[node name="Sounds" type="Node" parent="EffectsManager"]
 
-[node name="MovementSoundPlayer" type="AudioStreamPlayer" parent="EffectsManager"]
+[node name="battle" type="AudioStreamPlayer" parent="EffectsManager/Sounds"]
+stream = ExtResource( 14 )
 
-[node name="ShipSoundPlayer" type="AudioStreamPlayer" parent="EffectsManager"]
+[node name="infantry_movement" type="AudioStreamPlayer" parent="EffectsManager/Sounds"]
+stream = ExtResource( 12 )
+
+[node name="ship_movement" type="AudioStreamPlayer" parent="EffectsManager/Sounds"]
+stream = ExtResource( 10 )
 volume_db = -10.0
 
-[node name="AnnouncementSoundPlayer" type="AudioStreamPlayer" parent="EffectsManager"]
+[node name="conquer_announce" type="AudioStreamPlayer" parent="EffectsManager/Sounds"]
+stream = ExtResource( 18 )
+
+[node name="game_start" type="AudioStreamPlayer" parent="EffectsManager/Sounds"]
+stream = ExtResource( 11 )
 
 [node name="BattleParticles" type="Particles2D" parent="EffectsManager"]
 z_index = 40

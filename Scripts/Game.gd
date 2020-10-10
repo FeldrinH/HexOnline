@@ -100,7 +100,7 @@ puppetsync func start_game():
 	advance_turn_to(0, MOVES_PER_TURN)
 	add_forces(0)
 	current_turn = 0
-	world.effects.play_announcement()
+	world.effects.play_sound("game_start")
 	
 	end_move()
 
@@ -155,7 +155,7 @@ func player_lost(loser: Node, conqueror: Node):
 		rpc("announce_winner", found_winner.id)
 
 puppetsync func announce_loser(loser_id: int):
-	world.effects.play_announcement()
+	world.effects.play_sound("conquer_announce")
 	
 	var loser = get_player(loser_id)
 	if loser == world.network.get_our_player():
