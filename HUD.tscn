@@ -3,8 +3,8 @@
 [ext_resource path="res://Scripts/HUD.gd" type="Script" id=1]
 [ext_resource path="res://OperaLyricsSmooth-OOJo.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Sprites/menu_icon.png" type="Texture" id=3]
-[ext_resource path="res://Sprites/hud_ribbon.png" type="Texture" id=4]
-[ext_resource path="res://Sprites/lobby_button_1.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/hud_ribbon_2.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/lobby_button_3.png" type="Texture" id=5]
 
 [sub_resource type="DynamicFont" id=1]
 size = 32
@@ -12,11 +12,10 @@ outline_size = 1
 extra_spacing_char = 1
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=3]
-size = 18
+[sub_resource type="DynamicFont" id=2]
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=3]
 size = 32
 extra_spacing_char = 1
 font_data = ExtResource( 2 )
@@ -25,8 +24,8 @@ font_data = ExtResource( 2 )
 script = ExtResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
-position = Vector2( 514.553, 32.4498 )
-scale = Vector2( 1.00174, 1.37442 )
+position = Vector2( 512.002, 33.8529 )
+scale = Vector2( 0.409511, 0.352132 )
 texture = ExtResource( 4 )
 
 [node name="Shared" type="Control" parent="."]
@@ -38,10 +37,10 @@ __meta__ = {
 }
 
 [node name="OurLabel" type="Label" parent="Shared"]
-margin_left = 17.7215
-margin_top = 6.11372
-margin_right = 124.722
-margin_bottom = 44.1137
+margin_left = 71.322
+margin_top = 10.5115
+margin_right = 178.322
+margin_bottom = 49.5115
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_colors/font_outline_modulate = Color( 1, 1, 1, 1 )
@@ -60,23 +59,22 @@ __meta__ = {
 }
 
 [node name="SkipButton" type="TextureButton" parent="Turn"]
-margin_left = 425.19
-margin_top = 8.8909
-margin_right = 542.19
-margin_bottom = 40.8909
+margin_left = 365.0
+margin_top = 10.0
+margin_right = 494.0
+margin_bottom = 46.0
 texture_normal = ExtResource( 5 )
 expand = true
-stretch_mode = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Label" type="Label" parent="Turn/SkipButton"]
-margin_left = 12.6637
-margin_top = 5.201
-margin_right = 111.664
-margin_bottom = 27.201
-custom_fonts/font = SubResource( 3 )
+margin_left = 18.2718
+margin_top = 7.95936
+margin_right = 113.272
+margin_bottom = 29.9593
+custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Skip turn"
 align = 1
@@ -86,10 +84,10 @@ __meta__ = {
 }
 
 [node name="TurnLabel" type="Label" parent="Turn"]
-margin_left = 574.318
-margin_top = 6.33985
-margin_right = 700.32
-margin_bottom = 44.3399
+margin_left = 503.703
+margin_top = 10.7406
+margin_right = 629.705
+margin_bottom = 49.7406
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_colors/font_outline_modulate = Color( 1, 1, 1, 1 )
@@ -100,10 +98,10 @@ __meta__ = {
 }
 
 [node name="MoveLabel" type="Label" parent="Turn"]
-margin_left = 658.497
-margin_top = 7.23561
-margin_right = 737.494
-margin_bottom = 45.2356
+margin_left = 587.002
+margin_top = 11.6364
+margin_right = 665.999
+margin_bottom = 50.6364
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_colors/font_outline_modulate = Color( 1, 1, 1, 1 )
@@ -114,11 +112,11 @@ __meta__ = {
 }
 
 [node name="TimeLabel" type="Label" parent="Turn"]
-margin_left = 743.679
-margin_top = 5.1591
-margin_right = 890.679
-margin_bottom = 43.1591
-custom_fonts/font = SubResource( 2 )
+margin_left = 673.945
+margin_top = 9.55987
+margin_right = 820.945
+margin_bottom = 48.5599
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Time:"
 align = 2
@@ -127,11 +125,11 @@ __meta__ = {
 }
 
 [node name="TimerLabel" type="Label" parent="Turn"]
-margin_left = 879.27
-margin_top = 7.236
-margin_right = 936.268
-margin_bottom = 45.236
-custom_fonts/font = SubResource( 2 )
+margin_left = 809.535
+margin_top = 11.6368
+margin_right = 866.533
+margin_bottom = 50.6368
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "0"
 align = 2
@@ -140,10 +138,10 @@ __meta__ = {
 }
 
 [node name="MenuButton" type="TextureButton" parent="."]
-margin_left = 954.737
-margin_top = 8.68437
-margin_right = 1038.74
-margin_bottom = 52.6844
+margin_left = 894.267
+margin_top = 14.3394
+margin_right = 978.27
+margin_bottom = 58.3394
 size_flags_horizontal = 5
 texture_normal = ExtResource( 3 )
 stretch_mode = 4
