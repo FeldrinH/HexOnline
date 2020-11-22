@@ -62,7 +62,6 @@ puppetsync func __update_players(selectable_values: Array):
 		player.selectable = selectable_values[player.id]
 		if player.selectable:
 			players.append(player)
-	print(players)
 	emit_signal("players_changed")
 
 # Turn and permission checking utility functions
@@ -113,23 +112,24 @@ puppetsync func advance_turn(new_player_id, new_moves_remaining):
 	if __ is GDScriptFunctionState:
 		yield(__, "completed")
 	
+	print(new_player_id, new_moves_remaining)
 	advance_turn_to(new_player_id, new_moves_remaining)
 	add_forces(new_player_id)
 	current_turn += 1
 	
-	add_forces(current_player.id)
-	
 	end_move()
 
 # Call by RPC from client on server to request turn skip
-remotesync func skip_turn():
+master func skip_turn():
 	var sender_player = world.network.get_rpc_sender_player()
-	var __ = world.game.await_start_move()
+	var __ = await_start_move()
 	if __ is GDScriptFunctionState:
 		yield(__, "completed")
-	if world.game.is_active_player(sender_player):
+	
+	if is_active_player(sender_player):
 		call_advance_turn()
-	world.game.end_move()
+	
+	end_move()
 
 # Utility functions for turn management
 func advance_move_to(new_moves_remaining: int):
