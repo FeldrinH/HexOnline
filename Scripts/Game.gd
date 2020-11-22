@@ -217,7 +217,7 @@ func is_move_active():
 
 # Event handlers
 func __on_moves_remaining_changed(new_moves_remaining: int):
-	if world.network.is_server and new_moves_remaining <= 0:
+	if world.network.is_server and (new_moves_remaining <= 0 or !current_player.client):
 		call_advance_turn()
 
 func __on_turn_timer_timeout():
