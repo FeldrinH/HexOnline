@@ -9,6 +9,7 @@ var world : Node2D
 var id: int = -1
 var client: Node
 var capital: Node2D
+var selectable: bool = true
 var has_lost: bool = false
 
 func init(player_world, player_id):

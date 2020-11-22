@@ -1,5 +1,6 @@
 # Godot-specific ignores
 .import/
+logs/
 
 # Imported translations (automatically generated from CSV files)
 *.translation

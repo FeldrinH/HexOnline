@@ -102,7 +102,7 @@ static func generate_map(map: Node):
 		
 		# Adds capitals
 		for i in len(map.game.players):
-			best_capitals[i].add_capital(i, capital_names[i])
+			best_capitals[i].add_capital(map.game.players[i].id, capital_names[i])
 		
 		# Adds cities
 		var city_tiles = []

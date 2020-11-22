@@ -1,6 +1,7 @@
 extends Node
 
 signal client_connected(id, client) # Emitted on all clients/server after a new client has connected
+signal client_disconnected(id, client)
 signal client_initializing(id, client) # Emitted on server when client is connecting, when initial data should be sent
 signal client_initialized() # Emitted on client/server after local client has fully initialized
 
@@ -44,7 +45,7 @@ func get_rpc_sender_player() -> Node:
 master func register_client(profile: Dictionary):
 	var id = get_tree().get_rpc_sender_id()
 	if !clients.has(id):
-		print("SERVER: New client connected: " + str(id))
+		print("SERVER: New client registered: " + profile.display_name + " (" + str(id) + ")")
 		
 		rpc("add_remote_client", id, profile, -1)
 		
@@ -65,7 +66,7 @@ func initialize_client(id: int):
 
 puppetsync func add_remote_client(id: int, profile: Dictionary, player_id: int):
 	if !clients.has(id):
-		print("CLIENT: New client connected: " + profile.display_name)
+		print("CLIENT: New client registered: " + profile.display_name + " (" + str(id) + ")")
 		
 		var new_client = Client.instance()
 		new_client.init(world, id, profile, player_id)
@@ -78,11 +79,10 @@ puppetsync func add_remote_client(id: int, profile: Dictionary, player_id: int):
 		emit_signal("client_connected", id, new_client)
 
 # Used to run cleanup when client disconnects
-func remove_remote_client(id: int):
+puppetsync func remove_remote_client(id: int):
 	if clients.has(id):
-		print("CLIENT: Client disconnected: " + get_client(id).profile.display_name)
-		
 		var old_client = clients[id]
+		print("CLIENT: New client deregistered: " + old_client.profile.display_name + " (" + str(id) + ")")
 		old_client.cleanup()
 		clients.erase(id)
 		emit_signal("client_disconnected", id, old_client)
@@ -101,8 +101,10 @@ puppetsync func client_initialized():
 func cleanup_connections():
 	if get_tree().network_peer:
 		get_tree().network_peer = null
-	get_tree().disconnect("connected_to_server", self, "_client_on_connected_to_server")
 	get_tree().disconnect("network_peer_disconnected", self, "_server_on_client_disconnected")
+	get_tree().disconnect("connected_to_server", self, "_client_on_connected_to_server")
+	get_tree().disconnect("connection_failed", self, "_client_on_connection_failed")
+	get_tree().disconnect("server_disconnected", self, "_client_on_server_disconnected")
 
 func create_server(our_profile: Dictionary):
 	cleanup_connections()
@@ -113,7 +115,7 @@ func create_server(our_profile: Dictionary):
 	peer.create_server(PORT, MAX_CLIENTS)
 	get_tree().network_peer = peer
 	is_server = true
-	get_tree().connect("network_peer_disconnected ", self, "_server_on_client_disconnected")
+	get_tree().connect("network_peer_disconnected", self, "_server_on_client_disconnected")
 	
 	# Initialize server's client
 	_client_on_connected_to_server(our_profile)
@@ -128,6 +130,8 @@ func join_server(ip: String, our_profile: Dictionary):
 	get_tree().network_peer = peer
 	is_server = false
 	get_tree().connect("connected_to_server", self, "_client_on_connected_to_server", [our_profile])
+	get_tree().connect("connection_failed", self, "_client_on_connection_failed")
+	get_tree().connect("server_disconnected", self, "_client_on_server_disconnected")
 	
 	print("Client created")
 
@@ -135,7 +139,13 @@ func join_server(ip: String, our_profile: Dictionary):
 func _client_on_connected_to_server(our_profile: Dictionary):
 	rpc("register_client", our_profile)
 
+func _client_on_connection_failed():
+	print("CLIENT: Connection failed")
+
+func _client_on_server_disconnected():
+	print("CLIENT: Server disconnected")
+
 func _server_on_client_disconnected(id: int):
 	print("SERVER: Client disconnected: " + str(id))
 	
-	rpc("remove_client", id)
+	rpc("remove_remote_client", id)

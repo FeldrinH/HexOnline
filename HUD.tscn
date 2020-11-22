@@ -1,14 +1,19 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Scripts/HUD.gd" type="Script" id=1]
 [ext_resource path="res://OperaLyricsSmooth-OOJo.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Sprites/menu_icon.png" type="Texture" id=3]
 [ext_resource path="res://Sprites/hud_ribbon.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/lobby_button_1.png" type="Texture" id=5]
 
 [sub_resource type="DynamicFont" id=1]
 size = 32
 outline_size = 1
 extra_spacing_char = 1
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 18
 font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=2]
@@ -50,6 +55,32 @@ margin_left = -1.0
 margin_top = 6.0
 margin_right = 39.0
 margin_bottom = 46.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SkipButton" type="TextureButton" parent="Turn"]
+margin_left = 425.19
+margin_top = 8.8909
+margin_right = 542.19
+margin_bottom = 40.8909
+texture_normal = ExtResource( 5 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Turn/SkipButton"]
+margin_left = 12.6637
+margin_top = 5.201
+margin_right = 111.664
+margin_bottom = 27.201
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Skip turn"
+align = 1
+valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -119,4 +150,5 @@ stretch_mode = 4
 __meta__ = {
 "_edit_use_anchors_": false
 }
+[connection signal="pressed" from="Turn/SkipButton" to="." method="skip_turn"]
 [connection signal="pressed" from="MenuButton" to="." method="toggle_main_menu"]

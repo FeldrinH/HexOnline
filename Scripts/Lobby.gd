@@ -9,11 +9,12 @@ func _ready():
 	world.game.connect("players_changed", self, "setup_player_buttons")
 	
 	if world.network.is_server:
-		$MapGenButton.connect("pressed", self, "_on_mapgen_button_pressed", [], CONNECT_ONESHOT)
+		$MapGenButton.connect("pressed", self, "_on_mapgen_button_pressed")
 		$MapGenButton.visible = true
+		$StartButtonServer.connect("pressed", self, "_on_start_button_pressed", [], CONNECT_ONESHOT)
 	else:
-		$StartButton.visible = true
-	$StartButton.connect("pressed", self, "_on_start_button_pressed", [], CONNECT_ONESHOT)
+		$StartButtonClient.visible = true
+		$StartButtonClient.connect("pressed", self, "_on_start_button_pressed", [], CONNECT_ONESHOT)
 
 func setup_player_buttons():
 	for child in $PlayerButtons.get_children():
@@ -25,6 +26,7 @@ func setup_player_buttons():
 
 func _on_mapgen_button_pressed():
 	if world.game.get_selected_players_count() < 2:
+		print(world.game.get_selected_players_count())
 		return
 	
 	$MapGenButton.disabled = true
@@ -32,7 +34,7 @@ func _on_mapgen_button_pressed():
 	yield(world.generate_map(), "completed")
 	world.send_map(0)
 	$MapGenButton.visible = false
-	$StartButton.visible = true
+	$StartButtonServer.visible = true
 
 func _on_start_button_pressed():
 	if world.network.is_server:

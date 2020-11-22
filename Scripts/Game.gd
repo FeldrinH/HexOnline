@@ -33,7 +33,7 @@ func _ready():
 	connect("moves_remaining_changed", self, "__on_moves_remaining_changed")
 
 func get_player(id: int) -> Node:
-	return players[id] if id >= 0 else null
+	return __all_players[id] if id >= 0 else null
 
 func get_selected_players_count() -> int:
 	var count := 0
@@ -43,18 +43,26 @@ func get_selected_players_count() -> int:
 	return count
 
 func remove_unselected_players():
-	var new_players_global_ids := []
-	for global_id in len(__all_players):
-		if __all_players[global_id].client:
-			new_players_global_ids.append(global_id)
-	rpc("__update_players", new_players_global_ids)
+	for player in __all_players:
+		if player.client:
+			player.selectable = true
+		else:
+			player.selectable = false
+	__send_update_players(0)
 
-puppetsync func __update_players(new_players_global_ids: Array):
+func __send_update_players(target_id: int):
+	var selectable_values := []
+	for player in __all_players:
+		selectable_values.append(player.selectable)
+	rpc_id(target_id, "__update_players", selectable_values)
+
+puppetsync func __update_players(selectable_values: Array):
 	players = []
-	for i in len(new_players_global_ids):
-		var next_player = __all_players[new_players_global_ids[i]]
-		players.append(next_player)
-		next_player.init(world, i)
+	for player in __all_players:
+		player.selectable = selectable_values[player.id]
+		if player.selectable:
+			players.append(player)
+	print(players)
 	emit_signal("players_changed")
 
 # Turn and permission checking utility functions
@@ -67,6 +75,7 @@ func is_move_allowed(calling_player: Node, move_unit: Node) -> bool:
 
 # Networking game state on initial join
 func send_state(target_id: int):
+	__send_update_players(target_id)
 	if current_player:
 		rpc_id(target_id, "advance_turn_to", current_player.id, moves_remaining, timer.time_left)
 
@@ -77,11 +86,26 @@ func advance_move():
 
 # Call on server at end of turn
 func call_advance_turn():
-	var next_player = get_player((current_player.id + 1) % len(players))
-	while next_player.capital.conquered:
-		next_player = get_player((next_player.id + 1) % len(players))
+	var current_player_index := players.find(current_player)
 	
-	rpc("advance_turn", next_player.id, MOVES_PER_TURN)
+	current_player_index = (current_player_index + 1) % len(players)
+	while players[current_player_index].capital.conquered:
+		current_player_index = (current_player_index + 1) % len(players)
+	
+	rpc("advance_turn", players[current_player_index].id, MOVES_PER_TURN)
+
+# Call by RPC at start of game
+puppetsync func start_game():
+	var __ = await_start_move()
+	if __ is GDScriptFunctionState:
+		yield(__, "completed")
+	
+	advance_turn_to(players[0].id, MOVES_PER_TURN)
+	add_forces(players[0].id)
+	current_turn = 0
+	world.effects.play_sound("game_start")
+	
+	end_move()
 
 # Call by RPC at end of turn
 puppetsync func advance_turn(new_player_id, new_moves_remaining):
@@ -93,22 +117,19 @@ puppetsync func advance_turn(new_player_id, new_moves_remaining):
 	add_forces(new_player_id)
 	current_turn += 1
 	
-	rpc("add_forces", current_player.id)
+	add_forces(current_player.id)
 	
 	end_move()
 
-# Call by RPC at start of game
-puppetsync func start_game():
-	var __ = await_start_move()
+# Call by RPC from client on server to request turn skip
+remotesync func skip_turn():
+	var sender_player = world.network.get_rpc_sender_player()
+	var __ = world.game.await_start_move()
 	if __ is GDScriptFunctionState:
 		yield(__, "completed")
-	
-	advance_turn_to(0, MOVES_PER_TURN)
-	add_forces(0)
-	current_turn = 0
-	world.effects.play_sound("game_start")
-	
-	end_move()
+	if world.game.is_active_player(sender_player):
+		call_advance_turn()
+	world.game.end_move()
 
 # Utility functions for turn management
 func advance_move_to(new_moves_remaining: int):

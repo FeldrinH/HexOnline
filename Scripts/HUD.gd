@@ -36,3 +36,6 @@ func __on_moves_remaining_changed(moves_remaining: int):
 
 func toggle_main_menu():
 	world.ui.show("MainMenu")
+
+func skip_turn():
+	world.game.rpc("skip_turn")
