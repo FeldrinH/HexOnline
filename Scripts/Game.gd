@@ -183,8 +183,8 @@ func player_lost(loser: Node, conqueror: Node):
 
 puppetsync func announce_loser(loser_id: int):
 	world.effects.play_sound("conquer_announce")
-	
 	var loser = get_player(loser_id)
+
 	if loser == world.network.get_our_player():
 		world.ui.hide("Overlay")
 		world.ui.hide("DebugMenu")
@@ -196,6 +196,7 @@ puppetsync func announce_winner(winner_id: int):
 	world.ui.hide("DebugMenu")
 	world.ui.hide("LossScreen")
 	world.ui.show("WinScreen")
+	world.ui.get_node("WinScreen").display_winner_name(winner.name)
 
 # Clientside functions for ensuring moves are run in sequence and do not overlap
 func await_start_move():
