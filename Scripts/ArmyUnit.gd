@@ -21,7 +21,8 @@ var on_ship : bool = false
 func init(unit_world, starting_tile, starting_power, unit_player, silent: bool):
 	init_detached(unit_world, starting_tile, starting_power, unit_player, silent)
 	do_enter_tile(starting_tile, !silent)
-
+	set_moveable_sprite(true)
+	
 func init_detached(unit_world, starting_tile, starting_power, unit_player, silent: bool):
 	world = unit_world
 	player = unit_player
@@ -35,12 +36,14 @@ remotesync func move_to(target_tile_coord):
 	if __ is GDScriptFunctionState:
 		yield(__, "completed")
 	if world.game.is_move_allowed(sender_player, self):
+
 		var move_coroutine = execute_move_to(world.get_tile(target_tile_coord))
 		if move_coroutine is GDScriptFunctionState:
 			yield(move_coroutine, "completed")
 	world.game.end_move()
 
 func execute_move_to(target_tile):
+	set_moveable_sprite(false)
 	if target_tile.terrain == Util.TERRAIN_WATER:
 		on_ship = true
 		update_appearance()
@@ -170,3 +173,6 @@ func update_appearance():
 
 func play_number_popup(number: int):
 	popup.play_popup(number, player.unit_color)
+
+func set_moveable_sprite(set : bool):
+	$SpriteMovable.visible = set

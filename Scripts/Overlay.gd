@@ -72,8 +72,8 @@ func __on_tile_input_event(_viewport, event: InputEvent, _shape_idx, tile: Node2
 				else: # !highlighted.has(hovered):
 					set_selected(null)
 					set_highlighted({})
-	elif event.is_action_pressed("ui_mouse_debug"):
-		if our_player:
-			world.rpc("add_unit", hovered.coord, 20, our_player.id, false)
+#	elif event.is_action_pressed("ui_mouse_debug"):
+#		if our_player:
+#			world.rpc("add_unit", hovered.coord, 20, our_player.id, false)
 	#elif event.is_action_pressed("ui_mouse_right"):
 		#print(world.distance_between(selected, hovered))

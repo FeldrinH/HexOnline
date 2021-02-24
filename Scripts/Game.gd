@@ -148,6 +148,12 @@ puppetsync func advance_turn_to(new_player_id: int, new_moves_remaining: int, ne
 	
 	timer.start(new_turn_lenght)
 	
+	var all_units = world.get_all_units()
+	var current_player_units = []
+	for unit in all_units:
+		if unit.player and unit.player == current_player:
+			unit.set_moveable_sprite(true)
+				
 	print("Turn advanced to player " + current_player.name)
 
 func add_forces(player_id: int):

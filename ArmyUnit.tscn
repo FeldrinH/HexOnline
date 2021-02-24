@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Scripts/ArmyUnit.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/infantry_sprite.png" type="Texture" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://Sprites/cannon.png" type="Texture" id=5]
 [ext_resource path="res://Sprites/ironclad.png" type="Texture" id=6]
 [ext_resource path="res://PopupNumber.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Sprites/usable_icon.png" type="Texture" id=8]
 
 [sub_resource type="DynamicFont" id=1]
 size = 14
@@ -58,4 +59,11 @@ __meta__ = {
 [node name="MovementTween" type="Tween" parent="."]
 
 [node name="Popup" parent="." instance=ExtResource( 7 )]
+position = Vector2( 0.334087, 0.668175 )
 z_index = 30
+
+[node name="SpriteMovable" type="Sprite" parent="."]
+modulate = Color( 0.0509804, 0.662745, 0.203922, 1 )
+position = Vector2( 0.0260121, 0.0181027 )
+scale = Vector2( 0.333786, 0.363516 )
+texture = ExtResource( 8 )
