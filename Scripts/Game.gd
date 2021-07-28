@@ -178,14 +178,21 @@ func __find_winner() -> Node:
 			remaining_player = player
 	return remaining_player
 
-# Called on server when a player loses
-func player_lost(loser: Node, conqueror: Node):
-	loser.rpc("do_loss", conqueror.id)
+# Called on server when a player's capital is conquered
+func on_player_capital_conquered(loser: Node, conqueror: Node):
+	rpc("do_player_capital_conquered", loser.id, conqueror.id)
 	
 	rpc("announce_loser", loser.id)
 	var found_winner = __find_winner()
 	if found_winner:
 		rpc("announce_winner", found_winner.id)
+
+puppetsync func do_player_capital_conquered(loser_id: int, conqueror_id: int):
+	var loser = get_player(loser_id)
+	var conqueror = get_player(conqueror_id)
+	for tile in world.get_all_tiles():
+		if tile.player == loser:
+			tile.try_occupy(conqueror)
 
 puppetsync func announce_loser(loser_id: int):
 	world.effects.play_sound("conquer_announce")

@@ -18,4 +18,4 @@ func conquer(conqueror: Node):
 	conquered = true
 	
 	if world.network.is_server:
-		world.game.player_lost(player, conqueror)
+		world.game.on_player_capital_conquered(player, conqueror)

@@ -1,3 +1,3 @@
-SET PATH=%PATH%;%userprofile%\StaticTools\
+REM SET PATH=%PATH%;%userprofile%\StaticTools\
 
-start godot ClientWorld.tscn
+START godot ClientWorld.tscn
