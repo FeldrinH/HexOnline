@@ -63,7 +63,9 @@ position = Vector2( 0.334087, 0.668175 )
 z_index = 30
 
 [node name="SpriteMovable" type="Sprite" parent="."]
+visible = false
 modulate = Color( 0.0509804, 0.662745, 0.203922, 1 )
 position = Vector2( 0.0260121, 0.0181027 )
 scale = Vector2( 0.333786, 0.363516 )
+z_index = 5
 texture = ExtResource( 8 )

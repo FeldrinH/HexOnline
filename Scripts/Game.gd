@@ -99,9 +99,9 @@ puppetsync func start_game():
 	if __ is GDScriptFunctionState:
 		yield(__, "completed")
 	
+	current_turn = 0
 	advance_turn_to(players[0].id, MOVES_PER_TURN)
 	add_forces(players[0].id)
-	current_turn = 0
 	world.effects.play_sound("game_start")
 	
 	end_move()
@@ -113,9 +113,9 @@ puppetsync func advance_turn(new_player_id, new_moves_remaining):
 		yield(__, "completed")
 	
 	print(new_player_id, new_moves_remaining)
+	current_turn += 1
 	advance_turn_to(new_player_id, new_moves_remaining)
 	add_forces(new_player_id)
-	current_turn += 1
 	
 	end_move()
 
@@ -148,11 +148,8 @@ puppetsync func advance_turn_to(new_player_id: int, new_moves_remaining: int, ne
 	
 	timer.start(new_turn_lenght)
 	
-	var all_units = world.get_all_units()
-	var current_player_units = []
-	for unit in all_units:
-		if unit.player and unit.player == current_player:
-			unit.set_moveable_sprite(true)
+	for unit in world.get_all_units():
+		unit.update_sprite_move_icon()
 				
 	print("Turn advanced to player " + current_player.name)
 

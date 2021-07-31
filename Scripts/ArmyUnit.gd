@@ -21,7 +21,7 @@ var on_ship : bool = false
 func init(unit_world, starting_tile, starting_power, unit_player, silent: bool):
 	init_detached(unit_world, starting_tile, starting_power, unit_player, silent)
 	do_enter_tile(starting_tile, !silent)
-	set_moveable_sprite(true)
+	update_sprite_move_icon()
 	
 func init_detached(unit_world, starting_tile, starting_power, unit_player, silent: bool):
 	world = unit_world
@@ -43,7 +43,7 @@ remotesync func move_to(target_tile_coord):
 	world.game.end_move()
 
 func execute_move_to(target_tile):
-	set_moveable_sprite(false)
+
 	if target_tile.terrain == Util.TERRAIN_WATER:
 		on_ship = true
 		update_appearance()
@@ -57,11 +57,13 @@ func execute_move_to(target_tile):
 		var split_power = MAX_POWER - target_tile.army.power
 		if split_power > 0:
 			last_turn = world.game.current_turn
+			update_sprite_move_icon()
 			var split_unit = split(split_power)
 			yield(split_unit.execute_move_to(target_tile), "completed")
 		return
 	
 	last_turn = world.game.current_turn
+	update_sprite_move_icon()
 	world.game.advance_move()
 	
 	if target_tile.terrain == Util.TERRAIN_GROUND:
@@ -174,5 +176,9 @@ func update_appearance():
 func play_number_popup(number: int):
 	popup.play_popup(number, player.unit_color)
 
-func set_moveable_sprite(set : bool):
-	$SpriteMovable.visible = set
+func update_sprite_move_icon():
+	var moveable_sprite = $SpriteMovable
+	if world.game.is_move_allowed(world.network.get_our_player(), self):
+		moveable_sprite.visible = true
+	else:
+		moveable_sprite.visible = false
