@@ -31,15 +31,17 @@ func init_detached(unit_world, starting_tile, starting_power, unit_player, silen
 	set_power(starting_power, !silent)
 
 remotesync func move_to(target_tile_coord):
-	var sender_player = world.network.get_rpc_sender_player()
+	var sender_id := get_tree().get_rpc_sender_id()
+	
 	var __ = world.game.await_start_move()
 	if __ is GDScriptFunctionState:
 		yield(__, "completed")
-	if world.game.is_move_allowed(sender_player, self):
-
+	
+	if world.network.can_client_act_as_player(sender_id, player) and world.game.is_move_allowed(player, self):
 		var move_coroutine = execute_move_to(world.get_tile(target_tile_coord))
 		if move_coroutine is GDScriptFunctionState:
 			yield(move_coroutine, "completed")
+	
 	world.game.end_move()
 
 func execute_move_to(target_tile):

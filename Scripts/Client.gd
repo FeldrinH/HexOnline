@@ -4,7 +4,7 @@ signal player_changed(new_player)
 
 var world: Node
 
-var id: int
+var id: int # Positive for networked clients, negative for AI clients
 var profile: Dictionary
 var player: Node
 
@@ -14,6 +14,9 @@ func init(client_world: Node, client_id: int, client_profile: Dictionary, client
 	profile = client_profile
 	set_player_id(client_player_id)
 	set_name(str(id))
+
+func is_ai() -> bool:
+	return id < 0
 
 func cleanup():
 	set_player_id(-1)

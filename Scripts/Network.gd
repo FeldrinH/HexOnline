@@ -10,17 +10,21 @@ const Client = preload("res://Client.tscn")
 const PORT = 2000
 const MAX_CLIENTS = 8
 
+const SERVER_ID = 1 # Server always has networking id 1 in Godot
+
 onready var world: Node = $".."
 
 var our_client: Node # Exists on client_connecting
 var is_connected: bool = false # True on our_client_connected
 var is_server: bool = false
 var clients: Dictionary = {}
+var __next_ai_id: int = -100
 
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var __next_id: int = 0
 
 # Networking utility functions for use during game
+# Increments and returns the value of a synchronized counter
 func get_next_id() -> int:
 	__next_id += 1
 	return __next_id
@@ -31,14 +35,28 @@ func get_client(id: int) -> Node:
 	else:
 		return null
 
+# Generates and returns the next free id for an AI client
+func get_next_ai_id() -> int:
+	__next_ai_id -= 1
+	return __next_ai_id
+
 func select_player(player_id: int):
 	our_client.rpc("select_player", player_id)
 
 func get_our_player() -> Node:
 	return our_client.player
 
+# Get player for client who sent the active RPC.
+# NB: Messages sent from the server by AI will return the server's player, not the AI's player
 func get_rpc_sender_player() -> Node:
 	return get_client(get_tree().get_rpc_sender_id()).player
+
+# Check if RPC sender is allowed to act as current player
+static func can_client_act_as_player(client_id: int, target_player: Node) -> bool:
+	if client_id == SERVER_ID:
+		return true # Server can act as any player
+	else:
+		return target_player.client and target_player.client.id == client_id
 
 # Networking RPC functions
 # Run on server when new client announces itself
@@ -53,6 +71,14 @@ master func register_client(profile: Dictionary):
 			initialize_client(id)
 		
 		rpc_id(id, "client_initialized")
+
+# Run on server to add and sync new AI client
+func register_ai_client(profile: Dictionary):
+		var id := get_next_ai_id()
+		
+		print("SERVER: New ai client registered: " + profile.display_name + " (" + str(id) + ")")
+		
+		rpc("add_remote_client", id, profile, -1)
 
 func initialize_client(id: int):
 	for client in clients.values():
@@ -71,8 +97,8 @@ puppetsync func add_remote_client(id: int, profile: Dictionary, player_id: int):
 		var new_client = Client.instance()
 		new_client.init(world, id, profile, player_id)
 		add_child(new_client)
-		clients[id] = new_client
 		
+		clients[id] = new_client
 		if id == get_tree().get_network_unique_id():
 			our_client = new_client
 		
