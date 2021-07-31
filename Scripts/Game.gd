@@ -73,7 +73,7 @@ func is_move_allowed(calling_player: Node, move_unit: Node) -> bool:
 	return move_unit.player == calling_player and move_unit.last_turn != current_turn and is_active_player(calling_player)
 
 # Networking game state on initial join
-func send_state(target_id: int):
+func send_state(target_id: int):	
 	__send_update_players(target_id)
 	if current_player:
 		rpc_id(target_id, "advance_turn_to", current_player.id, moves_remaining, timer.time_left)
@@ -120,13 +120,14 @@ puppetsync func advance_turn(new_player_id, new_moves_remaining):
 	end_move()
 
 # Call by RPC from client on server to request turn skip
-master func skip_turn():
-	var sender_player = world.network.get_rpc_sender_player()
+master func skip_turn(target_player_id: int):
+	var sender_id := get_tree().get_rpc_sender_id()
 	var __ = await_start_move()
 	if __ is GDScriptFunctionState:
 		yield(__, "completed")
 	
-	if is_active_player(sender_player):
+	var target_player := get_player(target_player_id)
+	if world.network.can_client_act_as_player(sender_id, target_player) and is_active_player(target_player):
 		call_advance_turn()
 	
 	end_move()

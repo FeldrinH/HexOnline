@@ -38,4 +38,4 @@ func toggle_main_menu():
 	world.ui.show("MainMenu")
 
 func skip_turn():
-	world.game.rpc("skip_turn")
+	world.game.rpc("skip_turn", world.network.get_our_player().id)

@@ -48,8 +48,8 @@ func get_our_player() -> Node:
 
 # Get player for client who sent the active RPC.
 # NB: Messages sent from the server by AI will return the server's player, not the AI's player
-func get_rpc_sender_player() -> Node:
-	return get_client(get_tree().get_rpc_sender_id()).player
+# func get_rpc_sender_player() -> Node:
+#	return get_client(get_tree().get_rpc_sender_id()).player
 
 # Check if RPC sender is allowed to act as current player
 static func can_client_act_as_player(client_id: int, target_player: Node) -> bool:
@@ -81,6 +81,8 @@ func register_ai_client(profile: Dictionary):
 		rpc("add_remote_client", id, profile, -1)
 
 func initialize_client(id: int):
+	assert(id > 0) # Sanity check: id should never correspond to broadcast (0) or AI (negative)
+	
 	for client in clients.values():
 		rpc_id(id, "add_remote_client", client.id, client.profile, client.player.id if client.player else -1)
 		
