@@ -112,6 +112,41 @@ func distance_between(first_tile, second_tile):
 	var dy = abs(first_tile.coord.y - second_tile.coord.y)
 	return dy + max(0, (dx - dy) / 2)
 
+func distance_between_cube(a, b):
+	return (abs(a.x - b.x) + abs(a.y - b.y) + abs(a.z - b.z)) / 2
+
+func doublewidth_to_cube(coord):
+	var x = (coord.x - coord.y) / 2
+	var z = coord.y
+	var y = -x-z
+	return Vector3(x, y, z)
+	
+func cube_to_doublewidth(cube):
+	var col = 2 * cube.x + cube.z
+	var row = cube.z
+	return Vector2(col, row)
+
+func find_shortest_path(start, target, army):
+	var path = []
+	return find_shortest_path_util(start, target, army, path)
+	
+func find_shortest_path_util(current_tile, target, army, path):
+	var next_dist = distance_between(current_tile, target)
+	var next_tile = current_tile
+
+	if next_dist > 0:
+		for i in find_travelable(current_tile, army, 2):
+			var dist = distance_between(i, target)
+			if next_dist > dist:
+				next_tile = i 
+				next_dist = dist
+			
+		return find_shortest_path_util(next_tile, target, army, path)
+	else:
+		return path
+	
+	
+
 func find_neighbours(center_tile) -> Array:
 	var neigbours : Array = []
 	
