@@ -8,6 +8,8 @@ var id: int # Positive for networked clients, negative for AI clients
 var profile: Dictionary
 var player: Node
 
+const SERVER_ID = 1 # Server always has networking id 1 in Godot
+
 func init(client_world: Node, client_id: int, client_profile: Dictionary, client_player_id: int):
 	world = client_world
 	id = client_id
@@ -37,6 +39,8 @@ puppetsync func set_player_id(new_player_id: int):
 	__set_player(new_player)
 
 master func select_player(new_player_id: int):
-	if get_tree().get_rpc_sender_id() == id:
-		if !world.game.get_player(new_player_id) or !world.game.get_player(new_player_id).client:
+	var sender_id := get_tree().get_rpc_sender_id()
+	if sender_id == id or sender_id == SERVER_ID:
+		var new_player = world.game.get_player(new_player_id)
+		if !new_player or !new_player.client or new_player.client.is_ai():
 			rpc("set_player_id", new_player_id)

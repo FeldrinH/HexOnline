@@ -35,16 +35,24 @@ func get_client(id: int) -> Node:
 	else:
 		return null
 
-# Generates and returns the next free id for an AI client
-func get_next_ai_id() -> int:
-	__next_ai_id -= 1
-	return __next_ai_id
-
 func select_player(player_id: int):
 	our_client.rpc("select_player", player_id)
 
+func select_player_for_client(client_id: int, player_id: int):
+	get_client(client_id).rpc("select_player", player_id)
+
 func get_our_player() -> Node:
 	return our_client.player
+
+# Gets id of ai client for given player
+func create_ai_client_for_player(player_id: int, profile: Dictionary) -> int:
+	var client_id := - (100 + player_id)
+	
+	if clients.has(client_id):
+		deregister_ai_client(client_id)
+	register_ai_client(client_id, profile)
+	
+	return client_id
 
 # Get player for client who sent the active RPC.
 # NB: Messages sent from the server by AI will return the server's player, not the AI's player
@@ -73,12 +81,23 @@ master func register_client(profile: Dictionary):
 		rpc_id(id, "client_initialized")
 
 # Run on server to add and sync new AI client
-func register_ai_client(profile: Dictionary):
-		var id := get_next_ai_id()
+func register_ai_client(id: int, profile: Dictionary) -> int:
+		assert(is_server)
+		assert(id < 0)
 		
 		print("SERVER: New ai client registered: " + profile.display_name + " (" + str(id) + ")")
 		
 		rpc("add_remote_client", id, profile, -1)
+		
+		return id
+
+func deregister_ai_client(id: int):
+		assert(is_server)
+		assert(id < 0) # Sanity check: Only allow removing AI clients
+		
+		print("SERVER: AI client removed: " + str(id))
+		
+		rpc("remove_remote_client", id)
 
 func initialize_client(id: int):
 	assert(id > 0) # Sanity check: id should never correspond to broadcast (0) or AI (negative)

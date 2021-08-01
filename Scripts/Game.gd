@@ -1,5 +1,6 @@
 extends Node
 
+signal pre_game_start()
 signal current_player_changed(new_active_player)
 signal moves_remaining_changed(new_moves_remaining)
 signal players_changed()
@@ -98,6 +99,8 @@ puppetsync func start_game():
 	var __ = await_start_move()
 	if __ is GDScriptFunctionState:
 		yield(__, "completed")
+	
+	emit_signal("pre_game_start")
 	
 	current_turn = 0
 	advance_turn_to(players[0].id, MOVES_PER_TURN)

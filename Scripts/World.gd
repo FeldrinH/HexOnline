@@ -17,7 +17,6 @@ onready var network: Node = $Network
 onready var game: Node = $Game
 onready var ui: Node = $UI
 
-
 const __tile_dict : Dictionary = {}
 const __tile_array : Array = []
 
