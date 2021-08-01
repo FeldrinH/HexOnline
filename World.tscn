@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://Scripts/Network.gd" type="Script" id=1]
 [ext_resource path="res://DebugMenu.tscn" type="PackedScene" id=2]
@@ -20,6 +20,7 @@
 [ext_resource path="res://Sounds/announcement.ogg" type="AudioStream" id=18]
 [ext_resource path="res://WinScreen.tscn" type="PackedScene" id=19]
 [ext_resource path="res://LossScreen.tscn" type="PackedScene" id=20]
+[ext_resource path="res://Scripts/AIManager.gd" type="Script" id=21]
 [ext_resource path="res://Sprites/tile.png" type="Texture" id=22]
 
 [sub_resource type="TileSet" id=1]
@@ -105,6 +106,9 @@ script = ExtResource( 3 )
 unit_color = Color( 0.870588, 0.878431, 0.0862745, 1 )
 
 [node name="Timer" type="Timer" parent="Game"]
+
+[node name="AIManager" type="Node" parent="."]
+script = ExtResource( 21 )
 
 [node name="UI" type="Node" parent="."]
 script = ExtResource( 4 )
