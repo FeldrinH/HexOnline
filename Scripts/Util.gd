@@ -39,3 +39,8 @@ static func find_in_dictionary(dict: Dictionary, value):
 			return key
 	
 	return null
+
+static func distance_between(a : Vector2, b : Vector2) -> float:
+	var dx = abs(a.x - b.x)
+	var dy = abs(a.y - b.y)
+	return dy + max(0, (dx - dy) / 2)

@@ -98,7 +98,11 @@ texture = ExtResource( 8 )
 visible = false
 texture = ExtResource( 5 )
 
-[node name="Label" type="Label" parent="."]
+[node name="LabelParent" type="Node2D" parent="."]
+z_index = 29
+z_as_relative = false
+
+[node name="Label" type="Label" parent="LabelParent"]
 visible = false
 margin_left = -42.0
 margin_right = 42.0

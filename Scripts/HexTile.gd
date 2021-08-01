@@ -15,6 +15,7 @@ onready var border : Node2D = $Border
 onready var shore : Node2D = $Shore
 onready var border_sections : Array = border.get_children()
 onready var shore_sections : Array = shore.get_children()
+onready var debug_label := $LabelParent/Label
 
 var base_color : Color = Color(1,1,1)
 
@@ -34,7 +35,7 @@ func init(tile_world, tile_coord, tile_position, tile_blocked):
 	position = tile_position
 	blocked = tile_blocked
 	#world.connect("unit_enter", self, "__unit_enter")
-	$Label.text = str(coord)
+	#$Label.text = str(coord)
 
 puppet func add_city(name: String) -> Node2D:
 	remove_city()
