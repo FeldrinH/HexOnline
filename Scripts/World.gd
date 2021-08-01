@@ -43,7 +43,7 @@ func _ready():
 		
 		__tile_dict[hex_coord] = tile_instance
 		__tile_array.append(tile_instance)
-		tile_instance.init(self, hex_coord, tilemap.map_to_world(coord), tile_index == 1)
+		tile_instance.init(self, hex_coord, tilemap.map_to_world(coord), tile_index == 1, len(__tile_array)-1)
 		tile_instance.set_name(str(hex_coord))
 		
 		tiles.add_child(tile_instance)
@@ -73,6 +73,9 @@ func clear_map():
 
 func get_tile(coord):
 	return __tile_dict.get(coord, null)
+	
+func get_tile_by_id(id):
+	return __tile_array[id]
 
 func get_all_tiles():
 	return __tile_array

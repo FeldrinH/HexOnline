@@ -24,16 +24,18 @@ var coord: Vector2
 var blocked: bool
 var terrain: int
 var type: int
+var id: int 
 
 var player: Node = null
 var army: Node2D = null
 var city: Node2D = null
 
-func init(tile_world, tile_coord, tile_position, tile_blocked):
+func init(tile_world, tile_coord, tile_position, tile_blocked, id):
 	world = tile_world
 	coord = tile_coord
 	position = tile_position
 	blocked = tile_blocked
+	self.id = id
 	#world.connect("unit_enter", self, "__unit_enter")
 	#$Label.text = str(coord)
 
