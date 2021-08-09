@@ -30,8 +30,9 @@ func _on_current_player_changed(new_player: Node):
 			if i.city.player != new_player:
 				enemy_capital_tile = i
 				break
-				
-		for unit in world.get_player_units(new_player):
+		
+		var player_units = world.get_player_units(new_player)
+		for unit in player_units:
 			var shortest_path = find_shortest_path(unit.tile, enemy_capital_tile, unit)
 			print(shortest_path)
 			for tile in shortest_path:
@@ -39,6 +40,10 @@ func _on_current_player_changed(new_player: Node):
 				tile.debug_label.visible = true
 			if unit.tile != enemy_capital_tile:
 				unit.rpc("move_to", shortest_path[1].coord)
+			if unit == player_units[-1]:
+				print("end of turn")
+				if world.network.is_server:
+					world.game.call_advance_turn()
 			
 func find_shortest_path(start, target, army) -> Array:
 	astar.load_map(world, army)

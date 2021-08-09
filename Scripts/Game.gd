@@ -128,7 +128,7 @@ master func skip_turn(target_player_id: int):
 	var __ = await_start_move()
 	if __ is GDScriptFunctionState:
 		yield(__, "completed")
-	
+	print("reached check !!!")
 	var target_player := get_player(target_player_id)
 	if world.network.can_client_act_as_player(sender_id, target_player) and is_active_player(target_player):
 		call_advance_turn()

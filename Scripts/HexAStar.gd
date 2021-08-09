@@ -4,7 +4,8 @@ func load_map(world, unit):
 	clear()
 	var tiles = world.get_all_tiles()
 	for tile in tiles:
-		add_point(tile.id, tile.coord)	
+		var weight = 1 if tile.city else 2
+		add_point(tile.id, tile.coord, weight)	
 	for tile in tiles:
 		for travelable in world.find_travelable(tile, unit, 2):
 			 connect_points(tile.id, travelable.id)
