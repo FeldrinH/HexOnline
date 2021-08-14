@@ -141,18 +141,6 @@ func split(split_power):
 	set_power(power - split_power)
 	return world.add_unit_detached(tile.coord, split_power, player.id, true)
 
-func can_enter(leave_tile, enter_tile) -> bool:
-	if enter_tile.blocked:
-		return false
-	
-	if leave_tile == tile:
-		if enter_tile.city != null and enter_tile.city.is_port or leave_tile.city != null and leave_tile.city.is_port:
-			return true
-		else:
-			return enter_tile.terrain == leave_tile.terrain
-	else:
-		return leave_tile.terrain == tile.terrain and enter_tile.terrain == leave_tile.terrain
-
 func set_power(new_power, show_popup: bool = true):
 	if new_power - power != 0 and show_popup:
 		play_number_popup(new_power - power)
