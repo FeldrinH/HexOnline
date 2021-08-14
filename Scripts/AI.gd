@@ -38,7 +38,7 @@ func update_astar_map():
 	
 	var tiles = world.get_all_tiles()
 	for tile in tiles:
-		var weight = 1 if tile.city else 2
+		var weight = assign_weight(tile, player)
 		astar.add_point(tile.id, tile.coord, weight)
 	for tile in tiles:
 		for travelable in world.find_travelable(tile, player, 2):
@@ -52,3 +52,11 @@ func find_shortest_path(start, target) -> Array:
 		tile_path.append(world.get_tile_by_id(i))
 	
 	return tile_path
+	
+func assign_weight(given_tile, player) -> float:
+	for tile in world.find_travelable(given_tile, player, 2):
+		if tile.army and tile.player != player:
+			return Util.distance_between(given_tile.coord, tile.coord)*0.25
+		elif tile.city:
+			return 0.5
+	return 1.0
