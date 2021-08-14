@@ -2,7 +2,7 @@ extends Node
 # AI manager
 # NB: This only exists on the server
 
-const AI := preload("res://Scripts/AI.gd")
+const AI := preload("res://AI.tscn")
 
 onready var world: Node2D = $".."
 
@@ -21,7 +21,10 @@ func _on_pre_game_start():
 	
 	for player in world.game.players:
 		if player.client.is_ai():
-			ai_players[player.id] = AI.new(world, player)
+			var ai := AI.instance()
+			ai.init(world, player)
+			add_child(ai)
+			ai_players[player.id] = ai
 	
 	print("AI Manager: Init completed")
 

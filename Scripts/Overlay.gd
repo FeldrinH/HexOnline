@@ -62,7 +62,7 @@ func __on_tile_input_event(_viewport, event: InputEvent, _shape_idx, tile: Node2
 			if !selected:
 				if hovered.army and world.game.is_move_allowed(our_player, hovered.army):
 					set_selected(hovered)
-					set_highlighted(world.find_travelable(hovered, hovered.army, world.game.MOVE_RANGE))
+					set_highlighted(world.find_travelable(hovered, our_player, world.game.MOVE_RANGE))
 			else: # selected != null
 				if highlighted.has(hovered):
 					if selected.army:

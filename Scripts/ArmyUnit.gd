@@ -100,7 +100,7 @@ func do_enter_tile(target_tile, do_enter_event: bool):
 
 func on_enter_tile(target_tile):
 	target_tile.try_occupy(player)
-	for adjacent_tile in world.find_travelable(target_tile, self, 1):
+	for adjacent_tile in world.find_travelable(target_tile, player, 1):
 		if adjacent_tile.terrain == target_tile.terrain:
 			adjacent_tile.try_occupy(player)
 
