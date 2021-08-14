@@ -30,7 +30,6 @@ func _ready():
 	for i in len(players):
 		players[i].init(world, i)
 	timer.connect("timeout", self, "__on_turn_timer_timeout")
-	connect("moves_remaining_changed", self, "__on_moves_remaining_changed")
 
 func get_player(id: int) -> Node:
 	return __all_players[id] if id >= 0 else null
@@ -73,25 +72,10 @@ func is_move_allowed(calling_player: Node, move_unit: Node) -> bool:
 	return move_unit.player == calling_player and move_unit.last_turn != current_turn and is_active_player(calling_player)
 
 # Networking game state on initial join
-func send_state(target_id: int):	
+func send_state(target_id: int):
 	__send_update_players(target_id)
 	if current_player:
-		rpc_id(target_id, "advance_turn_to", current_player.id, moves_remaining, timer.time_left)
-
-# Turn management functions
-# Call on client at the end of every move
-func advance_move():
-	advance_move_to(moves_remaining - 1)
-
-# Call on server at end of turn
-func call_advance_turn():
-	var current_player_index := players.find(current_player)
-	
-	current_player_index = (current_player_index + 1) % len(players)
-	while players[current_player_index].capital.conquered:
-		current_player_index = (current_player_index + 1) % len(players)
-	
-	rpc("advance_turn", players[current_player_index].id, MOVES_PER_TURN)
+		rpc_id(target_id, "set_turn", current_player.id, moves_remaining, timer.time_left)
 
 # Call by RPC at start of game
 puppetsync func start_game():
@@ -102,7 +86,7 @@ puppetsync func start_game():
 	emit_signal("pre_game_start")
 	
 	current_turn = 0
-	advance_turn_to(players[0].id, MOVES_PER_TURN)
+	set_turn(players[0].id, MOVES_PER_TURN)
 	add_forces(players[0].id)
 	world.effects.play_sound("game_start")
 	
@@ -114,12 +98,49 @@ puppetsync func advance_turn(new_player_id, new_moves_remaining):
 	if __ is GDScriptFunctionState:
 		if yield(__, "completed"): return
 	
-	print(new_player_id, new_moves_remaining)
 	current_turn += 1
-	advance_turn_to(new_player_id, new_moves_remaining)
+	set_turn(new_player_id, new_moves_remaining)
 	add_forces(new_player_id)
 	
 	end_move()
+
+puppetsync func set_turn(new_player_id: int, new_moves_remaining: int, new_turn_lenght: int = TURN_LENGTH):
+	current_player = get_player(new_player_id)
+	moves_remaining = new_moves_remaining
+	
+	emit_signal("current_player_changed", current_player)
+	emit_signal("moves_remaining_changed", moves_remaining)
+	
+	timer.start(new_turn_lenght)
+	
+	for unit in world.get_all_units():
+		unit.update_sprite_move_icon()
+	
+	print("Turn advanced to player " + current_player.name)
+
+func add_forces(player_id: int):
+	var player = get_player(player_id)
+	
+	for unit in world.get_all_units():
+		if unit.player == player and unit.tile.city:
+			if unit.tile.city.is_capital and !unit.tile.city.conquered:
+				unit.set_power(min(unit.power + 20, unit.MAX_POWER), true)
+			else:
+				unit.set_power(min(unit.power + 10, unit.MAX_POWER), true)
+	
+	if !player.capital.city_tile.army and !player.capital.conquered:
+		world.add_unit(player.capital.city_tile.coord, 20, player.id, false)
+
+# Call on client inside each move
+func advance_move():
+	moves_remaining -= 1
+	
+	emit_signal("moves_remaining_changed", moves_remaining)
+	
+	print(str(moves_remaining) + " moves remaining")
+	
+	if world.network.is_server and moves_remaining <= 0:
+		call_advance_turn()
 
 # Call by RPC from client on server to request turn skip
 master func skip_turn(target_player_id: int):
@@ -135,40 +156,18 @@ master func skip_turn(target_player_id: int):
 	
 	end_move()
 
-# Utility functions for turn management
-func advance_move_to(new_moves_remaining: int):
-	moves_remaining = new_moves_remaining
-	
-	emit_signal("moves_remaining_changed", moves_remaining)
-	
-	print(str(moves_remaining) + " moves remaining")
+static func __is_player_inactive(target_player: Node) -> bool:
+	return target_player.capital.conquered or !target_player.client
 
-puppetsync func advance_turn_to(new_player_id: int, new_moves_remaining: int, new_turn_lenght: int = TURN_LENGTH):
-	current_player = get_player(new_player_id)
-	moves_remaining = new_moves_remaining
+# Call on server to advance turn
+func call_advance_turn():
+	var current_player_index := players.find(current_player)
 	
-	emit_signal("current_player_changed", current_player)
-	emit_signal("moves_remaining_changed", moves_remaining)
+	current_player_index = (current_player_index + 1) % len(players)
+	while __is_player_inactive(players[current_player_index]):
+		current_player_index = (current_player_index + 1) % len(players)
 	
-	timer.start(new_turn_lenght)
-	
-	for unit in world.get_all_units():
-		unit.update_sprite_move_icon()
-				
-	print("Turn advanced to player " + current_player.name)
-
-func add_forces(player_id: int):
-	var player = get_player(player_id)
-	
-	for unit in world.get_all_units():
-		if unit.player == player and unit.tile.city:
-			if unit.tile.city.is_capital and !unit.tile.city.conquered:
-				unit.set_power(min(unit.power + 20, unit.MAX_POWER), true)
-			else:
-				unit.set_power(min(unit.power + 10, unit.MAX_POWER), true)
-	
-	if !player.capital.city_tile.army and !player.capital.conquered:
-		world.add_unit(player.capital.city_tile.coord, 20, player.id, false)
+	rpc("advance_turn", players[current_player_index].id, MOVES_PER_TURN)
 
 func __find_winner() -> Node:
 	var remaining_player = null
@@ -239,11 +238,6 @@ func end_move():
 
 func is_move_active():
 	return __cur_move_index < __next_free_move_index
-
-# Event handlers
-func __on_moves_remaining_changed(new_moves_remaining: int):
-	if world.network.is_server and (new_moves_remaining <= 0 or !current_player.client):
-		call_advance_turn()
 
 func __on_turn_timer_timeout():
 	if world.network.is_server:

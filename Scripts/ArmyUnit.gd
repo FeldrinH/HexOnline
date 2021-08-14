@@ -5,6 +5,7 @@ var army_unit = load("res://ArmyUnit.tscn")
 onready var label = $Label
 onready var movement_tween = $MovementTween
 onready var popup = $Popup
+onready var moveable_sprite = $SpriteMovable
 
 const MAX_POWER = 100
 
@@ -162,7 +163,6 @@ func play_number_popup(number: int):
 	popup.play_popup(number, player.unit_color)
 
 func update_sprite_move_icon():
-	var moveable_sprite = $SpriteMovable
 	if world.game.is_move_allowed(world.network.get_our_player(), self):
 		moveable_sprite.visible = true
 	else:
