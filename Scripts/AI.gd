@@ -46,6 +46,9 @@ func run_ai():
 		last_paths.append(shortest_path)
 		
 		if len(shortest_path) > 1:
+			if player.capital.city_tile.army and player.capital.city_tile.army.power == 100:
+				player.capital.city_tile.army.rpc("move_to", shortest_path[1].coord)
+				continue
 			unit.rpc("move_to", shortest_path[1].coord)
 	
 	world.game.rpc("skip_turn", player.id)
@@ -73,9 +76,13 @@ func find_shortest_path(start, target) -> Array:
 	return tile_path
 	
 func assign_weight(given_tile, player) -> float:
+	if given_tile.army and given_tile.player != player:
+		return 1.0
+	elif given_tile.city:
+		return 2.0 + rand_range(-1, 1)
 	for tile in world.find_travelable(given_tile, player, 2):
 		if tile.army and tile.player != player:
-			return Util.distance_between(given_tile.coord, tile.coord)*0.25
+			return 1.2
 		elif tile.city:
-			return 0.5
-	return 1.0
+			return 3.0
+	return 4.0 + rand_range(-2, 2)
