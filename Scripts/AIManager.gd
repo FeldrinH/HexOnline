@@ -38,12 +38,11 @@ func _on_current_player_changed(new_player: Node):
 			for tile in shortest_path:
 				tile.debug_label.text = str(unit.name)
 				tile.debug_label.visible = true
-			if unit.tile != enemy_capital_tile:
+			
+			if len(shortest_path) > 0:
 				unit.rpc("move_to", shortest_path[1].coord)
-			if unit == player_units[-1]:
-				print("end of turn")
-				if world.network.is_server:
-					world.game.call_advance_turn()
+		
+		world.game.rpc("skip_turn", new_player.id)
 			
 func find_shortest_path(start, target, army) -> Array:
 	astar.load_map(world, army)
