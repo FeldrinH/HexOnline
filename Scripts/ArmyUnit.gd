@@ -35,7 +35,7 @@ remotesync func move_to(target_tile_coord):
 	
 	var __ = world.game.await_start_move()
 	if __ is GDScriptFunctionState:
-		yield(__, "completed")
+		if yield(__, "completed"): return
 	
 	if world.network.can_client_act_as_player(sender_id, player) and world.game.is_move_allowed(player, self):
 		var move_coroutine = execute_move_to(world.get_tile(target_tile_coord))

@@ -23,7 +23,6 @@ var current_player : Node = null
 var current_turn: int = -1
 var moves_remaining: int = MOVES_PER_TURN
 
-#var __current_player_index: int = 0
 var __cur_move_index: int = 0
 var __next_free_move_index: int = 0
 
@@ -98,7 +97,7 @@ func call_advance_turn():
 puppetsync func start_game():
 	var __ = await_start_move()
 	if __ is GDScriptFunctionState:
-		yield(__, "completed")
+		if yield(__, "completed"): return
 	
 	emit_signal("pre_game_start")
 	
@@ -113,7 +112,7 @@ puppetsync func start_game():
 puppetsync func advance_turn(new_player_id, new_moves_remaining):
 	var __ = await_start_move()
 	if __ is GDScriptFunctionState:
-		yield(__, "completed")
+		if yield(__, "completed"): return
 	
 	print(new_player_id, new_moves_remaining)
 	current_turn += 1
@@ -125,9 +124,10 @@ puppetsync func advance_turn(new_player_id, new_moves_remaining):
 # Call by RPC from client on server to request turn skip
 master func skip_turn(target_player_id: int):
 	var sender_id := get_tree().get_rpc_sender_id()
+	
 	var __ = await_start_move()
 	if __ is GDScriptFunctionState:
-		yield(__, "completed")
+		if yield(__, "completed"): return
 	
 	var target_player := get_player(target_player_id)
 	if world.network.can_client_act_as_player(sender_id, target_player) and is_active_player(target_player):
@@ -214,18 +214,28 @@ puppetsync func announce_winner(winner_id: int):
 
 # Clientside functions for ensuring moves are run in sequence and do not overlap
 func await_start_move():
-	var this_move_index = __next_free_move_index
+	var this_move_turn := current_turn
+	
+	var this_move_index := __next_free_move_index
 	__next_free_move_index += 1
 	
 	while __cur_move_index < this_move_index:
 		yield(self, "__move_ended")
 	
 	assert(__cur_move_index == this_move_index) # Sanity check
+	
+	if this_move_turn != current_turn:
+		print("SKIPPING INVALID MOVE")
+		
+		end_move()
+		return true
+	else:
+		return false
 
 func end_move():
 	__cur_move_index += 1
 	assert(__cur_move_index <= __next_free_move_index) # Sanity check
-	emit_signal("__move_ended")
+	call_deferred("emit_signal", "__move_ended")
 
 func is_move_active():
 	return __cur_move_index < __next_free_move_index
