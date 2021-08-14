@@ -45,13 +45,8 @@ remotesync func move_to(target_tile_coord):
 	world.game.end_move()
 
 func execute_move_to(target_tile):
-
-	if target_tile.terrain == Util.TERRAIN_WATER:
-		on_ship = true
-		update_appearance()
-		
-	if target_tile.city != null and target_tile.city.is_port:
-		on_ship = false
+	if !tile or tile.terrain != target_tile.terrain:
+		on_ship = target_tile.terrain == Util.TERRAIN_WATER
 		update_appearance()
 	
 	# If combined army would exeed max power, send detachment and stay in current tile
