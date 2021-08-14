@@ -27,7 +27,8 @@ func compare_capitals_distance(capital_a: Node2D, capital_b: Node2D):
 
 func _draw():
 	#print("AI CUSTOM DRAW")
-	var color = player.unit_color.darkened(0.1)
+	var color: Color = player.unit_color.darkened(0.1)
+	color.a = 0.75
 	for path in last_paths:
 		var points := PoolVector2Array()
 		for tile in path:
