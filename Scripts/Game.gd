@@ -156,15 +156,12 @@ master func skip_turn(target_player_id: int):
 	
 	end_move()
 
-static func __is_player_inactive(target_player: Node) -> bool:
-	return target_player.capital.conquered or !target_player.client
-
 # Call on server to advance turn
 func call_advance_turn():
 	var current_player_index := players.find(current_player)
 	
 	current_player_index = (current_player_index + 1) % len(players)
-	while __is_player_inactive(players[current_player_index]):
+	while players[current_player_index].is_inactive():
 		current_player_index = (current_player_index + 1) % len(players)
 	
 	rpc("advance_turn", players[current_player_index].id, MOVES_PER_TURN)

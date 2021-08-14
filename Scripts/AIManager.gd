@@ -30,5 +30,5 @@ func _on_pre_game_start():
 
 # Event handler called when turn advances to new player. Use to start AI functions
 func _on_current_player_changed(new_player: Node):
-	if ai_players.has(new_player.id):
+	if new_player.client.is_ai() and ai_players.has(new_player.id):
 		ai_players[new_player.id].run_ai()
