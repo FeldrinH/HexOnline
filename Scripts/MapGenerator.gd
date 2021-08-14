@@ -51,30 +51,30 @@ static func generate_map(map: Node):
 		
 		var best_min_distance = 0
 		var best_total_distance = 0
-		var best_capitals = null
+		var best_capital_tiles = null
 		for i in 100000:
 			if i % 2000 == 0:
 				yield()
 			
 			var try_min_distance = 100000
 			var try_total_distance = 0
-			var try_capitals = []
+			var try_capital_tiles = []
 			for player in map.game.players:
 				var try_tile = find_spawnable(inland_tiles, 20)
 				if try_tile:
-					for capital_tile in try_capitals:
+					for capital_tile in try_capital_tiles:
 						var new_distance = map.distance_between(try_tile, capital_tile)
 						try_min_distance = min(new_distance, try_min_distance)
 						try_total_distance += new_distance
 						if try_min_distance < best_min_distance:
 							break
-					try_capitals.append(try_tile)
+					try_capital_tiles.append(try_tile)
 				else:
 					break
-			if (try_min_distance > best_min_distance or (try_min_distance == best_min_distance and try_total_distance > best_total_distance)) and len(try_capitals) == len(map.game.players):
+			if (try_min_distance > best_min_distance or (try_min_distance == best_min_distance and try_total_distance > best_total_distance)) and len(try_capital_tiles) == len(map.game.players):
 				best_min_distance = try_min_distance
 				best_total_distance = try_total_distance
-				best_capitals = try_capitals
+				best_capital_tiles = try_capital_tiles
 				#print(str(best_min_distance) + "  " + str(best_total_distance))
 		
 		yield()
@@ -100,9 +100,9 @@ static func generate_map(map: Node):
 			port_names.append(temp_cities[index])
 			temp_cities.remove(index)
 		
-		# Adds capitals
+		# Adds capital_tiles
 		for i in len(map.game.players):
-			best_capitals[i].add_capital(map.game.players[i].id, capital_names[i])
+			best_capital_tiles[i].add_capital(map.game.players[i].id, capital_names[i])
 		
 		# Adds cities
 		var city_tiles = []
@@ -160,7 +160,7 @@ static func generate_map(map: Node):
 		
 		yield()
 		
-		if capitals_reachable(map):
+		if capital_tiles_reachable(map):
 			map.setup_tiles_appearance()
 			print("MAPGEN: Finished")
 			return
@@ -207,28 +207,28 @@ static func find_inland(tiles: Array) -> Array:
 			inland_tiles.append(landtile)
 	return inland_tiles
 
-static func capitals_reachable(map) -> bool:
-	var capitals = map.get_capitals()
-	var starting_capital = capitals[0]
-	var reached_capitals = []
+static func capital_tiles_reachable(map) -> bool:
+	var capital_tiles = map.get_capital_tiles()
+	var starting_capital = capital_tiles[0]
+	var reached_capital_tiles = []
 	var travelled_tiles = {}
-	capitals_reachable_util(map, starting_capital.coord, reached_capitals, travelled_tiles)
-	if reached_capitals.size() == map.game.players.size():
-		print("MAPGEN: Reached all capitals")
+	capital_tiles_reachable_util(map, starting_capital.coord, reached_capital_tiles, travelled_tiles)
+	if reached_capital_tiles.size() == map.game.players.size():
+		print("MAPGEN: Reached all capital_tiles")
 		return true 
 	else:
-		print("MAPGEN: Failed to reach all capitals")
+		print("MAPGEN: Failed to reach all capital_tiles")
 		return false
 
-static func capitals_reachable_util(map, coord, reached_capitals, travelled_tiles):
+static func capital_tiles_reachable_util(map, coord, reached_capital_tiles, travelled_tiles):
 	var current_tile = map.get_tile(coord)
 	travelled_tiles[current_tile] = true
-	if current_tile.city and current_tile.city.is_capital and !reached_capitals.has(current_tile):
-		reached_capitals.append(current_tile)
+	if current_tile.city and current_tile.city.is_capital and !reached_capital_tiles.has(current_tile):
+		reached_capital_tiles.append(current_tile)
 	for i in range (0, 6):
 		var next_tile = map.get_tile(current_tile.coord + Util.directions[i])
 		if can_enter(current_tile, next_tile) and !travelled_tiles.has(next_tile):
-			capitals_reachable_util(map, coord  + Util.directions[i], reached_capitals, travelled_tiles)
+			capital_tiles_reachable_util(map, coord  + Util.directions[i], reached_capital_tiles, travelled_tiles)
 	return
 
 static func can_enter(leave_tile, enter_tile) -> bool:

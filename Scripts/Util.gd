@@ -44,3 +44,6 @@ static func distance_between(a : Vector2, b : Vector2) -> float:
 	var dx = abs(a.x - b.x)
 	var dy = abs(a.y - b.y)
 	return dy + max(0, (dx - dy) / 2)
+
+static func distance_between_tiles(a: Node2D, b: Node2D) -> float:
+	return distance_between(a.coord, b.coord)

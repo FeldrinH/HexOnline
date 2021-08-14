@@ -84,13 +84,13 @@ puppet func setup_tiles_appearance():
 	for tile in __tile_array:
 		tile.setup_appearance()
 
-func get_capitals():
-	var capitals = []
+func get_capital_tiles():
+	var capital_tiles = []
 	var tiles = get_all_tiles()
 	for tile in tiles:
 		if tile.city and tile.city.is_capital:
-			capitals.append(tile)
-	return capitals
+			capital_tiles.append(tile)
+	return capital_tiles
 
 func generate_army_id(player_id: int):
 	return str(player_id) + "|" + str(network.get_next_id())
