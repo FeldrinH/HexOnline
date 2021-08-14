@@ -2,13 +2,16 @@ extends Node
 # AI manager
 # NB: This only exists on the server
 
+const AI := preload("res://Scripts/AI.gd")
+
 onready var world: Node2D = $".."
-onready var astar := preload("res://Scripts/HexAStar.gd").new()
+
+const ai_players := {}
 
 func _ready():
 	var game := $"../Game"
 	game.connect("pre_game_start", self, "_on_pre_game_start")
-	
+
 func _on_pre_game_start():
 	if !world.network.is_server:
 		queue_free() # If not on server, remove this
@@ -16,7 +19,9 @@ func _on_pre_game_start():
 	
 	world.game.connect("current_player_changed", self, "_on_current_player_changed", [], CONNECT_DEFERRED)
 	
-	pass # TODO: Setup objects for each AI client
+	for player in world.game.players:
+		if player.client.is_ai():
+			ai_players[player.id] = AI.new(world, player)
 	
 	print("AI Manager: Init completed")
 
@@ -75,3 +80,5 @@ func assign_weight(unit_tile, player):
 #		return find_shortest_path_util(next_tile, target, army, path)
 #	else:
 #		return path
+	if ai_players.has(new_player.id):
+		ai_players[new_player.id].run_ai()
