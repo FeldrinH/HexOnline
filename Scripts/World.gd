@@ -112,19 +112,19 @@ func add_unit_detached(starting_tile_coord: Vector2, starting_power: int, player
 func distance_between(first_tile, second_tile):
 	return Util.distance_between(first_tile.coord, second_tile.coord)
 
-func distance_between_cube(a, b):
-	return (abs(a.x - b.x) + abs(a.y - b.y) + abs(a.z - b.z)) / 2
+#func distance_between_cube(a, b):
+#	return (abs(a.x - b.x) + abs(a.y - b.y) + abs(a.z - b.z)) / 2
 
-func doublewidth_to_cube(coord):
-	var x = (coord.x - coord.y) / 2
-	var z = coord.y
-	var y = -x-z
-	return Vector3(x, y, z)
-	
-func cube_to_doublewidth(cube):
-	var col = 2 * cube.x + cube.z
-	var row = cube.z
-	return Vector2(col, row)
+#func doublewidth_to_cube(coord):
+#	var x = (coord.x - coord.y) / 2
+#	var z = coord.y
+#	var y = -x-z
+#	return Vector3(x, y, z)
+#
+#func cube_to_doublewidth(cube):
+#	var col = 2 * cube.x + cube.z
+#	var row = cube.z
+#	return Vector2(col, row)
 	
 func find_neighbours(center_tile) -> Array:
 	var neigbours : Array = []
