@@ -79,7 +79,7 @@ func send_state(target_id: int):
 
 # Call by RPC at start of game
 puppetsync func start_game():
-	var __ = await_start_move()
+	var __ = await_start_move("start_game")
 	if __ is GDScriptFunctionState:
 		if yield(__, "completed"): return
 	
@@ -90,11 +90,11 @@ puppetsync func start_game():
 	add_forces(players[0].id)
 	world.effects.play_sound("game_start")
 	
-	end_move()
+	end_move("start_game")
 
 # Call by RPC at end of turn
 puppetsync func advance_turn(new_player_id, new_moves_remaining):
-	var __ = await_start_move()
+	var __ = await_start_move("advance_turn")
 	if __ is GDScriptFunctionState:
 		if yield(__, "completed"): return
 	
@@ -102,7 +102,7 @@ puppetsync func advance_turn(new_player_id, new_moves_remaining):
 	set_turn(new_player_id, new_moves_remaining)
 	add_forces(new_player_id)
 	
-	end_move()
+	end_move("advance_turn")
 
 puppetsync func set_turn(new_player_id: int, new_moves_remaining: int, new_turn_lenght: int = TURN_LENGTH):
 	current_player = get_player(new_player_id)
@@ -146,7 +146,7 @@ func advance_move():
 master func skip_turn(target_player_id: int):
 	var sender_id := get_tree().get_rpc_sender_id()
 	
-	var __ = await_start_move()
+	var __ = await_start_move("skip_turn")
 	if __ is GDScriptFunctionState:
 		if yield(__, "completed"): return
 	
@@ -154,7 +154,7 @@ master func skip_turn(target_player_id: int):
 	if world.network.can_client_act_as_player(sender_id, target_player) and is_active_player(target_player):
 		call_advance_turn()
 	
-	end_move()
+	end_move("skip_turn")
 
 # Call on server to advance turn
 func call_advance_turn():
@@ -209,7 +209,9 @@ puppetsync func announce_winner(winner_id: int):
 	world.ui.get_node("WinScreen").display_winner_name(winner.name)
 
 # Clientside functions for ensuring moves are run in sequence and do not overlap
-func await_start_move():
+func await_start_move(debug_name: String):
+	#print("Awaiting move: ", debug_name)
+	
 	var this_move_turn := current_turn
 	
 	var this_move_index := __next_free_move_index
@@ -220,15 +222,18 @@ func await_start_move():
 	
 	assert(__cur_move_index == this_move_index) # Sanity check
 	
+	#print("Move ready: ", debug_name)
 	if this_move_turn != current_turn:
 		print("SKIPPING INVALID MOVE")
 		
-		end_move()
+		end_move(debug_name)
 		return true
 	else:
 		return false
 
-func end_move():
+func end_move(debug_name: String):
+	#print("Ending move: ", debug_name)
+	
 	__cur_move_index += 1
 	assert(__cur_move_index <= __next_free_move_index) # Sanity check
 	call_deferred("emit_signal", "__move_ended")

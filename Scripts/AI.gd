@@ -13,11 +13,15 @@ const last_paths := []
 func init(world: Node2D, player: Node):
 	self.world = world
 	self.player = player
+	
 	capital_tiles = world.get_capital_tiles() 
 	capital_tiles.remove(capital_tiles.find(player.capital.city_tile))
-	#print("capitals", capitals)
 	capital_tiles.sort_custom(self, "compare_capitals_distance")
-	enemy_capital_tile = capital_tiles[0]
+	#print("capitals", capitals)
+	select_new_target_capital()
+
+func display_name() -> String:
+	return player.client.profile.display_name
 
 func compare_capitals_distance(capital_a: Node2D, capital_b: Node2D):
 	if Util.distance_between_tiles(player.capital.city_tile, capital_a) < Util.distance_between_tiles(player.capital.city_tile, capital_b):
@@ -25,40 +29,37 @@ func compare_capitals_distance(capital_a: Node2D, capital_b: Node2D):
 	else:
 		return false
 
-func _draw():
-	#print("AI CUSTOM DRAW")
-	var color: Color = player.unit_color.darkened(0.1)
-	color.a = 0.75
-	for path in last_paths:
-		var points := PoolVector2Array()
-		for tile in path:
-			var pos = tile.position + Vector2(rand_range(-6, 6), rand_range(-6, 6))
-			points.append(pos)
-			draw_circle(pos, 2.5, color)
-		draw_polyline(points, color, 1.0)
+func select_new_target_capital():
+	var capital_tiles_filtered := []
+	for tile in capital_tiles:
+		if !tile.city.conquered:
+			capital_tiles_filtered.append(tile)
+	capital_tiles = capital_tiles_filtered
+	
+	enemy_capital_tile = capital_tiles[0]
+	
+	print(display_name(), ": New target ", enemy_capital_tile.city.player.name)
 
 # Called every time it is this AI player's turn, to run AI for this player
 func run_ai():
-	print(player.client.profile.display_name + ": Executing turn")
-	var move_count = world.game.moves_remaining
+	print(display_name(), ": Executing turn")
 	
-	if enemy_capital_tile.player == player:
-		for i in len(capital_tiles):
-			if capital_tiles[i].player != player:
-				enemy_capital_tile = capital_tiles[i]
-				break
+	if enemy_capital_tile.city.conquered:
+		select_new_target_capital()
+	
+	var move_count = world.game.moves_remaining
+	var player_units: Array = world.get_player_units(player)
+	update_astar_map()
 	
 	if player.capital.city_tile.army and player.capital.city_tile.army.power == 100:
 		var shortest_path = find_shortest_path(player.capital.city_tile, enemy_capital_tile)
 		player.capital.city_tile.army.rpc("move_to", shortest_path[1].coord)
 		move_count -= 1
+		player_units.erase(player.capital.city_tile.army)
 		last_paths.append(shortest_path)
 	
-	update_astar_map()
 	last_paths.clear()
 	
-	var player_units = world.get_player_units(player)
-
 	for unit in player_units:
 		if move_count <= 0:
 			break
@@ -105,3 +106,16 @@ func assign_weight(given_tile, player) -> float:
 		elif tile.city:
 			return 3.0
 	return 4.0 + rand_range(-2, 2)
+
+func _draw():
+	#print("AI CUSTOM DRAW")
+	var color: Color = player.unit_color.darkened(0.1)
+	color.a = 0.75
+	for path in last_paths:
+		var points := PoolVector2Array()
+		for i in len(path):
+			var pos = path[i].position + Vector2(rand_range(-6, 6), rand_range(-6, 6))
+			points.append(pos)
+			draw_circle(pos, max(4.0 - i, 2.0), color)
+		if len(points) > 1:
+			draw_polyline(points, color, 1.0)
