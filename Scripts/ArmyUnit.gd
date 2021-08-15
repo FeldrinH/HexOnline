@@ -70,7 +70,7 @@ func execute_move_to(target_tile):
 	
 	do_enter_tile(null, true)
 	
-	movement_tween.interpolate_property(self, "position", position, target_tile.position, max(position.distance_to(target_tile.position) / 1000, 0.25), Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
+	movement_tween.interpolate_property(self, "position", position, target_tile.position, max(position.distance_to(target_tile.position) / 1000, 0.5), Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 	movement_tween.start()
 	yield(movement_tween, "tween_all_completed")
 	
@@ -163,7 +163,11 @@ func play_number_popup(number: int):
 
 func update_sprite_move_icon():
 	var moveable_sprite = $SpriteMovable
+	var drop_shadow = $DropShadow
 	if world.game.is_move_allowed(world.network.get_our_player(), self):
 		moveable_sprite.visible = true
+		if tile.city: 
+			drop_shadow.visible = true
 	else:
 		moveable_sprite.visible = false
+		drop_shadow.visible = false

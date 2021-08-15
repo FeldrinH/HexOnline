@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Scripts/ArmyUnit.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/infantry_sprite.png" type="Texture" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Sprites/ironclad.png" type="Texture" id=6]
 [ext_resource path="res://PopupNumber.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Sprites/usable_icon.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/drop_shadow.png" type="Texture" id=9]
 
 [sub_resource type="DynamicFont" id=1]
 size = 14
@@ -17,7 +18,17 @@ font_data = ExtResource( 3 )
 z_index = 20
 script = ExtResource( 1 )
 
+[node name="DropShadow" type="Sprite" parent="."]
+visible = false
+position = Vector2( 9.31323e-10, 0 )
+scale = Vector2( 0.3, 0.3 )
+z_index = -1
+texture = ExtResource( 9 )
+
 [node name="Sprites" type="Node2D" parent="."]
+__meta__ = {
+"_editor_description_": ""
+}
 
 [node name="SpriteInfantry" type="Sprite" parent="Sprites"]
 visible = false
@@ -43,9 +54,9 @@ scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 6 )
 
 [node name="Label" type="Label" parent="."]
-margin_left = -28.0
+margin_left = -28.2227
 margin_top = 13.7528
-margin_right = 28.0403
+margin_right = 27.8176
 margin_bottom = 73.7528
 grow_horizontal = 2
 grow_vertical = 2
