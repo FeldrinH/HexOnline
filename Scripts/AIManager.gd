@@ -27,9 +27,9 @@ func _on_current_player_changed(active_player: Node):
 	
 	for player_id in ai_players:
 		var player = world.game.get_player(player_id)
-		print(player.name, player.is_inactive())
+		# print(player.name, player.is_inactive())
 		if player.is_inactive() or !player.client.is_ai():
-			ai_players[player_id].cleanup_ai()
+			ai_players[player_id].queue_free()
 			ai_players.erase(player_id)
 	
 	if active_player.client.is_ai():

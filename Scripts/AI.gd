@@ -20,10 +20,6 @@ func init_ai(world: Node2D, player: Node):
 	#print("capitals", capitals)
 	select_new_target_capital()
 
-func cleanup_ai():
-	last_paths.clear()
-	update()
-
 func display_name() -> String:
 	return player.client.profile.display_name
 
