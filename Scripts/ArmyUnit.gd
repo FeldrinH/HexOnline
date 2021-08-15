@@ -34,7 +34,8 @@ func init_detached(unit_world, starting_tile, starting_power, unit_player, silen
 remotesync func move_to(target_tile_coord):
 	var sender_id := get_tree().get_rpc_sender_id()
 	
-	var __ = world.game.await_start_move()
+	var move_desc := "move_to " + name + ": " + (str(tile.coord) if tile else "<detached>") + " -> " + str(target_tile_coord)
+	var __ = world.game.await_start_move(move_desc)
 	if __ is GDScriptFunctionState:
 		if yield(__, "completed"): return
 	
@@ -43,7 +44,7 @@ remotesync func move_to(target_tile_coord):
 		if move_coroutine is GDScriptFunctionState:
 			yield(move_coroutine, "completed")
 	
-	world.game.end_move()
+	world.game.end_move(move_desc)
 
 func execute_move_to(target_tile):
 	if !tile or tile.terrain != target_tile.terrain:

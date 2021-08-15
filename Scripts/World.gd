@@ -175,7 +175,7 @@ func get_all_units():
 	return units.get_children()
 
 func get_player_units(player) -> Array:
-	var player_units = []
+	var player_units := []
 	for i in units.get_children():
 		if i.player == player:
 			player_units.append(i)

@@ -19,8 +19,10 @@ func __on_our_client_player_changed(player: Node):
 	if player:
 		$Shared/OurLabel.text = player.name
 		$Shared/OurLabel.set("custom_colors/font_outline_modulate", player.unit_color)
+		$Turn/SkipButton.visible = true
 	else:
 		$Shared/OurLabel.text = ""
+		$Turn/SkipButton.visible = false
 
 func __on_current_player_changed(player: Node):
 	if player:
