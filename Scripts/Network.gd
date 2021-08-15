@@ -76,7 +76,8 @@ master func register_client(profile: Dictionary):
 		rpc("add_remote_client", id, profile, -1)
 		
 		if id != get_tree().get_network_unique_id():
-			initialize_client(id)
+			var __ = initialize_client(id)
+			if __ is GDScriptFunctionState: yield(__, "completed")
 		
 		rpc_id(id, "client_initialized")
 
@@ -104,12 +105,18 @@ func initialize_client(id: int):
 	
 	for client in clients.values():
 		rpc_id(id, "add_remote_client", client.id, client.profile, client.player.id if client.player else -1)
-		
+	
+	# Wait for active moves to end, because moving units cannot be sent
+	var __ = world.game.await_start_move("initialize_client")
+	if __ is GDScriptFunctionState:
+		yield(__, "completed")
+	
 	world.send_map(id)
 	world.game.send_state(id)
 	emit_signal("client_initializing", id, get_client(id))
-	
 	rpc_id(id, "set_synced_values", rng.seed, __next_id)
+	
+	world.game.end_move("initialize_client")
 
 puppetsync func add_remote_client(id: int, profile: Dictionary, player_id: int):
 	if !clients.has(id):
