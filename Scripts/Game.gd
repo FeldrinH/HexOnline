@@ -187,9 +187,13 @@ func on_player_capital_conquered(loser: Node, conqueror: Node):
 puppetsync func do_player_capital_conquered(loser_id: int, conqueror_id: int):
 	var loser = get_player(loser_id)
 	var conqueror = get_player(conqueror_id)
+	
+	for unit in world.get_player_units(loser):
+		unit.queue_free()
+	
 	for tile in world.get_all_tiles():
 		if tile.player == loser:
-			tile.try_occupy(conqueror)
+			tile.set_player(conqueror)
 
 puppetsync func announce_loser(loser_id: int):
 	world.effects.play_sound("conquer_announce")
