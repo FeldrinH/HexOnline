@@ -10,15 +10,19 @@ var capital_tiles: Array
 
 const last_paths := []
 
-func init(world: Node2D, player: Node):
+func init_ai(world: Node2D, player: Node):
 	self.world = world
 	self.player = player
 	
 	capital_tiles = world.get_capital_tiles() 
-	capital_tiles.remove(capital_tiles.find(player.capital.city_tile))
+	capital_tiles.erase(player.capital.city_tile)
 	capital_tiles.sort_custom(self, "compare_capitals_distance")
 	#print("capitals", capitals)
 	select_new_target_capital()
+
+func cleanup_ai():
+	last_paths.clear()
+	update()
 
 func display_name() -> String:
 	return player.client.profile.display_name
@@ -51,11 +55,12 @@ func run_ai():
 	var player_units: Array = world.get_player_units(player)
 	update_astar_map()
 	
-	if player.capital.city_tile.army and player.capital.city_tile.army.power == 100:
+	var capital_unit = player.capital.city_tile.army
+	if capital_unit and capital_unit.power == 100:
 		var shortest_path = find_shortest_path(player.capital.city_tile, enemy_capital_tile)
-		player.capital.city_tile.army.rpc("move_to", shortest_path[1].coord)
+		capital_unit.rpc("move_to", shortest_path[1].coord)
 		move_count -= 1
-		player_units.erase(player.capital.city_tile.army)
+		player_units.erase(capital_unit)
 		last_paths.append(shortest_path)
 	
 	last_paths.clear()

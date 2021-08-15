@@ -19,17 +19,24 @@ func _on_pre_game_start():
 	
 	world.game.connect("current_player_changed", self, "_on_current_player_changed", [], CONNECT_DEFERRED)
 	
-	for player in world.game.players:
-		if player.client.is_ai():
-			var ai := AI.instance()
-			ai.init(world, player)
-			add_child(ai)
-			ai_players[player.id] = ai
-	
 	print("AI Manager: Init completed")
 
 # Event handler called when turn advances to new player. Use to start AI functions
-func _on_current_player_changed(new_player: Node):
+func _on_current_player_changed(active_player: Node):
 	yield(get_tree(), "idle_frame") # Small delay to fix some edge cases
-	if new_player.client.is_ai() and ai_players.has(new_player.id):
-		ai_players[new_player.id].run_ai()
+	
+	for player_id in ai_players:
+		var player = world.game.get_player(player_id)
+		print(player.name, player.is_inactive())
+		if player.is_inactive() or !player.client.is_ai():
+			ai_players[player_id].cleanup_ai()
+			ai_players.erase(player_id)
+	
+	if active_player.client.is_ai():
+		if !ai_players.has(active_player.id):
+			var ai := AI.instance()
+			ai.init_ai(world, active_player)
+			add_child(ai)
+			ai_players[active_player.id] = ai
+		
+		ai_players[active_player.id].run_ai()
