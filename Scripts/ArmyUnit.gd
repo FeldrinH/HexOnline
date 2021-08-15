@@ -71,7 +71,8 @@ func execute_move_to(target_tile):
 	
 	do_enter_tile(null, true)
 	
-	movement_tween.interpolate_property(self, "position", position, target_tile.position, max(position.distance_to(target_tile.position) / 1000, 0.5), Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
+	var movement_time =  0.5 if player.client.is_ai() else 0.25
+	movement_tween.interpolate_property(self, "position", position, target_tile.position, max(position.distance_to(target_tile.position) / 1000, movement_time), Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
 	movement_tween.start()
 	yield(movement_tween, "tween_all_completed")
 	

@@ -189,6 +189,8 @@ explosiveness = 0.4
 process_material = SubResource( 4 )
 texture = ExtResource( 16 )
 
+[node name="SoundsTimer" type="Timer" parent="EffectsManager"]
+
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( 562, 315 )
 current = true
