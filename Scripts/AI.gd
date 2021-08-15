@@ -48,17 +48,18 @@ func run_ai():
 		select_new_target_capital()
 	
 	var move_count = world.game.moves_remaining
+	var player_units: Array = world.get_player_units(player)
 	update_astar_map()
 	
 	if player.capital.city_tile.army and player.capital.city_tile.army.power == 100:
 		var shortest_path = find_shortest_path(player.capital.city_tile, enemy_capital_tile)
 		player.capital.city_tile.army.rpc("move_to", shortest_path[1].coord)
 		move_count -= 1
+		player_units.erase(player.capital.city_tile.army)
 		last_paths.append(shortest_path)
 	
 	last_paths.clear()
 	
-	var player_units: Array = world.get_player_units(player)
 	for unit in player_units:
 		if move_count <= 0:
 			break
