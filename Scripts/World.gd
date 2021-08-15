@@ -141,20 +141,20 @@ func find_in_radius(center_tile, radius : int) -> Dictionary:
 
 func find_travelable(center_tile, player, distance : int) -> Dictionary:
 	var neighbors : Dictionary = {}
-	__add_neighbors(neighbors, center_tile, player, distance)
+	__add_neighbors(neighbors, center_tile, player, distance, true)
 	neighbors.erase(center_tile)
 	return neighbors
 
-func __add_neighbors(tiles : Dictionary, center_tile, player, distance: int):
-	if distance == 0:
+func __add_neighbors(tiles : Dictionary, center_tile, player, distance: int, is_first: bool):
+	if distance <= 0:
 		return
 	
 	for dir in Util.directions:
 		var new_tile = get_tile(center_tile.coord + dir)
-		if new_tile and can_enter(center_tile, new_tile):
+		if new_tile and __can_enter(center_tile, new_tile, is_first):
 			tiles[new_tile] = true
-			if center_tile.terrain == new_tile.terrain and (new_tile.army == null or new_tile.army.player == player):
-				__add_neighbors(tiles, new_tile, player, distance - 1)
+			if (new_tile.army == null or new_tile.army.player == player) and center_tile.terrain == new_tile.terrain:
+				__add_neighbors(tiles, new_tile, player, distance - 1, false)
 
 func __add_row(tiles : Dictionary, row_start : Vector2, row_length : int, dir : int):
 	for i in range(0, row_length):
@@ -162,14 +162,14 @@ func __add_row(tiles : Dictionary, row_start : Vector2, row_length : int, dir : 
 		if new_tile != null:
 			tiles[new_tile] = true
 
-static func can_enter(leave_tile, enter_tile) -> bool:
+static func __can_enter(leave_tile, enter_tile, is_first: bool) -> bool:
 	if enter_tile.blocked:
 		return false
 	
-	if enter_tile.city and enter_tile.city.is_port or leave_tile.city and leave_tile.city.is_port:
+	if enter_tile.terrain == leave_tile.terrain:
 		return true
 	else:
-		return enter_tile.terrain == leave_tile.terrain
+		return is_first and (enter_tile.city and enter_tile.city.is_port or leave_tile.city and leave_tile.city.is_port)
 
 func get_all_units():
 	return units.get_children()
