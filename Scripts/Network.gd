@@ -76,7 +76,8 @@ master func register_client(profile: Dictionary):
 		rpc("add_remote_client", id, profile, -1)
 		
 		if id != get_tree().get_network_unique_id():
-			initialize_client(id)
+			var __ = initialize_client(id)
+			if __ is GDScriptFunctionState: yield(__, "completed")
 		
 		rpc_id(id, "client_initialized")
 
