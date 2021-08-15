@@ -37,7 +37,7 @@ func _draw():
 			draw_circle(pos, 2.5, color)
 		draw_polyline(points, color, 1.0)
 
-# Called every time it is this AI players turn, to run AI for this player
+# Called every time it is this AI player's turn, to run AI for this player
 func run_ai():
 	print(player.client.profile.display_name + ": Executing turn")
 	var move_count = world.game.moves_remaining

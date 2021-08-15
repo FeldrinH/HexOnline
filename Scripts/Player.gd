@@ -22,3 +22,6 @@ func set_capital(new_capital):
 func __set_client(new_client):
 	client = new_client
 	emit_signal("client_changed", client)
+
+func is_inactive() -> bool:
+	return capital.conquered or !client

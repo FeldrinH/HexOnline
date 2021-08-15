@@ -5,6 +5,7 @@ var army_unit = load("res://ArmyUnit.tscn")
 onready var label = $Label
 onready var movement_tween = $MovementTween
 onready var popup = $Popup
+onready var moveable_sprite = $SpriteMovable
 
 const MAX_POWER = 100
 
@@ -35,7 +36,7 @@ remotesync func move_to(target_tile_coord):
 	
 	var __ = world.game.await_start_move()
 	if __ is GDScriptFunctionState:
-		yield(__, "completed")
+		if yield(__, "completed"): return
 	
 	if world.network.can_client_act_as_player(sender_id, player) and world.game.is_move_allowed(player, self):
 		var move_coroutine = execute_move_to(world.get_tile(target_tile_coord))

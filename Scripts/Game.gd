@@ -23,7 +23,6 @@ var current_player : Node = null
 var current_turn: int = -1
 var moves_remaining: int = MOVES_PER_TURN
 
-#var __current_player_index: int = 0
 var __cur_move_index: int = 0
 var __next_free_move_index: int = 0
 
@@ -31,7 +30,6 @@ func _ready():
 	for i in len(players):
 		players[i].init(world, i)
 	timer.connect("timeout", self, "__on_turn_timer_timeout")
-	connect("moves_remaining_changed", self, "__on_moves_remaining_changed")
 
 func get_player(id: int) -> Node:
 	return __all_players[id] if id >= 0 else null
@@ -74,36 +72,21 @@ func is_move_allowed(calling_player: Node, move_unit: Node) -> bool:
 	return move_unit.player == calling_player and move_unit.last_turn != current_turn and is_active_player(calling_player)
 
 # Networking game state on initial join
-func send_state(target_id: int):	
+func send_state(target_id: int):
 	__send_update_players(target_id)
 	if current_player:
-		rpc_id(target_id, "advance_turn_to", current_player.id, moves_remaining, timer.time_left)
-
-# Turn management functions
-# Call on client at the end of every move
-func advance_move():
-	advance_move_to(moves_remaining - 1)
-
-# Call on server at end of turn
-func call_advance_turn():
-	var current_player_index := players.find(current_player)
-	
-	current_player_index = (current_player_index + 1) % len(players)
-	while players[current_player_index].capital.conquered:
-		current_player_index = (current_player_index + 1) % len(players)
-	
-	rpc("advance_turn", players[current_player_index].id, MOVES_PER_TURN)
+		rpc_id(target_id, "set_turn", current_player.id, moves_remaining, timer.time_left)
 
 # Call by RPC at start of game
 puppetsync func start_game():
 	var __ = await_start_move()
 	if __ is GDScriptFunctionState:
-		yield(__, "completed")
+		if yield(__, "completed"): return
 	
 	emit_signal("pre_game_start")
 	
 	current_turn = 0
-	advance_turn_to(players[0].id, MOVES_PER_TURN)
+	set_turn(players[0].id, MOVES_PER_TURN)
 	add_forces(players[0].id)
 	world.effects.play_sound("game_start")
 	
@@ -113,37 +96,15 @@ puppetsync func start_game():
 puppetsync func advance_turn(new_player_id, new_moves_remaining):
 	var __ = await_start_move()
 	if __ is GDScriptFunctionState:
-		yield(__, "completed")
+		if yield(__, "completed"): return
 	
-	print(new_player_id, new_moves_remaining)
 	current_turn += 1
-	advance_turn_to(new_player_id, new_moves_remaining)
+	set_turn(new_player_id, new_moves_remaining)
 	add_forces(new_player_id)
 	
 	end_move()
 
-# Call by RPC from client on server to request turn skip
-master func skip_turn(target_player_id: int):
-	var sender_id := get_tree().get_rpc_sender_id()
-	var __ = await_start_move()
-	if __ is GDScriptFunctionState:
-		yield(__, "completed")
-	
-	var target_player := get_player(target_player_id)
-	if world.network.can_client_act_as_player(sender_id, target_player) and is_active_player(target_player):
-		call_advance_turn()
-	
-	end_move()
-
-# Utility functions for turn management
-func advance_move_to(new_moves_remaining: int):
-	moves_remaining = new_moves_remaining
-	
-	emit_signal("moves_remaining_changed", moves_remaining)
-	
-	print(str(moves_remaining) + " moves remaining")
-
-puppetsync func advance_turn_to(new_player_id: int, new_moves_remaining: int, new_turn_lenght: int = TURN_LENGTH):
+puppetsync func set_turn(new_player_id: int, new_moves_remaining: int, new_turn_lenght: int = TURN_LENGTH):
 	current_player = get_player(new_player_id)
 	moves_remaining = new_moves_remaining
 	
@@ -154,7 +115,7 @@ puppetsync func advance_turn_to(new_player_id: int, new_moves_remaining: int, ne
 	
 	for unit in world.get_all_units():
 		unit.update_sprite_move_icon()
-				
+	
 	print("Turn advanced to player " + current_player.name)
 
 func add_forces(player_id: int):
@@ -169,6 +130,41 @@ func add_forces(player_id: int):
 	
 	if !player.capital.city_tile.army and !player.capital.conquered:
 		world.add_unit(player.capital.city_tile.coord, 20, player.id, false)
+
+# Call on client inside each move
+func advance_move():
+	moves_remaining -= 1
+	
+	emit_signal("moves_remaining_changed", moves_remaining)
+	
+	print(str(moves_remaining) + " moves remaining")
+	
+	if world.network.is_server and moves_remaining <= 0:
+		call_advance_turn()
+
+# Call by RPC from client on server to request turn skip
+master func skip_turn(target_player_id: int):
+	var sender_id := get_tree().get_rpc_sender_id()
+	
+	var __ = await_start_move()
+	if __ is GDScriptFunctionState:
+		if yield(__, "completed"): return
+	
+	var target_player := get_player(target_player_id)
+	if world.network.can_client_act_as_player(sender_id, target_player) and is_active_player(target_player):
+		call_advance_turn()
+	
+	end_move()
+
+# Call on server to advance turn
+func call_advance_turn():
+	var current_player_index := players.find(current_player)
+	
+	current_player_index = (current_player_index + 1) % len(players)
+	while players[current_player_index].is_inactive():
+		current_player_index = (current_player_index + 1) % len(players)
+	
+	rpc("advance_turn", players[current_player_index].id, MOVES_PER_TURN)
 
 func __find_winner() -> Node:
 	var remaining_player = null
@@ -214,26 +210,31 @@ puppetsync func announce_winner(winner_id: int):
 
 # Clientside functions for ensuring moves are run in sequence and do not overlap
 func await_start_move():
-	var this_move_index = __next_free_move_index
+	var this_move_turn := current_turn
+	
+	var this_move_index := __next_free_move_index
 	__next_free_move_index += 1
 	
 	while __cur_move_index < this_move_index:
 		yield(self, "__move_ended")
 	
 	assert(__cur_move_index == this_move_index) # Sanity check
+	
+	if this_move_turn != current_turn:
+		print("SKIPPING INVALID MOVE")
+		
+		end_move()
+		return true
+	else:
+		return false
 
 func end_move():
 	__cur_move_index += 1
 	assert(__cur_move_index <= __next_free_move_index) # Sanity check
-	emit_signal("__move_ended")
+	call_deferred("emit_signal", "__move_ended")
 
 func is_move_active():
 	return __cur_move_index < __next_free_move_index
-
-# Event handlers
-func __on_moves_remaining_changed(new_moves_remaining: int):
-	if world.network.is_server and (new_moves_remaining <= 0 or !current_player.client):
-		call_advance_turn()
 
 func __on_turn_timer_timeout():
 	if world.network.is_server:
