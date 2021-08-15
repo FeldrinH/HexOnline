@@ -55,6 +55,7 @@ func run_ai():
 	if capital_unit and capital_unit.power == 100:
 		var shortest_path = find_shortest_path(player.capital.city_tile, enemy_capital_tile)
 		capital_unit.rpc("move_to", shortest_path[1].coord)
+		yield(get_tree().create_timer(0.25), "timeout")
 		move_count -= 1
 		player_units.erase(capital_unit)
 		last_paths.append(shortest_path)
@@ -71,6 +72,7 @@ func run_ai():
 		
 		if len(shortest_path) > 1:
 			unit.rpc("move_to", shortest_path[1].coord)
+			yield(get_tree().create_timer(0.25), "timeout")
 	
 	world.game.rpc("skip_turn", player.id)
 	

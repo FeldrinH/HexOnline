@@ -23,7 +23,7 @@ func _on_pre_game_start():
 
 # Event handler called when turn advances to new player. Use to start AI functions
 func _on_current_player_changed(active_player: Node):
-	yield(get_tree(), "idle_frame") # Small delay to fix some edge cases
+	yield(get_tree().create_timer(0.5), "timeout") # Small delay to fix some edge cases
 	
 	for player_id in ai_players:
 		var player = world.game.get_player(player_id)
