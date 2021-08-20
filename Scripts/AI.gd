@@ -2,6 +2,8 @@ extends Node2D
 
 var astar := preload("res://Scripts/HexAStar.gd").new()
 
+var mcts := MCTSManager.new()
+
 var world: Node2D
 var player: Node
 
@@ -19,6 +21,8 @@ func init_ai(world: Node2D, player: Node):
 	capital_tiles.sort_custom(self, "compare_capitals_distance")
 	#print("capitals", capitals)
 	select_new_target_capital()
+	
+	setup_mcts_map()
 
 func display_name() -> String:
 	return player.client.profile.display_name
@@ -40,15 +44,63 @@ func select_new_target_capital():
 	
 	print(display_name(), ": New target ", enemy_capital_tile.city.player.name)
 
+func test_mcts():
+	var start := OS.get_ticks_msec()
+	
+	setup_mcts_state()
+	var move = mcts.run_mcts(1)
+	last_paths.append([world.get_tile(move.from), world.get_tile(move.to)])
+	
+	var end := OS.get_ticks_msec()
+	print("MOVE: ", move, " (", end - start, " ms)")
+
+func setup_mcts_map():
+	#var start := OS.get_ticks_msec()
+	
+	mcts.set_our_player(player.id)
+	
+	for tile in world.get_all_tiles():
+		if !tile.blocked:
+			mcts.add_tile(tile.coord, tile.terrain)
+			if tile.city:
+				if tile.city.is_capital:
+					mcts.add_capital(tile.coord, tile.city.player.id)
+				else:
+					mcts.add_city(tile.coord, tile.city.is_port)
+	
+	#var end := OS.get_ticks_msec()
+	#print("Setup terrain for MCTS (", end - start, " ms)")
+
+func setup_mcts_state():
+	var start := OS.get_ticks_msec()
+	
+	mcts.reset_state(player.id, 0)
+	
+	for unit in world.get_all_units():
+		mcts.add_unit(unit.tile.coord, unit.player.id, unit.power)
+	
+	for player in world.game.players:
+		if !player.capital.conquered:
+			mcts.add_active_player(player.id)
+	
+	var end := OS.get_ticks_msec()
+	print("Setup state for MCTS (", end - start, " ms)")
+
 # Called every time it is this AI player's turn, to run AI for this player
 func run_ai():
 	print(display_name(), ": Executing turn")
+	assert(world.game.current_player == player) # Sanity check
+	
+	last_paths.clear()
+	
+	test_mcts()
 	
 	if enemy_capital_tile.city.conquered:
 		select_new_target_capital()
 	
 	var move_count = world.game.moves_remaining
 	var player_units: Array = world.get_player_units(player)
+	
 	update_astar_map()
 	
 	var capital_unit = player.capital.city_tile.army
@@ -59,8 +111,6 @@ func run_ai():
 		move_count -= 1
 		player_units.erase(capital_unit)
 		last_paths.append(shortest_path)
-	
-	last_paths.clear()
 	
 	for unit in player_units:
 		if move_count <= 0:

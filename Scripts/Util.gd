@@ -1,8 +1,8 @@
 class_name Util
 
 enum {
-	TERRAIN_GROUND
-	TERRAIN_WATER
+	TERRAIN_GROUND = 0
+	TERRAIN_WATER = 1
 }
 
 enum { 
