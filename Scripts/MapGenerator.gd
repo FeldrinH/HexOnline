@@ -1,3 +1,8 @@
+static func random_seed() -> int:
+	var seed_rng := RandomNumberGenerator.new()
+	seed_rng.randomize()
+	return seed_rng.seed
+
 static func generate_map(map: Node):
 	print("MAPGEN: Started")
 	while true:
@@ -5,7 +10,9 @@ static func generate_map(map: Node):
 		
 		var tiles = map.get_all_tiles()
 		
-		randomize()
+		var new_seed := random_seed()
+		seed(new_seed)
+		print("MAPGEN: Generating map with seed ", new_seed)
 		
 		for tile in tiles:
 			tile.set_terrain(Util.TERRAIN_GROUND)
