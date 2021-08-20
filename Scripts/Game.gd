@@ -228,7 +228,7 @@ func await_start_move(debug_name: String):
 	
 	#print("Move ready: ", debug_name)
 	if this_move_turn != current_turn:
-		print("SKIPPING INVALID MOVE")
+		print("SKIPPING INVALID MOVE: ", debug_name)
 		
 		end_move(debug_name)
 		return true
