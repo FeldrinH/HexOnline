@@ -3,6 +3,7 @@ extends Node
 # NB: This only exists on the server
 
 const AI := preload("res://AI.tscn")
+const AIMCTS := preload("res://AIMCTS.tscn")
 
 onready var world: Node2D = $".."
 
@@ -34,7 +35,11 @@ func _on_current_player_changed(active_player: Node):
 	
 	if active_player.client.is_ai():
 		if !ai_players.has(active_player.id):
-			var ai := AI.instance()
+			var ai: Node2D
+			if len(ai_players) == 0:
+				ai = AIMCTS.instance()
+			else:
+				ai = AI.instance()
 			ai.init_ai(world, active_player)
 			add_child(ai)
 			ai_players[active_player.id] = ai

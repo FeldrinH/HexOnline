@@ -43,6 +43,8 @@ remotesync func move_to(target_tile_coord):
 		var move_coroutine = execute_move_to(world.get_tile(target_tile_coord))
 		if move_coroutine is GDScriptFunctionState:
 			yield(move_coroutine, "completed")
+	else:
+		print("Move ", move_desc, " not allowed")
 	
 	world.game.end_move(move_desc)
 
