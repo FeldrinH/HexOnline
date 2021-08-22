@@ -75,7 +75,8 @@ func run_ai():
 			unit.rpc("move_to", shortest_path[1].coord)
 			yield(get_tree().create_timer(0.25), "timeout")
 	
-	world.game.rpc("skip_turn", player.id)
+	if move_count > 0:
+		world.game.rpc("skip_turn", player.id)
 	
 	update()
 
@@ -83,12 +84,16 @@ func update_astar_map():
 	astar.clear()
 	
 	var tiles = world.get_all_tiles()
+	
 	for tile in tiles:
-		var weight = assign_weight(tile, player)
-		astar.add_point(tile.id, tile.coord, weight)
+		if !tile.blocked:
+			var weight = assign_weight(tile, player)
+			astar.add_point(tile.id, tile.coord, weight)
+	
 	for tile in tiles:
-		for travelable in world.find_travelable(tile, player, 2):
-			 astar.connect_points(tile.id, travelable.id)
+		if !tile.blocked:
+			for travelable in world.find_travelable(tile, player, 2):
+				 astar.connect_points(tile.id, travelable.id, false)
 
 func find_shortest_path(start, target) -> Array:
 	var path = astar.get_id_path(start.id, target.id)

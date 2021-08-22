@@ -146,6 +146,8 @@ func find_travelable(center_tile, player, distance : int) -> Dictionary:
 	return neighbors
 
 func __add_neighbors(tiles : Dictionary, center_tile, player, distance: int, is_first: bool):
+	assert(!center_tile.blocked) # find_travelable should not reach blocked tiles
+	
 	if distance <= 0:
 		return
 	
