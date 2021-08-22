@@ -18,7 +18,7 @@ func init_ai(world: Node2D, player: Node):
 	capital_tiles.erase(player.capital.city_tile)
 	capital_tiles.sort_custom(self, "compare_capitals_distance")
 	#print("capitals", capitals)
-	select_new_target_capital()
+	refresh_capitals()
 
 func display_name() -> String:
 	return player.client.profile.display_name
@@ -29,23 +29,24 @@ func compare_capitals_distance(capital_a: Node2D, capital_b: Node2D):
 	else:
 		return false
 
-func select_new_target_capital():
+func refresh_capitals():
 	var capital_tiles_filtered := []
 	for tile in capital_tiles:
 		if !tile.city.conquered:
 			capital_tiles_filtered.append(tile)
 	capital_tiles = capital_tiles_filtered
 	
-	enemy_capital_tile = capital_tiles[0]
+	#enemy_capital_tile = capital_tiles[0]
 	
-	print(display_name(), ": New target ", enemy_capital_tile.city.player.name)
+	print(display_name(), ": New target ", capital_tiles[0].city.player.name)
 
 # Called every time it is this AI player's turn, to run AI for this player
 func run_ai():
 	print(display_name(), ": Executing turn")
 	
-	if enemy_capital_tile.city.conquered:
-		select_new_target_capital()
+	for i in capital_tiles:		
+		if i.city.conquered:
+			refresh_capitals()
 	
 	var move_count = world.game.moves_remaining
 	var player_units: Array = world.get_player_units(player)
@@ -67,7 +68,7 @@ func run_ai():
 			break
 		move_count -= 1
 		
-		var shortest_path = find_shortest_path(unit.tile, enemy_capital_tile)
+		var shortest_path = find_shortest_path(unit.tile, capital_tiles[(move_count-1)%len(capital_tiles)])
 		last_paths.append(shortest_path)
 		
 		if len(shortest_path) > 1:
