@@ -22,20 +22,6 @@ const __tile_array : Array = []
 
 func _ready():
 	randomize()
-	
-	#var sprites : Array = []
-	#for x in 12:
-	#	for y in 7:
-	#		var sprite : Sprite = TerrainGroundSprite.instance()
-	#		sprite.position = Vector2(x * 100, y * 100)
-	#		sprite.texture = Util.pick_random(TerrainGroundTextures)
-	#		sprite.rotation_degrees = (randi() % 4) * 90 + rand_range(-20, 20)
-	#		sprites.append(sprite)
-	
-	#sprites.shuffle()
-	#for sprite in sprites:
-	#	terrainsprites.add_child(sprite)
-	
 	for coord in tilemap.get_used_cells():
 		var tile_index = tilemap.get_cellv(coord)
 		var tile_instance = HexTile.instance()

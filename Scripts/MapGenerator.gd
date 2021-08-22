@@ -216,6 +216,8 @@ static func find_inland(tiles: Array) -> Array:
 
 static func capital_tiles_reachable(map) -> bool:
 	var capital_tiles = map.get_capital_tiles()
+	if len(capital_tiles) == 0:
+		return true
 	var starting_capital = capital_tiles[0]
 	var reached_capital_tiles = []
 	var travelled_tiles = {}

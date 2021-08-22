@@ -15,6 +15,9 @@ func exit_game():
 func close_menu():
 	world.ui.hide("MainMenu")
 
+func generate_background():
+	pass
+
 #func open_settings_menu():
 #	$MainMenuButtons.visible = false
 #	$SettingsMenu.visible = true
